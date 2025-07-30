@@ -1,0 +1,74 @@
+// Footer Styles
+.site-footer {
+  background-color: var(--theme-primary);
+  color: white;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+
+  .site-info {
+    @extend .container;
+
+    p {
+      margin-bottom: 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      color: var(--theme-accent);
+      text-decoration: none;
+
+      &:hover {
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Widget areas in footer
+.footer-widgets {
+  background-color: var(--theme-secondary);
+  color: white;
+  padding: 2rem 0;
+
+  .container {
+    @extend .container;
+  }
+
+  .footer-widget-area {
+    @extend .col-md-4, .mb-4;
+
+    .widget {
+      @extend .mb-4;
+
+      .widget-title {
+        @extend .h5, .mb-3;
+        color: white;
+        border-bottom: 2px solid var(--theme-accent);
+        padding-bottom: 0.5rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          @extend .mb-2;
+
+          a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+
+            &:hover {
+              color: var(--theme-accent);
+            }
+          }
+        }
+      }
+    }
+  }
+}

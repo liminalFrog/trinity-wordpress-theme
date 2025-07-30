@@ -1,0 +1,89 @@
+// Responsive Design
+@include media-breakpoint-down(md) {
+  .site-title {
+    font-size: 1.5rem;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+
+    a {
+      text-align: center;
+    }
+  }
+
+  .site-main {
+    padding: 1rem;
+  }
+
+  .entry-title {
+    font-size: 1.5rem;
+  }
+
+  .entry-meta {
+    .posted-on,
+    .byline,
+    .comments-link {
+      display: block;
+      margin-right: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .site-title {
+    font-size: 1.25rem;
+  }
+
+  .entry-title {
+    font-size: 1.25rem;
+  }
+
+  .nav-menu a {
+    padding: 0.75rem 1rem;
+  }
+
+  .post-navigation .nav-links {
+    flex-direction: column;
+
+    .nav-previous,
+    .nav-next {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .site-header,
+  .main-navigation,
+  .site-footer,
+  .post-navigation,
+  .comments-area {
+    display: none;
+  }
+
+  .site-main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .post {
+    border-bottom: none;
+    margin-bottom: 2rem;
+    page-break-inside: avoid;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .entry-title {
+    font-size: 18pt;
+    margin-bottom: 1rem;
+  }
+}
