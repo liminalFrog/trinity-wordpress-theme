@@ -89,7 +89,25 @@
                     <div class="col-md-4 text-md-end">
                         <div class="footer-logo">
                             <?php if (has_custom_logo()) : ?>
-                                <?php the_custom_logo(); ?>
+                                <?php 
+                                // Get the custom logo
+                                $custom_logo_id = get_theme_mod('custom_logo');
+                                $logo = wp_get_attachment_image_src($custom_logo_id, 'full');
+                                
+                                // Check for light logo option
+                                $light_logo_id = get_theme_mod('light_logo');
+                                $light_logo = $light_logo_id ? wp_get_attachment_image_src($light_logo_id, 'full') : null;
+                                
+                                // Use light logo if available, otherwise use normal logo
+                                if ($light_logo) : ?>
+                                    <a href="<?php echo esc_url(home_url('/')); ?>" class="footer-logo-link">
+                                        <img src="<?php echo esc_url($light_logo[0]); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="footer-logo-img">
+                                    </a>
+                                <?php else : ?>
+                                    <a href="<?php echo esc_url(home_url('/')); ?>" class="footer-logo-link">
+                                        <img src="<?php echo esc_url($logo[0]); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="footer-logo-img">
+                                    </a>
+                                <?php endif; ?>
                             <?php else : ?>
                                 <a href="<?php echo esc_url(home_url('/')); ?>" class="footer-site-title">
                                     <?php bloginfo('name'); ?>

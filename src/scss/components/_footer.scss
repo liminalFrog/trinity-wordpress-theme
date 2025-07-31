@@ -180,19 +180,40 @@
     }
     
     .footer-logo {
-      .custom-logo-link {
+      .custom-logo-link,
+      .footer-logo-link {
         display: inline-block;
         
         img {
           max-height: 50px;
           width: auto;
-          filter: brightness(0) invert(1);
           transition: all 0.3s ease;
           
           &:hover {
             transform: scale(1.05);
-            filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
           }
+        }
+      }
+      
+      .footer-logo-img {
+        max-height: 50px;
+        width: auto;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+      }
+      
+      // Legacy support for normal logo with white filter
+      .custom-logo-link img {
+        filter: brightness(0) invert(1);
+        
+        &:hover {
+          transform: scale(1.05);
+          filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
         }
       }
       

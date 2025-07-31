@@ -120,6 +120,35 @@
                 // Hide dropdown on parent leave
                 dropdown.addEventListener('mouseleave', hideDropdown);
                 
+                // Handle dropdown toggle click - navigate to page if link exists
+                toggle.addEventListener('click', function(e) {
+                    const href = toggle.getAttribute('href');
+                    
+                    // If toggle has a real URL (not #), navigate to it
+                    if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
+                        // Prevent Bootstrap dropdown from opening
+                        e.stopPropagation();
+                        
+                        // Navigate to the page
+                        window.location.href = href;
+                        return false;
+                    } else {
+                        // Prevent default for toggles without URLs
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Toggle dropdown manually
+                        if (dropdown.classList.contains('show')) {
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (bsDropdown) {
+                                bsDropdown.hide();
+                            }
+                        } else {
+                            showDropdown();
+                        }
+                    }
+                });
+                
                 // Keep dropdown open when hovering over menu items and sub-items
                 if (menu) {
                     menu.addEventListener('mouseenter', function() {
@@ -131,11 +160,32 @@
                     // Handle nested dropdowns (sub-menus)
                     const nestedDropdowns = menu.querySelectorAll('.dropdown');
                     nestedDropdowns.forEach(function(nestedDropdown) {
+                        const nestedToggle = nestedDropdown.querySelector('.dropdown-toggle');
+                        
                         nestedDropdown.addEventListener('mouseenter', function() {
                             clearTimeout(hoverTimeout);
                         });
                         
                         nestedDropdown.addEventListener('mouseleave', hideDropdown);
+                        
+                        // Handle nested dropdown toggle click
+                        if (nestedToggle) {
+                            nestedToggle.addEventListener('click', function(e) {
+                                const href = nestedToggle.getAttribute('href');
+                                
+                                // If toggle has a real URL (not #), navigate to it
+                                if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
+                                    // Prevent Bootstrap dropdown from interfering and navigate
+                                    e.stopPropagation();
+                                    window.location.href = href;
+                                    return false;
+                                } else {
+                                    // Prevent default for toggles without URLs
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }
+                            });
+                        }
                         
                         // Handle sub-sub-menus if they exist
                         const deepNestedMenu = nestedDropdown.querySelector('.dropdown-menu');
@@ -148,6 +198,22 @@
                         }
                     });
                 }
+            } else {
+                // Mobile behavior - click only
+                toggle.addEventListener('click', function(e) {
+                    const href = toggle.getAttribute('href');
+                    
+                    // If toggle has a real URL (not #), navigate to it
+                    if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
+                        // Navigate to the page on mobile too
+                        e.stopPropagation();
+                        window.location.href = href;
+                        return false;
+                    } else {
+                        // Standard Bootstrap dropdown behavior for mobile
+                        e.preventDefault();
+                    }
+                });
             }
         });
 
