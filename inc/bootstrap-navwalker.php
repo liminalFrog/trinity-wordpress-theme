@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class mytheme_bootstrap_navwalker extends Walker_Nav_Menu {
+class trinity_bootstrap_navwalker extends Walker_Nav_Menu {
 
     /**
      * Start the list before the elements are added.
@@ -106,7 +106,7 @@ class mytheme_bootstrap_navwalker extends Walker_Nav_Menu {
 /**
  * Fallback function for when no menu is assigned
  */
-function mytheme_bootstrap_navwalker_fallback($args) {
+function trinity_bootstrap_navwalker_fallback($args) {
     if (!current_user_can('manage_options')) {
         return;
     }

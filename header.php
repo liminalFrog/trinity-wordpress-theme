@@ -74,8 +74,8 @@
                     'container'       => false,
                     'menu_class'      => 'navbar-nav ms-auto',
                     'menu_id'         => 'primary-menu',
-                    'fallback_cb'     => 'mytheme_bootstrap_navwalker_fallback',
-                    'walker'          => new mytheme_bootstrap_navwalker(),
+                    'fallback_cb'     => 'trinity_bootstrap_navwalker_fallback',
+                    'walker'          => new trinity_bootstrap_navwalker(),
                 ));
                 ?>
             </div>
