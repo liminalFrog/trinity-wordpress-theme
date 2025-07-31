@@ -2,23 +2,28 @@
 :root {
   --navbar-red: #bd1300;
   --navbar-scrolled-bg: rgba(0, 0, 0, 0.8);
+  --navbar-normal-bg: rgba(255, 255, 255, 0.8);
 }
 
 .navbar {
   position: sticky;
   top: 0;
   z-index: 1030; // Bootstrap navbar z-index
-  background: url('assets/images/dot_seamless_dark.png'), rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(10px);
-  background-size: 50px 50px, 100% 100%;
-  background-repeat: repeat, no-repeat;
+  background-color: var(--navbar-normal-bg) !important;
+  background-image: url('assets/images/dot_seamless_dark.png') !important;
+  background-size: 50px 50px !important;
+  background-repeat: repeat !important;
+  backdrop-filter: blur(1rem);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
   transition: all 0.3s ease;
 
   // Dark navbar when scrolled
   &.navbar-scrolled {
-    background: var(--navbar-scrolled-bg) !important;
+    background-color: var(--navbar-scrolled-bg) !important;
+    background-image: url('assets/images/dot_seamless_light.png') !important;
+    background-size: 50px 50px !important;
+    background-repeat: repeat !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
 
@@ -251,12 +256,23 @@
     min-width: 220px; // Ensure adequate width
     z-index: 1020;
 
+    // Remove focus outline on dropdown menu
+    &:focus {
+      outline: none;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
     .dropdown-item {
       color: #2c3e50;
       padding: 0.75rem 1.25rem;
       transition: all 0.3s ease;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       position: relative;
+
+      // Remove focus outline on dropdown items
+      &:focus {
+        outline: none;
+      }
 
       &:last-child {
         border-bottom: none;
@@ -307,6 +323,14 @@
     transition: transform 0.3s ease;
   }
 
+  .dropdown-toggle {
+    // Remove focus outline on dropdown toggles
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
   .dropdown.show .dropdown-toggle::after {
     transform: rotate(180deg);
   }
@@ -317,9 +341,20 @@
       background-color: var(--navbar-scrolled-bg);
       backdrop-filter: blur(10px);
 
+      // Remove focus outline in dark mode
+      &:focus {
+        outline: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+      }
+
       .dropdown-item {
         color: rgba(255, 255, 255, 0.9);
         border-bottom-color: rgba(255, 255, 255, 0.1);
+
+        // Remove focus outline in dark mode
+        &:focus {
+          outline: none;
+        }
 
         &:hover,
         &:focus {
@@ -336,9 +371,20 @@
       // Nested dropdowns in dark mode
       .dropdown-menu {
         background-color: var(--navbar-scrolled-bg);
+
+        // Remove focus outline for nested dropdowns
+        &:focus {
+          outline: none;
+          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+        }
         
         .dropdown-item {
           color: rgba(255, 255, 255, 0.9);
+
+          // Remove focus outline for nested items
+          &:focus {
+            outline: none;
+          }
           
           &:hover,
           &:focus {
