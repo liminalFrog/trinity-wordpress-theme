@@ -1,13 +1,37 @@
 /**
  * File navigation.js.
  *
- * Enhanced navigation with Bootstrap functionality
+ * Enhanced navigation with Bootstrap functionality and message bar
  */
 (function() {
     'use strict';
 
     // Wait for DOM to be ready
     document.addEventListener('DOMContentLoaded', function() {
+        
+        // Top message bar functionality
+        const messageBar = document.querySelector('.top-message-bar');
+        const messageClose = document.querySelector('.message-close');
+        
+        if (messageBar && messageClose) {
+            messageClose.addEventListener('click', function() {
+                messageBar.style.transition = 'all 0.3s ease';
+                messageBar.style.transform = 'translateY(-100%)';
+                messageBar.style.opacity = '0';
+                
+                setTimeout(function() {
+                    messageBar.style.display = 'none';
+                    
+                    // Store in sessionStorage to remember for the session
+                    sessionStorage.setItem('messageBarClosed', 'true');
+                }, 300);
+            });
+            
+            // Check if message bar was closed in this session
+            if (sessionStorage.getItem('messageBarClosed') === 'true') {
+                messageBar.style.display = 'none';
+            }
+        }
         
         // Add active class to current menu item
         const currentLocation = location.pathname;

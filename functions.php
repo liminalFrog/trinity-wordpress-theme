@@ -116,6 +116,17 @@ function mytheme_widgets_init() {
         'after_title'   => '</h2>',
     ));
 
+    // Top message bar
+    register_sidebar(array(
+        'name'          => esc_html__('Top Message Bar', 'mytheme'),
+        'id'            => 'top-message-bar',
+        'description'   => esc_html__('Add widgets for announcements, promotions, or important notices at the top of the site.', 'mytheme'),
+        'before_widget' => '<div id="%1$s" class="message-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<span class="message-title">',
+        'after_title'   => '</span>',
+    ));
+
     // Footer widget areas
     register_sidebar(array(
         'name'          => esc_html__('Footer Column 1', 'mytheme'),

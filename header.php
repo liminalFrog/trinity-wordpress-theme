@@ -13,6 +13,20 @@
 
 <div id="page" class="site">
     
+    <!-- Top Message Bar -->
+    <?php if (is_active_sidebar('top-message-bar')) : ?>
+        <div class="top-message-bar">
+            <div class="container-fluid">
+                <div class="message-content">
+                    <?php dynamic_sidebar('top-message-bar'); ?>
+                    <button type="button" class="message-close" aria-label="Close message">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+    
     <nav class="navbar navbar-expand-lg navbar-dark" id="site-navigation">
         <div class="container">
             <!-- Brand/Logo -->
