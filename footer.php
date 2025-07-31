@@ -2,70 +2,90 @@
         <div class="footer-content">
             <div class="container">
                 <div class="row">
-                    <!-- Footer Navigation -->
+                    <!-- Footer Column 1 -->
                     <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                        <h5 class="footer-title">Quick Links</h5>
-                        <?php
-                        wp_nav_menu(array(
-                            'theme_location' => 'footer-menu',
-                            'menu_class'     => 'footer-nav',
-                            'container'      => false,
-                            'depth'          => 1,
-                            'fallback_cb'    => '__return_false',
-                        ));
-                        ?>
+                        <?php if (is_active_sidebar('footer-1')) : ?>
+                            <?php dynamic_sidebar('footer-1'); ?>
+                        <?php else : ?>
+                            <!-- Default Content: Navigation -->
+                            <h5 class="footer-title">Quick Links</h5>
+                            <?php
+                            wp_nav_menu(array(
+                                'theme_location' => 'footer-menu',
+                                'menu_class'     => 'footer-nav',
+                                'container'      => false,
+                                'depth'          => 1,
+                                'fallback_cb'    => '__return_false',
+                            ));
+                            ?>
+                        <?php endif; ?>
                     </div>
 
-                    <!-- Contact Info -->
+                    <!-- Footer Column 2 -->
                     <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                        <h5 class="footer-title">Contact</h5>
-                        <div class="footer-contact">
-                            <p class="mb-2">
-                                <i class="fas fa-envelope me-2"></i>
-                                <a href="mailto:info@<?php echo esc_url(home_url()); ?>">info@<?php echo parse_url(home_url(), PHP_URL_HOST); ?></a>
-                            </p>
-                            <p class="mb-2">
-                                <i class="fas fa-phone me-2"></i>
-                                <a href="tel:+1234567890">+1 (234) 567-890</a>
-                            </p>
-                            <p class="mb-0">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                Your Address Here
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Social Media -->
-                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                        <h5 class="footer-title">Follow Us</h5>
-                        <div class="footer-social">
-                            <a href="#" class="social-link" aria-label="Facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="social-link" aria-label="Twitter">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="social-link" aria-label="Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="social-link" aria-label="LinkedIn">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Newsletter -->
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="footer-title">Newsletter</h5>
-                        <p class="newsletter-text">Subscribe to get the latest news and updates.</p>
-                        <form class="newsletter-form">
-                            <div class="input-group">
-                                <input type="email" class="form-control" placeholder="Your email" aria-label="Email">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
+                        <?php if (is_active_sidebar('footer-2')) : ?>
+                            <?php dynamic_sidebar('footer-2'); ?>
+                        <?php else : ?>
+                            <!-- Default Content: Contact Info -->
+                            <h5 class="footer-title">Contact</h5>
+                            <div class="footer-contact">
+                                <p class="mb-2">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    <a href="mailto:info@<?php echo parse_url(home_url(), PHP_URL_HOST); ?>">info@<?php echo parse_url(home_url(), PHP_URL_HOST); ?></a>
+                                </p>
+                                <p class="mb-2">
+                                    <i class="fas fa-phone me-2"></i>
+                                    <a href="tel:+1234567890">+1 (234) 567-890</a>
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    Your Address Here
+                                </p>
                             </div>
-                        </form>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Footer Column 3 -->
+                    <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                        <?php if (is_active_sidebar('footer-3')) : ?>
+                            <?php dynamic_sidebar('footer-3'); ?>
+                        <?php else : ?>
+                            <!-- Default Content: Social Media -->
+                            <h5 class="footer-title">Follow Us</h5>
+                            <div class="footer-social">
+                                <a href="#" class="social-link" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Footer Column 4 -->
+                    <div class="col-lg-3 col-md-6">
+                        <?php if (is_active_sidebar('footer-4')) : ?>
+                            <?php dynamic_sidebar('footer-4'); ?>
+                        <?php else : ?>
+                            <!-- Default Content: Newsletter -->
+                            <h5 class="footer-title">Newsletter</h5>
+                            <p class="newsletter-text">Subscribe to get the latest news and updates.</p>
+                            <form class="newsletter-form">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" placeholder="Your email" aria-label="Email">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

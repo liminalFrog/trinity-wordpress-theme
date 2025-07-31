@@ -105,6 +105,7 @@ add_action('wp_enqueue_scripts', 'mytheme_scripts');
  * Register widget area.
  */
 function mytheme_widgets_init() {
+    // Main sidebar
     register_sidebar(array(
         'name'          => esc_html__('Sidebar', 'mytheme'),
         'id'            => 'sidebar-1',
@@ -113,6 +114,47 @@ function mytheme_widgets_init() {
         'after_widget'  => '</section>',
         'before_title'  => '<h2 class="widget-title">',
         'after_title'   => '</h2>',
+    ));
+
+    // Footer widget areas
+    register_sidebar(array(
+        'name'          => esc_html__('Footer Column 1', 'mytheme'),
+        'id'            => 'footer-1',
+        'description'   => esc_html__('Add widgets to the first footer column.', 'mytheme'),
+        'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h5 class="footer-title">',
+        'after_title'   => '</h5>',
+    ));
+
+    register_sidebar(array(
+        'name'          => esc_html__('Footer Column 2', 'mytheme'),
+        'id'            => 'footer-2',
+        'description'   => esc_html__('Add widgets to the second footer column.', 'mytheme'),
+        'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h5 class="footer-title">',
+        'after_title'   => '</h5>',
+    ));
+
+    register_sidebar(array(
+        'name'          => esc_html__('Footer Column 3', 'mytheme'),
+        'id'            => 'footer-3',
+        'description'   => esc_html__('Add widgets to the third footer column.', 'mytheme'),
+        'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h5 class="footer-title">',
+        'after_title'   => '</h5>',
+    ));
+
+    register_sidebar(array(
+        'name'          => esc_html__('Footer Column 4', 'mytheme'),
+        'id'            => 'footer-4',
+        'description'   => esc_html__('Add widgets to the fourth footer column.', 'mytheme'),
+        'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h5 class="footer-title">',
+        'after_title'   => '</h5>',
     ));
 }
 add_action('widgets_init', 'mytheme_widgets_init');
