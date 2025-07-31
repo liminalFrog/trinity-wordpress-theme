@@ -1,106 +1,190 @@
 /**
  * File navigation.js.
  *
- * Handles toggling the navigation menu for small screens and enables TAB key
- * navigation support for dropdown menus.
+ * Enhanced navigation with Bootstrap functionality
  */
 (function() {
-    var container, button, menu, links, i, len;
+    'use strict';
 
-    container = document.getElementById('site-navigation');
-    if (!container) {
-        return;
-    }
-
-    button = container.getElementsByTagName('button')[0];
-    if ('undefined' === typeof button) {
-        return;
-    }
-
-    menu = container.getElementsByTagName('ul')[0];
-
-    // Hide menu toggle button if menu is empty and return early.
-    if ('undefined' === typeof menu) {
-        button.style.display = 'none';
-        return;
-    }
-
-    menu.setAttribute('aria-expanded', 'false');
-    if (-1 === menu.className.indexOf('nav-menu')) {
-        menu.className += ' nav-menu';
-    }
-
-    button.onclick = function() {
-        if (-1 !== container.className.indexOf('toggled')) {
-            container.className = container.className.replace(' toggled', '');
-            button.setAttribute('aria-expanded', 'false');
-            menu.setAttribute('aria-expanded', 'false');
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Add active class to current menu item
+        const currentLocation = location.pathname;
+        const menuItems = document.querySelectorAll('.navbar-nav .nav-link');
+        
+        // First, remove any existing active classes added by our script
+        menuItems.forEach(function(item) {
+            item.classList.remove('active');
+            item.removeAttribute('aria-current');
+        });
+        
+        // Check for WordPress current menu item classes first
+        const currentWordPressItems = document.querySelectorAll('.navbar-nav .current-menu-item .nav-link, .navbar-nav .current_page_item .nav-link, .navbar-nav .current-page-ancestor .nav-link');
+        if (currentWordPressItems.length > 0) {
+            currentWordPressItems.forEach(function(item) {
+                item.classList.add('active');
+                item.setAttribute('aria-current', 'page');
+            });
         } else {
-            container.className += ' toggled';
-            button.setAttribute('aria-expanded', 'true');
-            menu.setAttribute('aria-expanded', 'true');
-        }
-    };
-
-    // Get all the link elements within the menu.
-    links = menu.getElementsByTagName('a');
-
-    // Each time a menu link is focused or blurred, toggle focus.
-    for (i = 0, len = links.length; i < len; i++) {
-        links[i].addEventListener('focus', toggleFocus, true);
-        links[i].addEventListener('blur', toggleFocus, true);
-    }
-
-    /**
-     * Sets or removes .focus class on an element.
-     */
-    function toggleFocus() {
-        var self = this;
-
-        // Move up through the ancestors of the current link until we hit .nav-menu.
-        while (-1 === self.className.indexOf('nav-menu')) {
-
-            // On li elements toggle the class .focus.
-            if ('li' === self.tagName.toLowerCase()) {
-                if (-1 !== self.className.indexOf('focus')) {
-                    self.className = self.className.replace(' focus', '');
-                } else {
-                    self.className += ' focus';
+            // Fallback to URL matching if WordPress classes aren't present
+            menuItems.forEach(function(item) {
+                const itemHref = item.getAttribute('href');
+                if (itemHref && (itemHref === currentLocation || 
+                    (currentLocation !== '/' && itemHref !== '/' && currentLocation.includes(itemHref)))) {
+                    item.classList.add('active');
+                    item.setAttribute('aria-current', 'page');
                 }
-            }
-
-            self = self.parentElement;
+            });
         }
-    }
 
-    /**
-     * Toggles `focus` class to allow submenu access on tablets.
-     */
-    (function(container) {
-        var touchStartFn, i,
-            parentLink = container.querySelectorAll('.menu-item-has-children > a, .page_item_has_children > a');
-
-        if ('ontouchstart' in window) {
-            touchStartFn = function(e) {
-                var menuItem = this.parentNode, i;
-
-                if (!menuItem.classList.contains('focus')) {
-                    e.preventDefault();
-                    for (i = 0; i < menuItem.parentNode.children.length; ++i) {
-                        if (menuItem === menuItem.parentNode.children[i]) {
-                            continue;
+        // Smooth scrolling for anchor links
+        const anchorLinks = document.querySelectorAll('a[href^="#"]');
+        anchorLinks.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#' && targetId.length > 1) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        
+                        // Calculate offset for fixed navbar
+                        const navbar = document.querySelector('.navbar');
+                        const offset = navbar ? navbar.offsetHeight : 0;
+                        
+                        const targetPosition = targetElement.offsetTop - offset;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        const navbarToggle = document.querySelector('.navbar-toggler');
+                        const navbarCollapse = document.querySelector('.navbar-collapse');
+                        
+                        if (navbarToggle && navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            navbarToggle.click();
                         }
-                        menuItem.parentNode.children[i].classList.remove('focus');
                     }
-                    menuItem.classList.add('focus');
-                } else {
-                    menuItem.classList.remove('focus');
                 }
-            };
+            });
+        });
 
-            for (i = 0; i < parentLink.length; ++i) {
-                parentLink[i].addEventListener('touchstart', touchStartFn, false);
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navbar = document.querySelector('.navbar');
+            const navbarToggle = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            
+            if (navbar && navbarToggle && navbarCollapse && 
+                navbarCollapse.classList.contains('show') && 
+                !navbar.contains(e.target)) {
+                navbarToggle.click();
             }
+        });
+
+        // Enhanced dropdown hover effect on desktop with multi-level support
+        const dropdownElements = document.querySelectorAll('.navbar-nav .dropdown');
+        
+        dropdownElements.forEach(function(dropdown) {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            let hoverTimeout;
+            
+            if (window.innerWidth >= 992) { // Bootstrap lg breakpoint
+                // Function to show dropdown
+                function showDropdown() {
+                    clearTimeout(hoverTimeout);
+                    if (!dropdown.classList.contains('show')) {
+                        const bsDropdown = new bootstrap.Dropdown(toggle);
+                        bsDropdown.show();
+                    }
+                }
+                
+                // Function to hide dropdown with delay
+                function hideDropdown() {
+                    hoverTimeout = setTimeout(function() {
+                        if (dropdown.classList.contains('show')) {
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (bsDropdown) {
+                                bsDropdown.hide();
+                            }
+                        }
+                    }, 150); // Increased delay for easier navigation
+                }
+                
+                // Show dropdown on parent hover
+                dropdown.addEventListener('mouseenter', showDropdown);
+                
+                // Hide dropdown on parent leave
+                dropdown.addEventListener('mouseleave', hideDropdown);
+                
+                // Keep dropdown open when hovering over menu items and sub-items
+                if (menu) {
+                    menu.addEventListener('mouseenter', function() {
+                        clearTimeout(hoverTimeout);
+                    });
+                    
+                    menu.addEventListener('mouseleave', hideDropdown);
+                    
+                    // Handle nested dropdowns (sub-menus)
+                    const nestedDropdowns = menu.querySelectorAll('.dropdown');
+                    nestedDropdowns.forEach(function(nestedDropdown) {
+                        nestedDropdown.addEventListener('mouseenter', function() {
+                            clearTimeout(hoverTimeout);
+                        });
+                        
+                        nestedDropdown.addEventListener('mouseleave', hideDropdown);
+                        
+                        // Handle sub-sub-menus if they exist
+                        const deepNestedMenu = nestedDropdown.querySelector('.dropdown-menu');
+                        if (deepNestedMenu) {
+                            deepNestedMenu.addEventListener('mouseenter', function() {
+                                clearTimeout(hoverTimeout);
+                            });
+                            
+                            deepNestedMenu.addEventListener('mouseleave', hideDropdown);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Handle window resize for dropdown hover
+        window.addEventListener('resize', function() {
+            if (window.innerWidth < 992) {
+                // Close any open dropdowns on mobile
+                dropdownElements.forEach(function(dropdown) {
+                    if (dropdown.classList.contains('show')) {
+                        const toggle = dropdown.querySelector('.dropdown-toggle');
+                        const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                        if (bsDropdown) {
+                            bsDropdown.hide();
+                        }
+                    }
+                });
+            }
+        });
+
+        // Add scroll behavior for navbar
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const scrollThreshold = 50; // Change navbar after scrolling 50px
+        
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Add scrolled class after threshold
+                if (scrollTop > scrollThreshold) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            });
         }
-    })(container);
+    });
 })();

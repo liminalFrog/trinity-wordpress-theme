@@ -13,54 +13,69 @@
 
 <div id="page" class="site">
     
-    <header id="masthead" class="site-header">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="site-navigation">
         <div class="container">
-            <div class="site-branding">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
                 <?php if (has_custom_logo()) : ?>
-                    <div class="custom-logo-container">
+                    <?php 
+                    // Get the custom logo
+                    $custom_logo_id = get_theme_mod('custom_logo');
+                    $logo = wp_get_attachment_image_src($custom_logo_id, 'full');
+                    
+                    // Check for light logo option
+                    $light_logo_id = get_theme_mod('light_logo');
+                    $light_logo = $light_logo_id ? wp_get_attachment_image_src($light_logo_id, 'full') : null;
+                    
+                    if ($light_logo) : ?>
+                        <!-- Dual logo setup -->
+                        <div class="logo-container">
+                            <img src="<?php echo esc_url($logo[0]); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="logo-normal">
+                            <img src="<?php echo esc_url($light_logo[0]); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="logo-light">
+                        </div>
+                    <?php else : ?>
+                        <!-- Single logo setup -->
                         <?php the_custom_logo(); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (is_front_page() && is_home()) : ?>
-                    <h1 class="site-title">
-                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
-                            <?php bloginfo('name'); ?>
-                        </a>
-                    </h1>
+                    <?php endif; ?>
                 <?php else : ?>
-                    <p class="site-title">
-                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
-                            <?php bloginfo('name'); ?>
-                        </a>
-                    </p>
+                    <?php if (is_front_page() && is_home()) : ?>
+                        <span class="h4 mb-0"><?php bloginfo('name'); ?></span>
+                    <?php else : ?>
+                        <span class="h4 mb-0"><?php bloginfo('name'); ?></span>
+                    <?php endif; ?>
                 <?php endif; ?>
+            </a>
 
+            <!-- Mobile toggle button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <?php
-                $description = get_bloginfo('description', 'display');
-                if ($description || is_customize_preview()) :
+                wp_nav_menu(array(
+                    'theme_location'  => 'primary',
+                    'depth'           => 2,
+                    'container'       => false,
+                    'menu_class'      => 'navbar-nav ms-auto',
+                    'menu_id'         => 'primary-menu',
+                    'fallback_cb'     => 'mytheme_bootstrap_navwalker_fallback',
+                    'walker'          => new mytheme_bootstrap_navwalker(),
+                ));
                 ?>
-                    <p class="site-description"><?php echo $description; ?></p>
-                <?php endif; ?>
             </div>
         </div>
-    </header>
-
-    <nav id="site-navigation" class="main-navigation">
-        <div class="container">
-            <?php
-            wp_nav_menu(array(
-                'theme_location' => 'primary',
-                'menu_id'        => 'primary-menu',
-                'menu_class'     => 'nav-menu',
-                'container'      => false,
-                'fallback_cb'    => function() {
-                    echo '<ul class="nav-menu">';
-                    echo '<li><a href="' . home_url('/') . '">Home</a></li>';
-                    echo '<li><a href="' . admin_url() . '">Admin</a></li>';
-                    echo '</ul>';
-                }
-            ));
-            ?>
-        </div>
     </nav>
+
+    <?php
+    // Display site description below navbar if it exists
+    $description = get_bloginfo('description', 'display');
+    if ($description || is_customize_preview()) :
+    ?>
+        <div class="site-description-bar bg-light py-2">
+            <div class="container">
+                <p class="text-muted text-center mb-0 small"><?php echo $description; ?></p>
+            </div>
+        </div>
+    <?php endif; ?>

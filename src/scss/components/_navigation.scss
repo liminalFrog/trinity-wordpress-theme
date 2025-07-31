@@ -1,61 +1,56 @@
-// Navigation Styles
-.main-navigation {
-  background-color: var(--theme-secondary);
-  padding: 0;
+// Navigation Styles - Bootstrap navbar styles are in _header.scss
+// Additional navigation-specific styles can go here
 
-  .nav-menu {
-    @extend .navbar-nav;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 0;
+// Search form in navbar (if needed)
+.navbar-nav .nav-item.search-form {
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
 
-    li {
-      @extend .nav-item;
-      margin: 0;
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
 
-      a {
-        @extend .nav-link;
-        color: white !important;
-        padding: 1rem 1.5rem;
-        transition: background-color 0.3s ease;
-
-        &:hover,
-        &:focus {
-          background-color: var(--theme-primary);
-          color: white !important;
-        }
-      }
-
-      &.current-menu-item a,
-      &.current_page_item a {
-        background-color: var(--theme-primary);
-        color: white !important;
-      }
+    &:focus {
+      background-color: white;
+      border-color: var(--theme-accent);
+      color: var(--theme-text);
+      box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
     }
   }
 
-  // Mobile menu toggle (if needed)
-  .menu-toggle {
-    @extend .btn, .btn-outline-light;
-    display: none;
-    border: none;
-    margin: 0.5rem;
+  .btn {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
 
-    @include media-breakpoint-down(md) {
-      display: block;
+    &:hover {
+      background-color: white;
+      color: var(--theme-primary);
     }
   }
+}
 
-  &.toggled .nav-menu {
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      width: 100%;
+// Breadcrumb navigation (if used)
+.breadcrumb {
+  background-color: var(--bs-light);
+  border-radius: 0;
+  margin-bottom: 0;
+  padding: 1rem 0;
 
-      li a {
-        text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  .breadcrumb-item {
+    a {
+      color: var(--theme-primary);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--theme-accent);
+        text-decoration: underline;
       }
+    }
+
+    &.active {
+      color: var(--bs-secondary);
     }
   }
 }

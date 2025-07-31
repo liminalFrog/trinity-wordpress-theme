@@ -42,6 +42,20 @@ body {
   line-height: 1.6;
   color: var(--theme-text);
   background-color: var(--theme-bg);
+  background-image: url('assets/images/dot_seamless_dark.png');
+  background-size: 50px 50px;
+  background-repeat: repeat;
+}
+
+// Adjust spacing for sticky navbar
+.site {
+  padding-top: 0;
+}
+
+// Add smooth scroll behavior
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; // Account for sticky navbar
 }
 
 // WordPress specific styles

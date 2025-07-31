@@ -8,6 +8,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Include Bootstrap NavWalker
+require_once get_template_directory() . '/inc/bootstrap-navwalker.php';
+
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  */
@@ -21,9 +24,10 @@ function mytheme_setup() {
     // Enable support for Post Thumbnails on posts and pages.
     add_theme_support('post-thumbnails');
 
-    // This theme uses wp_nav_menu() in one location.
+    // This theme uses wp_nav_menu() in multiple locations.
     register_nav_menus(array(
         'primary' => esc_html__('Primary Menu', 'mytheme'),
+        'footer-menu' => esc_html__('Footer Menu', 'mytheme'),
     ));
 
     // Switch default core markup for search form, comment form, and comments
@@ -74,6 +78,9 @@ add_action('after_setup_theme', 'mytheme_content_width', 0);
 function mytheme_scripts() {
     // Enqueue main stylesheet (compiled from Sass)
     wp_enqueue_style('mytheme-style', get_stylesheet_uri(), array(), '1.0.0');
+
+    // Enqueue Font Awesome
+    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
 
     // Enqueue Bootstrap JavaScript
     wp_enqueue_script(
@@ -159,3 +166,29 @@ function mytheme_pingback_header() {
     }
 }
 add_action('wp_head', 'mytheme_pingback_header');
+
+/**
+ * Customize the theme options.
+ */
+function mytheme_customize_register($wp_customize) {
+    // Add section for logo options
+    $wp_customize->add_section('mytheme_logo_section', array(
+        'title'    => __('Logo Options', 'mytheme'),
+        'priority' => 30,
+    ));
+
+    // Light logo setting
+    $wp_customize->add_setting('light_logo', array(
+        'default'           => '',
+        'sanitize_callback' => 'absint',
+    ));
+
+    // Light logo control
+    $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'light_logo', array(
+        'label'    => __('Light Logo (for dark navbar)', 'mytheme'),
+        'section'  => 'mytheme_logo_section',
+        'settings' => 'light_logo',
+        'description' => __('Upload a light version of your logo to be displayed when the navbar has a dark background on scroll.', 'mytheme'),
+    )));
+}
+add_action('customize_register', 'mytheme_customize_register');

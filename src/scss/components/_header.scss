@@ -1,39 +1,452 @@
-// Header Styles
-.site-header {
-  background-color: var(--theme-primary);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+// Bootstrap Navbar Styles
+:root {
+  --navbar-red: #bd1300;
+  --navbar-scrolled-bg: rgba(0, 0, 0, 0.8);
+}
 
-  .site-branding {
-    text-align: center;
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030; // Bootstrap navbar z-index
+  background: url('assets/images/dot_seamless_dark.png'), rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px);
+  background-size: 50px 50px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  padding: 0.75rem 0;
+  transition: all 0.3s ease;
+
+  // Dark navbar when scrolled
+  &.navbar-scrolled {
+    background: var(--navbar-scrolled-bg) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
 
-  .site-title {
-    margin: 0;
-    font-size: 2rem;
+  .navbar-brand, .custom-logo-link {
+    color: #2c3e50 !important;
+    font-size: 1.5rem;
     font-weight: 300;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
 
-    a {
-      color: white;
-      text-decoration: none;
+    &:hover,
+    &:focus {
+      color: #3498db !important;
+      opacity: 0.9;
+    }
+
+    // Logo container for switching between normal and light versions
+    .logo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    // Normal logo styling
+    .logo-normal {
+      max-height: 40px;
+      width: auto;
       transition: opacity 0.3s ease;
+      opacity: 1;
+    }
 
-      &:hover {
-        opacity: 0.8;
+    // Light logo styling (hidden by default)
+    .logo-light {
+      max-height: 40px;
+      width: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    // Legacy single logo support
+    img:not(.logo-normal):not(.logo-light) {
+      max-height: 40px;
+      width: auto;
+      transition: filter 0.3s ease;
+    }
+  }
+
+  // Dark navbar brand styling
+  &.navbar-scrolled {
+    .navbar-brand, .custom-logo-link {
+      color: white !important;
+
+      &:hover,
+      &:focus {
+        color: #3498db !important;
+      }
+
+      // Switch to light logo when scrolled
+      .logo-normal {
+        opacity: 0;
+      }
+
+      .logo-light {
+        opacity: 1;
+      }
+
+      // Legacy single logo support - apply white filter
+      img:not(.logo-normal):not(.logo-light) {
+        filter: brightness(0) invert(1); // Makes logo white
       }
     }
   }
 
-  .site-description {
-    margin: 0.5rem 0 0 0;
-    font-size: 1rem;
-    opacity: 0.8;
+  .navbar-toggler {
+    border: 1px solid rgba(44, 62, 80, 0.3);
+    padding: 0.375rem 0.75rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba(44, 62, 80, 0.5);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2844, 62, 80, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      transition: background-image 0.3s ease;
+    }
+  }
+
+  // Dark navbar toggler styling
+  &.navbar-scrolled .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
+  .navbar-nav {
+    .nav-link {
+      color: #2c3e50 !important;
+      padding: 0.1rem 0.5rem;
+      font-weight: 400;
+      position: relative;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &:focus {
+        color: var(--navbar-red) !important;
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+
+      &.active,
+      &.current-menu-item,
+      .current-menu-item &,
+      .current_page_item &,
+      .current-page-ancestor & {
+        color: white !important;
+        background-color: var(--navbar-red) !important;
+        font-weight: 500;
+      }
+
+      // Add subtle animation
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: var(--navbar-red);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      &:hover::before {
+        width: 80%;
+      }
+
+      &.active::before,
+      &.current-menu-item::before,
+      .current-menu-item &::before,
+      .current_page_item &::before,
+      .current-page-ancestor &::before {
+        width: 80%;
+        background-color: var(--navbar-red);
+      }
+    }
+  }
+
+  // Dark navbar nav styling
+  &.navbar-scrolled .navbar-nav {
+    .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+
+      &:hover,
+      &:focus {
+        color: white !important;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      &.active,
+      &.current-menu-item,
+      .current-menu-item &,
+      .current_page_item &,
+      .current-page-ancestor & {
+        color: white !important;
+        background-color: var(--navbar-red) !important;
+      }
+
+      &::before {
+        background-color: #3498db;
+      }
+
+      &.active::before,
+      &.current-menu-item::before,
+      .current-menu-item &::before,
+      .current_page_item &::before,
+      .current-page-ancestor &::before {
+        background-color: var(--navbar-red);
+      }
+    }
+  }
+
+  // Dropdown menu styles with multi-level support
+  .dropdown {
+    position: relative;
+    
+    // Ensure dropdown shows on hover (fallback for CSS-only)
+    &:hover > .dropdown-menu {
+      display: block;
+    }
+    
+    // Extend hover area slightly to prevent gaps
+    &::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 3px; // Small bridge to prevent gap
+      background: transparent;
+      z-index: 1000;
+    }
+  }
+
+  .dropdown-menu {
+    background-color: white;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    margin-top: 0; // Remove any gap
+    overflow: visible; // Allow nested dropdowns to show
+    top: calc(100% + 3px); // Position directly below parent with small buffer
+    left: 0;
+    min-width: 220px; // Ensure adequate width
+    z-index: 1020;
+
+    .dropdown-item {
+      color: #2c3e50;
+      padding: 0.75rem 1.25rem;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: #3498db;
+        color: white;
+        transform: translateX(5px);
+      }
+
+      &.active {
+        background-color: var(--navbar-red);
+        color: white;
+      }
+    }
+
+    // Nested dropdown support
+    .dropdown {
+      &:hover > .dropdown-menu {
+        display: block;
+      }
+      
+      .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-left: 0.5rem;
+        
+        // Third level and beyond
+        .dropdown-menu {
+          top: 0;
+          left: 100%;
+          margin-left: 0.5rem;
+        }
+      }
+      
+      .dropdown-toggle::after {
+        float: right;
+        margin-top: 0.25rem;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .dropdown-toggle::after {
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+  }
+
+  .dropdown.show .dropdown-toggle::after {
+    transform: rotate(180deg);
+  }
+
+  // Dark navbar dropdown styling
+  &.navbar-scrolled {
+    .dropdown-menu {
+      background-color: var(--navbar-scrolled-bg);
+      backdrop-filter: blur(10px);
+
+      .dropdown-item {
+        color: rgba(255, 255, 255, 0.9);
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+
+        &:hover,
+        &:focus {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: white;
+        }
+
+        &.active {
+          background-color: var(--navbar-red);
+          color: white;
+        }
+      }
+      
+      // Nested dropdowns in dark mode
+      .dropdown-menu {
+        background-color: var(--navbar-scrolled-bg);
+        
+        .dropdown-item {
+          color: rgba(255, 255, 255, 0.9);
+          
+          &:hover,
+          &:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+          }
+        }
+      }
+    }
   }
 }
 
-// Custom logo support
-.custom-logo {
-  max-height: 60px;
-  width: auto;
+// Site description bar
+.site-description-bar {
+  border-bottom: 1px solid var(--theme-border);
+  background: linear-gradient(135deg, var(--bs-light), #f8f9fa);
+}
+
+// Mobile responsive adjustments
+@include media-breakpoint-down(lg) {
+  .navbar {
+    .navbar-collapse {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(44, 62, 80, 0.2);
+      border-radius: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    // Dark navbar mobile collapse styling
+    &.navbar-scrolled .navbar-collapse {
+      border-top-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav {
+      .nav-link {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        border-radius: 0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &::before {
+          display: none;
+        }
+
+        &:hover {
+          transform: none;
+          padding-left: 1.5rem;
+        }
+      }
+
+      .dropdown-menu {
+        background-color: rgba(255, 255, 255, 0.95);
+        box-shadow: none;
+        border-radius: 0;
+        margin-top: 0;
+        padding: 0;
+
+        .dropdown-item {
+          color: #2c3e50;
+          padding: 0.5rem 1.5rem;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+          &:hover,
+          &:focus {
+            background-color: #3498db;
+            color: white;
+            transform: none;
+            padding-left: 2rem;
+          }
+
+          &.active {
+            background-color: var(--navbar-red);
+            color: white;
+          }
+        }
+      }
+    }
+
+    // Dark navbar mobile nav styling
+    &.navbar-scrolled .navbar-nav {
+      .nav-link {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .dropdown-menu {
+        background-color: rgba(0, 0, 0, 0.2);
+
+        .dropdown-item {
+          color: rgba(255, 255, 255, 0.9);
+          border-bottom-color: rgba(255, 255, 255, 0.1);
+
+          &:hover,
+          &:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+          }
+
+          &.active {
+            background-color: var(--navbar-red);
+            color: white;
+          }
+        }
+      }
+    }
+  }
 }
