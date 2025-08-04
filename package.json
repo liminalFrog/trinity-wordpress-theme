@@ -7,7 +7,10 @@
     "build": "sass src/scss/style.scss:style.css --style=compressed",
     "watch": "sass src/scss/style.scss:style.css --watch --style=expanded",
     "dev": "sass src/scss/style.scss:style.css --watch --style=expanded --source-map",
-    "build-prod": "sass src/scss/style.scss:style.css --style=compressed --no-source-map"
+    "build-prod": "sass src/scss/style.scss:style.css --style=compressed --no-source-map",
+    "zip": "npm run zip:clean && npm run build-prod && npm run zip:create",
+    "zip:clean": "rimraf trinity.zip",
+    "zip:create": "bestzip trinity.zip * --exclude=node_modules/* --exclude=.git/* --exclude=.gitignore --exclude=package.json --exclude=package-lock.json --exclude=*.zip --exclude=.vscode/* --exclude=.idea/* --exclude=src/scss/* --exclude=*.scss"
   },
   "keywords": [
     "wordpress",
@@ -15,10 +18,12 @@
     "bootstrap",
     "sass"
   ],
-  "author": "Your Name",
+  "author": "Adam Mureiko",
   "license": "MIT",
   "devDependencies": {
-    "sass": "^1.77.8"
+    "sass": "^1.77.8",
+    "bestzip": "^2.2.1",
+    "rimraf": "^5.0.5"
   },
   "dependencies": {
     "bootstrap": "^5.3.3"
