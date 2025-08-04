@@ -245,3 +245,53 @@ function trinity_customize_register($wp_customize) {
     )));
 }
 add_action('customize_register', 'trinity_customize_register');
+
+/**
+ * Add Trinity-specific CSS for TMHero integration
+ */
+function trinity_tmhero_integration_css() {
+    ?>
+    <style type="text/css">
+        /* Trinity theme TMHero integration */
+        body.tmhero-hide-page-title .site-main,
+        body.tmhero-hide-page-title #primary {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Ensure hero blocks start immediately after fixed navbar */
+        body.tmhero-hide-page-title .tmhero-block:first-child {
+            margin-top: 0 !important;
+        }
+        
+        /* Remove any spacing from Bootstrap/Trinity containers when hero is first element */
+        body.tmhero-hide-page-title .container:first-child .tmhero-block:first-child,
+        body.tmhero-hide-page-title .container-fluid:first-child .tmhero-block:first-child {
+            margin-top: 0 !important;
+        }
+        
+        /* Ensure full-width heroes extend edge to edge */
+        body.tmhero-hide-page-title .tmhero-full-width {
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+        }
+        
+        /* Remove article padding when hero is present */
+        body.tmhero-hide-page-title article .entry-header {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Preserve navbar fixed behavior while removing content top spacing */
+        .navbar-fixed-top,
+        .fixed-top {
+            position: fixed !important;
+            top: 0 !important;
+            z-index: 1030 !important;
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'trinity_tmhero_integration_css');
