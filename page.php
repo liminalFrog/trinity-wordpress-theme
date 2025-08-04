@@ -27,7 +27,7 @@ get_header();
                 the_content();
 
                 wp_link_pages(array(
-                    'before' => '<div class="page-links">' . esc_html__('Pages:', 'mytheme'),
+                    'before' => '<div class="page-links">' . esc_html__('Pages:', 'trinity'),
                     'after'  => '</div>',
                 ));
                 ?>
@@ -39,7 +39,7 @@ get_header();
                     edit_post_link(
                         sprintf(
                             wp_kses(
-                                __('Edit <span class="screen-reader-text">"%s"</span>', 'mytheme'),
+                                __('Edit <span class="screen-reader-text">"%s"</span>', 'trinity'),
                                 array(
                                     'span' => array(
                                         'class' => array(),

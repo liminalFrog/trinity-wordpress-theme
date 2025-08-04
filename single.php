@@ -16,8 +16,8 @@ get_header();
                 <h1 class="entry-title"><?php the_title(); ?></h1>
                 
                 <div class="entry-meta">
-                    <?php mytheme_posted_on(); ?>
-                    <?php mytheme_posted_by(); ?>
+                    <?php trinity_posted_on(); ?>
+                    <?php trinity_posted_by(); ?>
                 </div>
             </header>
 
@@ -31,7 +31,7 @@ get_header();
                 <?php
                 the_content(sprintf(
                     wp_kses(
-                        __('Continue reading<span class="screen-reader-text"> "%s"</span>', 'mytheme'),
+                        __('Continue reading<span class="screen-reader-text"> "%s"</span>', 'trinity'),
                         array(
                             'span' => array(
                                 'class' => array(),
@@ -42,7 +42,7 @@ get_header();
                 ));
 
                 wp_link_pages(array(
-                    'before' => '<div class="page-links">' . esc_html__('Pages:', 'mytheme'),
+                    'before' => '<div class="page-links">' . esc_html__('Pages:', 'trinity'),
                     'after'  => '</div>',
                 ));
                 ?>
@@ -50,14 +50,14 @@ get_header();
 
             <footer class="entry-footer">
                 <?php
-                $categories_list = get_the_category_list(esc_html__(', ', 'mytheme'));
+                $categories_list = get_the_category_list(esc_html__(', ', 'trinity'));
                 if ($categories_list) {
-                    printf('<span class="cat-links">' . esc_html__('Posted in %1$s', 'mytheme') . '</span>', $categories_list);
+                    printf('<span class="cat-links">' . esc_html__('Posted in %1$s', 'trinity') . '</span>', $categories_list);
                 }
 
-                $tags_list = get_the_tag_list('', esc_html_x(', ', 'list item separator', 'mytheme'));
+                $tags_list = get_the_tag_list('', esc_html_x(', ', 'list item separator', 'trinity'));
                 if ($tags_list) {
-                    printf('<span class="tags-links">' . esc_html__('Tagged %1$s', 'mytheme') . '</span>', $tags_list);
+                    printf('<span class="tags-links">' . esc_html__('Tagged %1$s', 'trinity') . '</span>', $tags_list);
                 }
                 ?>
             </footer>
@@ -67,8 +67,8 @@ get_header();
         <div class="post-navigation">
             <?php
             the_post_navigation(array(
-                'prev_text' => '<span class="nav-subtitle">' . esc_html__('Previous:', 'mytheme') . '</span> <span class="nav-title">%title</span>',
-                'next_text' => '<span class="nav-subtitle">' . esc_html__('Next:', 'mytheme') . '</span> <span class="nav-title">%title</span>',
+                'prev_text' => '<span class="nav-subtitle">' . esc_html__('Previous:', 'trinity') . '</span> <span class="nav-title">%title</span>',
+                'next_text' => '<span class="nav-subtitle">' . esc_html__('Next:', 'trinity') . '</span> <span class="nav-title">%title</span>',
             ));
             ?>
         </div>

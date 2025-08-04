@@ -90,3 +90,45 @@ html {
 .border-theme {
   border-color: var(--theme-border) !important;
 }
+
+// TMHero Integration Styles
+body.tmhero-hide-page-title {
+  .site-main,
+  #primary {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  // Ensure hero blocks start immediately after fixed navbar
+  .tmhero-block:first-child {
+    margin-top: 0 !important;
+  }
+  
+  // Remove any spacing from Bootstrap/Trinity containers when hero is first element
+  .container:first-child .tmhero-block:first-child,
+  .container-fluid:first-child .tmhero-block:first-child {
+    margin-top: 0 !important;
+  }
+  
+  // Ensure full-width heroes extend edge to edge
+  .tmhero-full-width {
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+  }
+  
+  // Remove article padding when hero is present
+  article .entry-header {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+
+// Preserve navbar fixed behavior while removing content top spacing
+.navbar-fixed-top,
+.fixed-top {
+  position: fixed !important;
+  top: 0 !important;
+  z-index: 1030 !important;
+}
