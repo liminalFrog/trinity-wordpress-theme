@@ -167,7 +167,7 @@ class Trinity_Theme_Updater {
             
             <h2>Update Information</h2>
             <p><strong>Current Version:</strong> <?php echo wp_get_theme()->get('Version'); ?></p>
-            <p><strong>Repository:</strong> <a href="https://github.com/your-username/trinity-theme" target="_blank">GitHub Repository</a></p>
+            <p><strong>Repository:</strong> <a href="https://github.com/liminalFrog/trinity-wordpress-theme" target="_blank">GitHub Repository</a></p>
             
             <h3>How to Set Up Updates</h3>
             <ol>
@@ -192,8 +192,8 @@ function trinity_init_updater() {
             get_template(),
             $theme->get('Version'),
             $theme->get('Author'),
-            'your-username', // Replace with your GitHub username
-            'trinity-theme', // Replace with your repository name
+            'liminalFrog', // Replace with your GitHub username
+            'trinity-wordpress-theme', // Replace with your repository name
             $github_token
         );
     }
