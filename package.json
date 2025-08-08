@@ -1,6 +1,6 @@
 {
   "name": "trinity",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Trinity WordPress theme with Bootstrap and Sass",
   "main": "index.js",
   "scripts": {
