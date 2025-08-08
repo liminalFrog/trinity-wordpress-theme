@@ -53,4 +53,4 @@ git push origin "v$VERSION"
 
 echo "✨ Release v$VERSION completed!"
 echo "🌐 GitHub Actions will automatically create the release with zip file"
-echo "📋 Check: https://github.com/your-username/trinity-theme/releases"
+echo "📋 Check: https://github.com/liminalFrog/trinity-wordpress-theme/releases"
