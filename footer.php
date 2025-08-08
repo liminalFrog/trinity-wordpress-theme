@@ -100,10 +100,10 @@
                             <p class="mb-2 mb-md-0">
                                 &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.
                             </p>
-                            <!-- <p class="mb-0">
+                            <p class="mb-0">
                                 Powered by <a href="https://wordpress.org/" target="_blank">WordPress</a> | 
                                 Theme: My Custom Theme with <a href="https://getbootstrap.com/" target="_blank">Bootstrap</a>
-                            </p> -->
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-4 text-md-end">
