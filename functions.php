@@ -11,8 +11,8 @@ if (!defined('ABSPATH')) {
 // Include Bootstrap NavWalker
 require_once get_template_directory() . '/inc/bootstrap-navwalker.php';
 
-// Include Theme Updater
-require_once get_template_directory() . '/inc/theme-updater.php';
+// Include Simplified Theme Updater
+require_once get_template_directory() . '/inc/theme-updater-simple.php';
 
 /**
  * Sets up theme defaults and registers support for various WordPress features.
