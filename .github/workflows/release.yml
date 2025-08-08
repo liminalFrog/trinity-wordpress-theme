@@ -1,0 +1,75 @@
+name: Build and Release Trinity Theme
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build theme
+      run: npm run build-prod
+      
+    - name: Create release zip
+      run: |
+        # Remove development files
+        rm -rf node_modules
+        rm -rf .git
+        rm -rf .github
+        rm -f package*.json
+        rm -rf src
+        
+        # Create zip file
+        zip -r trinity-theme.zip . -x "*.zip"
+        
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Trinity Theme ${{ github.ref }}
+        body: |
+          ## Changes in this Release
+          - Auto-generated release for Trinity theme
+          - Built and optimized for production
+          
+          ## Installation
+          1. Download trinity-theme.zip
+          2. Upload to WordPress via Appearance > Themes > Add New > Upload Theme
+          3. Activate the theme
+          
+          ## Features
+          - Bootstrap 5 integration
+          - TMHero plugin compatibility
+          - Auto-update capability
+          - Responsive design
+          - Custom SCSS compilation
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./trinity-theme.zip
+        asset_name: trinity-theme.zip
+        asset_content_type: application/zip
