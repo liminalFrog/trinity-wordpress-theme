@@ -67,9 +67,18 @@
         anchorLinks.forEach(function(link) {
             link.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
+                
+                // Only process valid anchor links that aren't dropdown toggles
                 if (targetId !== '#' && targetId.length > 1) {
                     const targetElement = document.querySelector(targetId);
+                    
+                    // Only scroll if target element actually exists on the page
                     if (targetElement) {
+                        // Don't interfere with dropdown toggles
+                        if (this.classList.contains('dropdown-toggle')) {
+                            return; // Let Bootstrap handle dropdown toggles
+                        }
+                        
                         e.preventDefault();
                         
                         // Calculate offset for fixed navbar
