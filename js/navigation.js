@@ -62,23 +62,23 @@
             });
         }
 
-        // Smooth scrolling for anchor links
+        // Smooth scrolling for anchor links (completely exclude all navbar dropdown elements)
         const anchorLinks = document.querySelectorAll('a[href^="#"]');
         anchorLinks.forEach(function(link) {
             link.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
                 
-                // Only process valid anchor links that aren't dropdown toggles
+                // Skip all navbar-related links - only process non-navbar anchor links
+                if (this.closest('.navbar')) {
+                    return; // Don't process any navbar links at all
+                }
+                
+                // Only process valid anchor links outside the navbar
                 if (targetId !== '#' && targetId.length > 1) {
                     const targetElement = document.querySelector(targetId);
                     
                     // Only scroll if target element actually exists on the page
                     if (targetElement) {
-                        // Don't interfere with dropdown toggles
-                        if (this.classList.contains('dropdown-toggle')) {
-                            return; // Let Bootstrap handle dropdown toggles
-                        }
-                        
                         e.preventDefault();
                         
                         // Calculate offset for fixed navbar
