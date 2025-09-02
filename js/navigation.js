@@ -73,8 +73,20 @@
                     return; // Don't process any navbar links at all
                 }
                 
-                // Only process valid anchor links outside the navbar
-                if (targetId !== '#' && targetId.length > 1) {
+                // Also skip dropdown-related elements specifically
+                if (this.closest('.dropdown') || this.classList.contains('dropdown-toggle') || 
+                    this.classList.contains('dropdown-item')) {
+                    return; // Don't process any dropdown-related links
+                }
+                
+                // Skip any link that just has "#" as href to prevent unwanted scrolling
+                if (targetId === '#') {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Only process valid anchor links outside the navbar and dropdowns
+                if (targetId.length > 1) {
                     const targetElement = document.querySelector(targetId);
                     
                     // Only scroll if target element actually exists on the page
@@ -102,6 +114,19 @@
                     }
                 }
             });
+        });
+
+        // Additional safety net: prevent any anchor link with href="#" from scrolling
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('a[href="#"]') || e.target.closest('a[href="#"]')) {
+                const link = e.target.matches('a[href="#"]') ? e.target : e.target.closest('a[href="#"]');
+                // Only prevent if it's in navbar or dropdown
+                if (link.closest('.navbar') || link.closest('.dropdown')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
         });
 
         // Close mobile menu when clicking outside
@@ -160,13 +185,14 @@
                     // If toggle has a real URL (not #), navigate to it
                     if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
                         // Prevent Bootstrap dropdown from opening
+                        e.preventDefault();
                         e.stopPropagation();
                         
                         // Navigate to the page
                         window.location.href = href;
                         return false;
                     } else {
-                        // Prevent default for toggles without URLs
+                        // Prevent default for toggles without URLs to stop any scroll behavior
                         e.preventDefault();
                         e.stopPropagation();
                         
@@ -179,6 +205,7 @@
                         } else {
                             showDropdown();
                         }
+                        return false;
                     }
                 });
                 
@@ -209,13 +236,15 @@
                                 // If toggle has a real URL (not #), navigate to it
                                 if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
                                     // Prevent Bootstrap dropdown from interfering and navigate
+                                    e.preventDefault();
                                     e.stopPropagation();
                                     window.location.href = href;
                                     return false;
                                 } else {
-                                    // Prevent default for toggles without URLs
+                                    // Prevent default for toggles without URLs to stop scroll behavior
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    return false;
                                 }
                             });
                         }
@@ -239,12 +268,15 @@
                     // If toggle has a real URL (not #), navigate to it
                     if (href && href !== '#' && href !== 'javascript:void(0)' && href !== '') {
                         // Navigate to the page on mobile too
+                        e.preventDefault();
                         e.stopPropagation();
                         window.location.href = href;
                         return false;
                     } else {
-                        // Standard Bootstrap dropdown behavior for mobile
+                        // Standard Bootstrap dropdown behavior for mobile, but prevent scroll
                         e.preventDefault();
+                        e.stopPropagation();
+                        return false;
                     }
                 });
             }
