@@ -34,6 +34,11 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
   --theme-text: #333;
   --theme-bg: #fff;
   --theme-border: #eee;
+  
+  // Navbar height calculations
+  --navbar-height: 4rem; // Approximate total navbar height (brand + padding)
+  --message-bar-height: 2.5rem; // Top message bar height
+  --total-header-height: calc(var(--navbar-height) + var(--message-bar-height));
 }
 
 // Import custom components
@@ -149,15 +154,39 @@ html {
   border-color: var(--theme-border) !important;
 }
 
+// Content positioning to account for fixed navbar
+.site-main,
+#primary,
+main {
+  // Add margin-top to account for navbar height
+  margin-top: var(--total-header-height);
+  
+  // When TMHero is first child, remove the margin as TMHero goes under navbar
+  &:has(.tmhero-block:first-child) {
+    margin-top: 0 !important;
+  }
+}
+
+// Alternative for browsers without :has() support
+.site-main .tmhero-block:first-child,
+#primary .tmhero-block:first-child,
+main .tmhero-block:first-child {
+  // TMHero blocks should start from top (under navbar)
+  margin-top: calc(-1 * var(--total-header-height)) !important;
+  margin-left: -1rem !important;
+  margin-right: -1rem !important;
+}
+
 // TMHero Integration Styles
 body.tmhero-hide-page-title {
   .site-main,
   #primary {
-    padding-top: 0 !important;
+    // Remove extra margin when TMHero handles positioning
     margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
-  // Ensure hero blocks start immediately after fixed navbar
+  // Ensure hero blocks start immediately under navbar
   .tmhero-block:first-child {
     margin-top: 0 !important;
   }
@@ -176,10 +205,7 @@ body.tmhero-hide-page-title {
     width: 100vw !important;
   }
 
-  // Remove article padding when hero is present - FIX for positioning threshold
   article {
-    margin-top: -0.4rem !important; // Stay just under the backdrop filter threshold
-    
     .entry-header {
       padding-top: 0 !important;
       margin-top: 0 !important;
@@ -190,67 +216,12 @@ body.tmhero-hide-page-title {
 // Universal TMHero fixes - apply regardless of body class
 .tmhero-block {
   // Remove any default margins that might create gaps
-  margin-top: 0 !important;
   margin-bottom: 0 !important;
   
   // Ensure proper positioning relative to navbar
   &:first-child {
     margin-top: 0 !important;
   }
-}
-
-// Universal fix for pages with TMHero blocks
-.site-main:has(.tmhero-block:first-child),
-#primary:has(.tmhero-block:first-child),
-main:has(.tmhero-block:first-child) {
-  // Remove container top padding when TMHero is first
-  padding-top: 0 !important;
-  margin-left:0 !important;
-  // Adjust article positioning to prevent backdrop filter interference
-  article {
-    margin-top: -0.3rem !important; // Safe positioning to avoid darkening
-  }
-}
-
-// Account for top message bar when TMHero is present
-body:has(.tmhero-block) .top-message-bar {
-  margin-bottom: 0 !important;
-}
-
-// Ensure TMHero starts immediately after message bar + navbar
-body:has(.tmhero-block) .site-main .tmhero-block:first-child,
-body:has(.tmhero-block) #primary .tmhero-block:first-child {
-  // Calculate offset for message bar (~2.5rem) + container padding (2rem) - safe offset
-  margin-top: -4.2rem !important;
-  margin-left: -1rem !important;
-  margin-right: -1rem !important;
-}
-
-// Fallback for browsers without :has() support
-.site-main .tmhero-block:first-child,
-#primary .tmhero-block:first-child,
-main .tmhero-block:first-child {
-  // Pull up to close gap, but stay under backdrop filter threshold
-  margin-top: -1.7rem !important; // Accounts for container padding minus safe offset
-  margin-left: -1rem !important;
-  margin-right: -1rem !important;
-}
-
-// Fix navbar background transitions affecting TMHero overlay perception
-.navbar {
-  // Ensure consistent backdrop behavior over TMHero blocks
-  &.navbar-scrolled {
-    // When scrolled over TMHero, maintain consistent background opacity
-    backdrop-filter: blur(1rem) !important;
-  }
-}
-
-// Ensure TMHero blocks start immediately under navbar regardless of container
-.site-main .tmhero-block:first-child,
-#primary .tmhero-block:first-child,
-main .tmhero-block:first-child {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
 }
 
 // Remove container padding when TMHero is first element
@@ -263,14 +234,6 @@ main .tmhero-block:first-child {
 .container .tmhero-block:first-child,
 .container-fluid .tmhero-block:first-child {
   margin-top: calc(-2rem) !important; // Offset container's default padding
-}
-
-// Preserve navbar fixed behavior while removing content top spacing
-.navbar-fixed-top,
-.fixed-top {
-  position: fixed !important;
-  top: 0 !important;
-  z-index: 1030 !important;
 }
 
 // Page Title Hiding Functionality
@@ -297,19 +260,5 @@ body.trinity-hide-page-title {
   // Remove extra spacing from entry content when title is hidden
   .entry-content {
     margin-top: 0 !important;
-  }
-}
-
-// TMHero Gap and Darkening Fixes
-// Target the specific body class that TMHero applies
-body.tmhero-hide-page-title {
-  // Fix the gap by adjusting content positioning
-  .site-main {
-    margin-top: -0.4rem !important; /* Just under the -0.45rem threshold to avoid darkening */
-  }
-  
-  // Ensure article content aligns properly
-  article {
-    margin-top: -0.4rem !important;
   }
 }
