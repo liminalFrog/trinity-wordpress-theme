@@ -139,6 +139,50 @@
     background-size: 50px 50px !important;
     background-repeat: repeat !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    
+    // Maintain consistent backdrop filter to prevent TMHero dimness changes
+    backdrop-filter: blur(1rem);
+  }
+  
+  // AGGRESSIVE FIX: Disable backdrop filter on any page with TMHero
+  body:has(.tmhero-block) & {
+    backdrop-filter: none !important;
+    
+    &.navbar-scrolled {
+      backdrop-filter: none !important;
+    }
+  }
+  
+  // Special handling when over TMHero blocks to prevent dimness perception changes
+  &.navbar-over-tmhero {
+    backdrop-filter: none !important; // Completely remove backdrop filter over TMHero
+    
+    &.navbar-scrolled {
+      backdrop-filter: none !important; // No backdrop filter when scrolled over TMHero
+    }
+  }
+  
+  // Universal handling for pages with TMHero blocks
+  body:has(.tmhero-block) & {
+    backdrop-filter: blur(0.3rem); // Reduced blur on pages with TMHero
+    
+    &.navbar-scrolled {
+      backdrop-filter: blur(0.3rem); // Consistent reduced blur
+    }
+  }
+  
+  // Specific handling for TMHero positioning threshold issue
+  body.tmhero-hide-page-title & {
+    // When TMHero body class is present, reduce backdrop filter effect
+    backdrop-filter: blur(0.2rem);
+    
+    &.navbar-scrolled {
+      backdrop-filter: blur(0.2rem);
+    }
+    
+    &.navbar-over-tmhero {
+      backdrop-filter: none !important; // No backdrop filter at all
+    }
   }
 
   .navbar-brand, .custom-logo-link {

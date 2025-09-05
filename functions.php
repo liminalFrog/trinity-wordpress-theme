@@ -68,6 +68,132 @@ function trinity_setup() {
 add_action('after_setup_theme', 'trinity_setup');
 
 /**
+ * Add custom image styles for block editor
+ */
+function trinity_add_image_styles() {
+    // Add custom image styles to the block editor
+    add_theme_support('editor-styles');
+    
+    // Register custom image styles for use in the block editor
+    register_block_style('core/image', array(
+        'name'  => 'rounded-0',
+        'label' => __('Sharp Corners', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-1',
+        'label' => __('Small Rounded', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-2',
+        'label' => __('Medium Rounded', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-3',
+        'label' => __('Large Rounded', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-4',
+        'label' => __('Extra Large Rounded', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-5',
+        'label' => __('Maximum Rounded', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-circle',
+        'label' => __('Circle', 'trinity'),
+    ));
+    
+    register_block_style('core/image', array(
+        'name'  => 'rounded-pill',
+        'label' => __('Pill Shape', 'trinity'),
+    ));
+}
+add_action('init', 'trinity_add_image_styles');
+
+/**
+ * Add meta box for page title visibility
+ */
+function trinity_add_page_title_meta_box() {
+    add_meta_box(
+        'trinity_page_title_options',
+        __('Page Title Options', 'trinity'),
+        'trinity_page_title_meta_box_callback',
+        array('page', 'post'),
+        'side',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'trinity_add_page_title_meta_box');
+
+/**
+ * Meta box callback function
+ */
+function trinity_page_title_meta_box_callback($post) {
+    // Add nonce field for security
+    wp_nonce_field('trinity_page_title_nonce_action', 'trinity_page_title_nonce');
+    
+    // Get current value
+    $hide_title = get_post_meta($post->ID, '_trinity_hide_page_title', true);
+    
+    // Output the field
+    echo '<label for="trinity_hide_page_title">';
+    echo '<input type="checkbox" id="trinity_hide_page_title" name="trinity_hide_page_title" value="1"' . checked($hide_title, 1, false) . ' />';
+    echo ' ' . __('Hide page title', 'trinity');
+    echo '</label>';
+    echo '<p class="description">' . __('Check this box to hide the page title on this page.', 'trinity') . '</p>';
+}
+
+/**
+ * Save meta box data
+ */
+function trinity_save_page_title_meta_box($post_id) {
+    // Check if nonce is valid
+    if (!isset($_POST['trinity_page_title_nonce']) || !wp_verify_nonce($_POST['trinity_page_title_nonce'], 'trinity_page_title_nonce_action')) {
+        return;
+    }
+    
+    // Check if user has permission to edit the post
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // Don't save during autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Save the checkbox value
+    if (isset($_POST['trinity_hide_page_title']) && $_POST['trinity_hide_page_title'] == '1') {
+        update_post_meta($post_id, '_trinity_hide_page_title', 1);
+    } else {
+        delete_post_meta($post_id, '_trinity_hide_page_title');
+    }
+}
+add_action('save_post', 'trinity_save_page_title_meta_box');
+
+/**
+ * Add body class when page title should be hidden
+ */
+function trinity_hide_title_body_class($classes) {
+    if (is_singular()) {
+        global $post;
+        $hide_title = get_post_meta($post->ID, '_trinity_hide_page_title', true);
+        if ($hide_title) {
+            $classes[] = 'trinity-hide-page-title';
+        }
+    }
+    return $classes;
+}
+add_filter('body_class', 'trinity_hide_title_body_class');
+
+/**
  * Set the content width in pixels, based on the theme's design and stylesheet.
  */
 function trinity_content_width() {

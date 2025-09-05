@@ -155,8 +155,14 @@
                 function showDropdown() {
                     clearTimeout(hoverTimeout);
                     if (!dropdown.classList.contains('show')) {
-                        const bsDropdown = new bootstrap.Dropdown(toggle);
-                        bsDropdown.show();
+                        // Manual dropdown show without Bootstrap's show() method to prevent scroll issues
+                        dropdown.classList.add('show');
+                        toggle.classList.add('show');
+                        toggle.setAttribute('aria-expanded', 'true');
+                        if (menu) {
+                            menu.classList.add('show');
+                            menu.setAttribute('data-bs-popper', 'static');
+                        }
                     }
                 }
                 
@@ -164,9 +170,13 @@
                 function hideDropdown() {
                     hoverTimeout = setTimeout(function() {
                         if (dropdown.classList.contains('show')) {
-                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                            if (bsDropdown) {
-                                bsDropdown.hide();
+                            // Manual dropdown hide without Bootstrap's hide() method
+                            dropdown.classList.remove('show');
+                            toggle.classList.remove('show');
+                            toggle.setAttribute('aria-expanded', 'false');
+                            if (menu) {
+                                menu.classList.remove('show');
+                                menu.removeAttribute('data-bs-popper');
                             }
                         }
                     }, 150); // Increased delay for easier navigation
@@ -196,12 +206,9 @@
                         e.preventDefault();
                         e.stopPropagation();
                         
-                        // Toggle dropdown manually
+                        // Toggle dropdown manually without Bootstrap methods
                         if (dropdown.classList.contains('show')) {
-                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                            if (bsDropdown) {
-                                bsDropdown.hide();
-                            }
+                            hideDropdown();
                         } else {
                             showDropdown();
                         }
@@ -285,13 +292,19 @@
         // Handle window resize for dropdown hover
         window.addEventListener('resize', function() {
             if (window.innerWidth < 992) {
-                // Close any open dropdowns on mobile
+                // Close any open dropdowns on mobile using manual method
                 dropdownElements.forEach(function(dropdown) {
                     if (dropdown.classList.contains('show')) {
                         const toggle = dropdown.querySelector('.dropdown-toggle');
-                        const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                        if (bsDropdown) {
-                            bsDropdown.hide();
+                        const menu = dropdown.querySelector('.dropdown-menu');
+                        
+                        // Manual hide without Bootstrap methods
+                        dropdown.classList.remove('show');
+                        toggle.classList.remove('show');
+                        toggle.setAttribute('aria-expanded', 'false');
+                        if (menu) {
+                            menu.classList.remove('show');
+                            menu.removeAttribute('data-bs-popper');
                         }
                     }
                 });
@@ -312,6 +325,30 @@
                     navbar.classList.add('navbar-scrolled');
                 } else {
                     navbar.classList.remove('navbar-scrolled');
+                }
+                
+                // Check if navbar is over a TMHero block
+                const tmheroBlocks = document.querySelectorAll('.tmhero-block');
+                let isOverTMHero = false;
+                
+                if (tmheroBlocks.length > 0) {
+                    const navbarRect = navbar.getBoundingClientRect();
+                    const navbarBottom = navbarRect.bottom;
+                    
+                    tmheroBlocks.forEach(function(block) {
+                        const blockRect = block.getBoundingClientRect();
+                        // Check if navbar overlaps with any TMHero block
+                        if (blockRect.top < navbarBottom && blockRect.bottom > 0) {
+                            isOverTMHero = true;
+                        }
+                    });
+                }
+                
+                // Apply or remove TMHero class
+                if (isOverTMHero) {
+                    navbar.classList.add('navbar-over-tmhero');
+                } else {
+                    navbar.classList.remove('navbar-over-tmhero');
                 }
                 
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
