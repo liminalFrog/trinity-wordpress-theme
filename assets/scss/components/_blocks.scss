@@ -1,0 +1,467 @@
+// Custom blocks styles
+
+// Trinity Hero Block
+// Styles defined in _hero.scss
+
+// Trinity Alert Block
+.trinity-alert {
+    .alert {
+        border-radius: var(--trinity-border-radius);
+        border-width: 1px;
+        
+        &.alert-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+            border-color: rgba(13, 110, 253, 0.2);
+            color: #084298;
+        }
+        
+        &.alert-secondary {
+            background-color: rgba(108, 117, 125, 0.1);
+            border-color: rgba(108, 117, 125, 0.2);
+            color: #41464b;
+        }
+        
+        &.alert-success {
+            background-color: rgba(25, 135, 84, 0.1);
+            border-color: rgba(25, 135, 84, 0.2);
+            color: #0f5132;
+        }
+        
+        &.alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: rgba(220, 53, 69, 0.2);
+            color: #842029;
+        }
+        
+        &.alert-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.2);
+            color: #664d03;
+        }
+        
+        &.alert-info {
+            background-color: rgba(13, 202, 240, 0.1);
+            border-color: rgba(13, 202, 240, 0.2);
+            color: #055160;
+        }
+        
+        .alert-heading {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-close {
+            opacity: 0.7;
+            
+            &:hover {
+                opacity: 1;
+            }
+        }
+        
+        // Icon support
+        .alert-icon {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+            vertical-align: middle;
+        }
+        
+        // Dark theme adjustments
+        [data-theme="dark"] & {
+            &.alert-primary {
+                background-color: rgba(13, 110, 253, 0.2);
+                color: #9ec5fe;
+            }
+            
+            &.alert-secondary {
+                background-color: rgba(108, 117, 125, 0.2);
+                color: #d3d3d4;
+            }
+            
+            &.alert-success {
+                background-color: rgba(25, 135, 84, 0.2);
+                color: #75b798;
+            }
+            
+            &.alert-danger {
+                background-color: rgba(220, 53, 69, 0.2);
+                color: #f1aeb5;
+            }
+            
+            &.alert-warning {
+                background-color: rgba(255, 193, 7, 0.2);
+                color: #ffda6a;
+            }
+            
+            &.alert-info {
+                background-color: rgba(13, 202, 240, 0.2);
+                color: #86cfda;
+            }
+        }
+    }
+}
+
+// Trinity Accordion Block
+.trinity-accordion {
+    .accordion {
+        border-radius: var(--trinity-border-radius);
+        overflow: hidden;
+        
+        .accordion-item {
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            
+            &:last-child {
+                border-bottom: none;
+            }
+            
+            .accordion-header {
+                .accordion-button {
+                    background-color: #f8f9fa;
+                    border: none;
+                    font-weight: 600;
+                    padding: 1.25rem 1.5rem;
+                    
+                    &:not(.collapsed) {
+                        background-color: var(--trinity-primary);
+                        color: white;
+                        @include shadow(1);
+                    }
+                    
+                    &:focus {
+                        box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+                    }
+                    
+                    &::after {
+                        transition: transform 0.2s ease;
+                    }
+                    
+                    &.collapsed::after {
+                        transform: rotate(-90deg);
+                    }
+                }
+            }
+            
+            .accordion-collapse {
+                .accordion-body {
+                    padding: 1.5rem;
+                    background-color: white;
+                    
+                    [data-theme="dark"] & {
+                        background-color: #1e1e1e;
+                        color: white;
+                    }
+                }
+            }
+        }
+        
+        // Dark theme
+        [data-theme="dark"] & {
+            .accordion-item {
+                border-color: #333;
+                
+                .accordion-header .accordion-button {
+                    background-color: #2d2d2d;
+                    color: white;
+                    
+                    &:not(.collapsed) {
+                        background-color: var(--trinity-primary);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Trinity Card Block
+// Styles defined in _cards.scss
+
+// Trinity Carousel Block
+.trinity-carousel {
+    .carousel {
+        border-radius: var(--trinity-border-radius);
+        overflow: hidden;
+        @include shadow(1);
+        
+        .carousel-indicators {
+            margin-bottom: 1rem;
+            
+            [data-bs-target] {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin: 0 4px;
+                background-color: rgba(255, 255, 255, 0.5);
+                
+                &.active {
+                    background-color: white;
+                }
+            }
+        }
+        
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 10%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            
+            .carousel-control-prev-icon,
+            .carousel-control-next-icon {
+                width: 3rem;
+                height: 3rem;
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                @include backdrop-filter(blur(10px));
+            }
+        }
+        
+        &:hover {
+            .carousel-control-prev,
+            .carousel-control-next {
+                opacity: 1;
+            }
+        }
+        
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.5);
+            @include backdrop-filter(blur(10px));
+            border-radius: var(--trinity-border-radius);
+            padding: 1rem 2rem;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            
+            h5 {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
+
+// Trinity Modal Block
+.trinity-modal {
+    .modal {
+        .modal-dialog {
+            &.modal-dialog-centered {
+                @include center-content;
+                min-height: calc(100vh - 2rem);
+            }
+        }
+        
+        .modal-content {
+            border: none;
+            border-radius: var(--trinity-border-radius-lg);
+            @include shadow(3);
+            
+            .modal-header {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+                padding: 1.5rem;
+                
+                .modal-title {
+                    font-weight: 600;
+                }
+                
+                .btn-close {
+                    padding: 0.75rem;
+                    margin: -0.75rem -0.75rem -0.75rem auto;
+                }
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                border-top: 1px solid rgba(0, 0, 0, 0.125);
+                padding: 1rem 1.5rem;
+                
+                .btn {
+                    margin-left: 0.5rem;
+                    
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+        
+        // Dark theme
+        [data-theme="dark"] & {
+            .modal-content {
+                background-color: #1e1e1e;
+                color: white;
+                
+                .modal-header,
+                .modal-footer {
+                    border-color: #333;
+                }
+            }
+        }
+    }
+}
+
+// Trinity List Group Block
+.trinity-list-group {
+    .list-group {
+        border-radius: var(--trinity-border-radius);
+        
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+            padding: 1rem 1.25rem;
+            
+            &:first-child {
+                border-top: none;
+                border-top-left-radius: var(--trinity-border-radius);
+                border-top-right-radius: var(--trinity-border-radius);
+            }
+            
+            &:last-child {
+                border-bottom: none;
+                border-bottom-left-radius: var(--trinity-border-radius);
+                border-bottom-right-radius: var(--trinity-border-radius);
+            }
+            
+            &.list-group-item-action {
+                transition: var(--trinity-transition-fast);
+                
+                &:hover {
+                    background-color: var(--trinity-primary);
+                    color: white;
+                    transform: translateX(5px);
+                }
+            }
+            
+            // Badge support
+            .badge {
+                margin-left: auto;
+            }
+            
+            // Icon support
+            .list-icon {
+                margin-right: 0.75rem;
+                color: var(--trinity-primary);
+            }
+        }
+        
+        // Dark theme
+        [data-theme="dark"] & {
+            .list-group-item {
+                background-color: #1e1e1e;
+                border-color: #333;
+                color: white;
+                
+                &.list-group-item-action:hover {
+                    background-color: var(--trinity-primary);
+                }
+            }
+        }
+    }
+}
+
+// Trinity Table Block
+.trinity-table {
+    .table {
+        border-radius: var(--trinity-border-radius);
+        overflow: hidden;
+        
+        thead th {
+            background-color: var(--trinity-primary);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 1rem;
+        }
+        
+        tbody {
+            tr {
+                transition: var(--trinity-transition-fast);
+                
+                &:hover {
+                    background-color: rgba(var(--bs-primary-rgb), 0.1);
+                }
+                
+                td {
+                    padding: 1rem;
+                    border-color: rgba(0, 0, 0, 0.075);
+                }
+            }
+        }
+        
+        &.table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.025);
+        }
+        
+        // Dark theme
+        [data-theme="dark"] & {
+            color: white;
+            
+            thead th {
+                background-color: var(--trinity-primary);
+            }
+            
+            tbody {
+                tr {
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                    }
+                    
+                    td {
+                        border-color: #333;
+                    }
+                }
+            }
+            
+            &.table-striped tbody tr:nth-of-type(odd) {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+    }
+    
+    .table-responsive {
+        border-radius: var(--trinity-border-radius);
+        @include shadow(1);
+    }
+}
+
+// Scroll spy styles
+.trinity-scrollspy {
+    .nav {
+        .nav-link {
+            color: #6c757d;
+            transition: var(--trinity-transition-fast);
+            
+            &:hover,
+            &.active {
+                color: var(--trinity-primary);
+                background-color: rgba(var(--bs-primary-rgb), 0.1);
+            }
+        }
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        .nav .nav-link {
+            color: #adb5bd;
+            
+            &:hover,
+            &.active {
+                color: var(--trinity-primary);
+                background-color: rgba(var(--bs-primary-rgb), 0.2);
+            }
+        }
+    }
+}
+
+// Stretched link utility
+.stretched-link {
+    &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        content: "";
+    }
+}

@@ -1,0 +1,289 @@
+// Loading styles
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    @include backdrop-filter(blur(5px));
+    @include center-content;
+    z-index: 9999;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    
+    &.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3em;
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        background-color: rgba(18, 18, 18, 0.95);
+    }
+}
+
+// Page loading spinner
+.page-loading {
+    @include center-content;
+    min-height: 200px;
+    
+    .spinner-border {
+        color: var(--trinity-primary);
+    }
+}
+
+// Button loading state
+.btn-loading {
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+        top: 50%;
+        left: 50%;
+        margin-left: -0.5rem;
+        margin-top: -0.5rem;
+        border: 2px solid transparent;
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: btn-loading-spin 1s linear infinite;
+    }
+    
+    .btn-text {
+        opacity: 0;
+    }
+}
+
+// Skeleton loading placeholders
+.placeholder-glow .placeholder {
+    animation: placeholder-glow 2s ease-in-out infinite alternate;
+}
+
+.placeholder-wave {
+    animation: placeholder-wave 2s linear infinite;
+}
+
+.placeholder {
+    display: inline-block;
+    min-height: 1em;
+    vertical-align: middle;
+    cursor: wait;
+    background-color: currentColor;
+    opacity: 0.5;
+    border-radius: var(--trinity-border-radius);
+    
+    &.w-25 { width: 25% !important; }
+    &.w-50 { width: 50% !important; }
+    &.w-75 { width: 75% !important; }
+    &.w-100 { width: 100% !important; }
+    
+    &.placeholder-xs { min-height: 0.6em; }
+    &.placeholder-sm { min-height: 0.8em; }
+    &.placeholder-lg { min-height: 1.2em; }
+    &.placeholder-xl { min-height: 1.4em; }
+    
+    // Colored placeholders
+    &.bg-primary { background-color: var(--trinity-primary) !important; }
+    &.bg-secondary { background-color: var(--trinity-secondary) !important; }
+    &.bg-success { background-color: var(--trinity-success) !important; }
+    &.bg-danger { background-color: var(--trinity-danger) !important; }
+    &.bg-warning { background-color: var(--trinity-warning) !important; }
+    &.bg-info { background-color: var(--trinity-info) !important; }
+    &.bg-light { background-color: var(--trinity-light) !important; }
+    &.bg-dark { background-color: var(--trinity-dark) !important; }
+}
+
+// Image placeholder
+.image-placeholder {
+    background-color: #e9ecef;
+    @include center-content;
+    color: #6c757d;
+    border-radius: var(--trinity-border-radius);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: image-placeholder-shimmer 2s infinite;
+    }
+    
+    .placeholder-icon {
+        font-size: 2rem;
+        opacity: 0.5;
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        background-color: #333;
+        color: #adb5bd;
+        
+        &::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+    }
+}
+
+// Content placeholder
+.content-placeholder {
+    .placeholder-title {
+        height: 2rem;
+        background-color: #e9ecef;
+        border-radius: var(--trinity-border-radius);
+        margin-bottom: 1rem;
+        width: 60%;
+    }
+    
+    .placeholder-paragraph {
+        height: 1rem;
+        background-color: #e9ecef;
+        border-radius: var(--trinity-border-radius);
+        margin-bottom: 0.75rem;
+        
+        &:nth-child(2) { width: 90%; }
+        &:nth-child(3) { width: 85%; }
+        &:nth-child(4) { width: 70%; }
+        &:last-child { width: 40%; }
+    }
+    
+    .placeholder-button {
+        height: 2.5rem;
+        width: 8rem;
+        background-color: #e9ecef;
+        border-radius: var(--trinity-border-radius);
+        margin-top: 1rem;
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        .placeholder-title,
+        .placeholder-paragraph,
+        .placeholder-button {
+            background-color: #333;
+        }
+    }
+}
+
+// Loading states for specific components
+.card-loading {
+    .card-img-top {
+        @include aspect-ratio(16, 9);
+        background-color: #e9ecef;
+        
+        [data-theme="dark"] & {
+            background-color: #333;
+        }
+    }
+    
+    .card-body {
+        .placeholder-title {
+            height: 1.5rem;
+            margin-bottom: 0.75rem;
+            width: 80%;
+        }
+        
+        .placeholder-text {
+            height: 1rem;
+            margin-bottom: 0.5rem;
+            
+            &:nth-child(2) { width: 100%; }
+            &:nth-child(3) { width: 90%; }
+            &:nth-child(4) { width: 60%; }
+        }
+    }
+}
+
+.navbar-loading {
+    .placeholder-brand {
+        height: 2rem;
+        width: 8rem;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .placeholder-nav {
+        display: flex;
+        gap: 1rem;
+        
+        .placeholder-item {
+            height: 1.5rem;
+            width: 4rem;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+// Animations
+@keyframes btn-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes placeholder-glow {
+    50% {
+        opacity: 0.2;
+    }
+}
+
+@keyframes placeholder-wave {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes image-placeholder-shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+// Fade in animation for loaded content
+.fade-in {
+    animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Progress bar for page loading
+.loading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 9998;
+    
+    .progress-bar {
+        height: 100%;
+        background-color: var(--trinity-primary);
+        transition: width 0.3s ease;
+        border-radius: 0 3px 3px 0;
+    }
+}

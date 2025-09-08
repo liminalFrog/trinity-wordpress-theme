@@ -1,0 +1,224 @@
+// Base styles
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    @include smooth-scroll;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    transition: var(--trinity-transition);
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: inherit;
+}
+
+h1 { font-size: $h1-font-size; }
+h2 { font-size: $h2-font-size; }
+h3 { font-size: $h3-font-size; }
+h4 { font-size: $h4-font-size; }
+h5 { font-size: $h5-font-size; }
+h6 { font-size: $h6-font-size; }
+
+// Paragraphs
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+// Links
+a {
+    color: var(--trinity-primary);
+    text-decoration: none;
+    transition: var(--trinity-transition-fast);
+    
+    &:hover,
+    &:focus {
+        color: var(--trinity-primary-dark);
+        text-decoration: underline;
+    }
+    
+    @include focus-outline;
+}
+
+// Images
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--trinity-border-radius);
+}
+
+// Lists
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+li {
+    margin-bottom: 0;
+}
+
+// Tables
+table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    
+    th,
+    td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #dee2e6;
+        text-align: left;
+    }
+    
+    th {
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+}
+
+// Forms
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+// Code
+code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    color: #e83e8c;
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+}
+
+pre {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: var(--trinity-border-radius);
+    overflow-x: auto;
+    
+    code {
+        background: none;
+        padding: 0;
+        color: inherit;
+    }
+}
+
+// Blockquotes
+blockquote {
+    margin: 0 0 1rem;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid var(--trinity-primary);
+    background-color: #f8f9fa;
+    border-radius: var(--trinity-border-radius);
+    
+    p:last-child {
+        margin-bottom: 0;
+    }
+    
+    footer {
+        font-size: 0.875rem;
+        color: #6c757d;
+        
+        &::before {
+            content: '— ';
+        }
+    }
+}
+
+// Horizontal rules
+hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #dee2e6;
+}
+
+// Selection
+::selection {
+    background-color: var(--trinity-primary);
+    color: white;
+}
+
+::-moz-selection {
+    background-color: var(--trinity-primary);
+    color: white;
+}
+
+// Focus styles
+:focus {
+    outline: 2px solid var(--trinity-primary);
+    outline-offset: 2px;
+}
+
+// Accessibility
+.sr-only {
+    @include sr-only;
+}
+
+// Utility classes
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.text-lowercase {
+    text-transform: lowercase !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.font-weight-light {
+    font-weight: 300 !important;
+}
+
+.font-weight-normal {
+    font-weight: 400 !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.text-decoration-none {
+    text-decoration: none !important;
+}
+
+.text-decoration-underline {
+    text-decoration: underline !important;
+}
+
+// Responsive text
+@include media-breakpoint-down(sm) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+}

@@ -1,0 +1,255 @@
+// Card styles
+
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: var(--trinity-border-radius);
+    @include shadow(1);
+    transition: var(--trinity-transition);
+    overflow: hidden;
+    
+    &:hover {
+        @include shadow(2);
+        transform: translateY(-2px);
+    }
+    
+    .card-img-top {
+        border-radius: var(--trinity-border-radius) var(--trinity-border-radius) 0 0;
+        transition: var(--trinity-transition);
+        
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+        
+        .card-title {
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            
+            a {
+                color: inherit;
+                text-decoration: none;
+                
+                &:hover {
+                    color: var(--trinity-primary);
+                }
+            }
+        }
+        
+        .card-text {
+            margin-bottom: 1rem;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .card-meta {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+            
+            .meta-item {
+                margin-right: 1rem;
+                
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    
+    .card-footer {
+        background-color: rgba(0, 0, 0, 0.03);
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
+        padding: 0.75rem 1.5rem;
+        
+        .btn {
+            margin-right: 0.5rem;
+            
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    
+    // Card variants
+    &.card-hover-lift {
+        &:hover {
+            transform: translateY(-5px);
+            @include shadow(3);
+        }
+    }
+    
+    &.card-borderless {
+        border: none;
+        @include shadow(1);
+    }
+    
+    &.card-rounded {
+        border-radius: var(--trinity-border-radius-lg);
+        
+        .card-img-top {
+            border-radius: var(--trinity-border-radius-lg) var(--trinity-border-radius-lg) 0 0;
+        }
+    }
+    
+    // Horizontal card
+    &.card-horizontal {
+        flex-direction: row;
+        
+        .card-img-top {
+            width: 200px;
+            height: auto;
+            object-fit: cover;
+            border-radius: var(--trinity-border-radius) 0 0 var(--trinity-border-radius);
+        }
+        
+        .card-body {
+            flex: 1;
+        }
+        
+        @include media-breakpoint-down(md) {
+            flex-direction: column;
+            
+            .card-img-top {
+                width: 100%;
+                border-radius: var(--trinity-border-radius) var(--trinity-border-radius) 0 0;
+            }
+        }
+    }
+    
+    // Card with overlay
+    &.card-overlay {
+        position: relative;
+        color: white;
+        
+        .card-img-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1.5rem;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .card-title,
+        .card-text {
+            color: white;
+        }
+    }
+    
+    // Dark theme adjustments
+    [data-theme="dark"] & {
+        background-color: #1e1e1e;
+        border-color: #333;
+        color: white;
+        
+        .card-text,
+        .card-meta {
+            color: #adb5bd;
+        }
+        
+        .card-footer {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: #333;
+        }
+    }
+}
+
+// Card grid
+.card-grid {
+    display: grid;
+    gap: 2rem;
+    
+    &.grid-cols-1 {
+        grid-template-columns: 1fr;
+    }
+    
+    &.grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+        
+        @include media-breakpoint-down(md) {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    &.grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+        
+        @include media-breakpoint-down(lg) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        @include media-breakpoint-down(md) {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    &.grid-cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+        
+        @include media-breakpoint-down(xl) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        @include media-breakpoint-down(lg) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        @include media-breakpoint-down(md) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+// Card masonry layout
+.card-masonry {
+    column-count: 3;
+    column-gap: 2rem;
+    
+    .card {
+        break-inside: avoid;
+        margin-bottom: 2rem;
+    }
+    
+    @include media-breakpoint-down(lg) {
+        column-count: 2;
+    }
+    
+    @include media-breakpoint-down(md) {
+        column-count: 1;
+    }
+}
+
+// Loading placeholder for cards
+.card-placeholder {
+    .placeholder-glow .placeholder {
+        animation-duration: 2s;
+    }
+    
+    .placeholder-img {
+        @include aspect-ratio(16, 9);
+        background-color: #e9ecef;
+    }
+    
+    .placeholder-title {
+        height: 1.5rem;
+        background-color: #e9ecef;
+        margin-bottom: 0.75rem;
+    }
+    
+    .placeholder-text {
+        height: 1rem;
+        background-color: #e9ecef;
+        margin-bottom: 0.5rem;
+        
+        &:last-child {
+            width: 60%;
+        }
+    }
+}

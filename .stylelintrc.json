@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "indentation": 4,
+    "string-quotes": "single",
+    "no-duplicate-selectors": true,
+    "color-hex-case": "lower",
+    "color-hex-length": "short",
+    "color-named": "never",
+    "selector-no-qualifying-type": null,
+    "no-descending-specificity": null,
+    "scss/at-import-partial-extension": null,
+    "scss/at-rule-no-unknown": null
+  }
+}

@@ -1,0 +1,346 @@
+// Footer styles
+
+.site-footer {
+    margin-top: auto;
+    
+    .footer-widgets {
+        background-color: #2d3748;
+        color: white;
+        position: relative;
+        box-shadow: inset 0 0.5rem 1.0rem rgba(0,0,0,0.4), 0 -1px 0 rgba(255, 255, 255, 0.25);
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: transparent;
+            background-image: url('assets/images/dot_seamless_light.png');
+            background-size: 60px 60px;
+            background-repeat: repeat;
+            background-position: center;
+            z-index: 1;
+        }
+        
+        > .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .widget {
+            .widget-title {
+                color: white;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                font-size: 1.125rem;
+            }
+            
+            ul {
+                list-style: none;
+                padding: 0;
+                
+                li {
+                    margin-bottom: 0.5rem;
+                    
+                    a {
+                        color: #cbd5e0;
+                        text-decoration: none;
+                        transition: var(--trinity-transition-fast);
+                        
+                        &:hover {
+                            color: var(--trinity-primary);
+                            padding-left: 0.5rem;
+                        }
+                    }
+                }
+            }
+            
+            p {
+                color: #cbd5e0;
+                line-height: 1.6;
+            }
+            
+            // Social media widget
+            .social-links {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+                
+                a {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    border-radius: 50%;
+                    color: white;
+                    text-decoration: none;
+                    transition: var(--trinity-transition-fast);
+                    
+                    &:hover {
+                        transform: translateY(-2px);
+                        @include shadow(1);
+                    }
+                    
+                    &.facebook { background-color: #1877f2; }
+                    &.twitter { background-color: #1da1f2; }
+                    &.linkedin { background-color: #0077b5; }
+                    &.instagram { 
+                        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+                    }
+                    &.youtube { background-color: #ff0000; }
+                    &.pinterest { background-color: #bd081c; }
+                }
+            }
+            
+            // Contact info widget
+            .contact-info {
+                .contact-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                    
+                    .contact-icon {
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 50%;
+                        background-color: var(--trinity-primary);
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-right: 1rem;
+                        flex-shrink: 0;
+                    }
+                    
+                    .contact-content {
+                        color: #cbd5e0;
+                        
+                        a {
+                            color: inherit;
+                            text-decoration: none;
+                            
+                            &:hover {
+                                color: var(--trinity-primary);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    .footer-bottom {
+        background-color: var(--trinity-dark);
+        color: white;
+        position: relative;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: transparent;
+            background-image: url('assets/images/dot_seamless_light.png');
+            background-size: 60px 60px;
+            background-repeat: repeat;
+            opacity: 0.85;
+            background-position: center;
+            z-index: 1;
+        }
+        
+        > .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        p {
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .theme-toggle {
+            .btn {
+                position: relative;
+                overflow: hidden;
+                
+                .sun-icon,
+                .moon-icon {
+                    transition: var(--trinity-transition-fast);
+                    position: absolute;
+                    top: 50%;
+                    left: 0.75rem;
+                    transform: translateY(-50%);
+                }
+                
+                .toggle-text {
+                    margin-left: 1.5rem;
+                }
+                
+                // Show/hide icons based on theme
+                [data-theme="light"] & {
+                    .sun-icon {
+                        opacity: 1;
+                        transform: translateY(-50%) rotate(0deg);
+                    }
+                    
+                    .moon-icon {
+                        opacity: 0;
+                        transform: translateY(-50%) rotate(180deg);
+                    }
+                }
+                
+                [data-theme="dark"] & {
+                    .sun-icon {
+                        opacity: 0;
+                        transform: translateY(-50%) rotate(-180deg);
+                    }
+                    
+                    .moon-icon {
+                        opacity: 1;
+                        transform: translateY(-50%) rotate(0deg);
+                    }
+                }
+            }
+        }
+        
+        // Footer logo
+        .footer-logo {
+            text-decoration: none;
+            
+            .footer-logo-img {
+                transition: var(--trinity-transition-fast);
+                filter: brightness(1) contrast(1);
+                height: 48px;
+                width: auto;
+                
+                &:hover {
+                    transform: scale(1.05);
+                    filter: brightness(1.1) contrast(1.1);
+                }
+            }
+        }
+        
+        // Footer menu
+        .footer-menu {
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                gap: 2rem;
+                flex-wrap: wrap;
+                
+                li {
+                    a {
+                        color: rgba(255, 255, 255, 0.8);
+                        text-decoration: none;
+                        transition: var(--trinity-transition-fast);
+                        
+                        &:hover {
+                            color: white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Dark theme adjustments
+    [data-theme="dark"] & {
+        .footer-widgets {
+            background-color: #2d2d2d;
+            
+            .widget {
+                .widget-title {
+                    color: white;
+                }
+                
+                ul li a {
+                    color: #adb5bd;
+                    
+                    &:hover {
+                        color: var(--trinity-primary);
+                    }
+                }
+                
+                p {
+                    color: #adb5bd;
+                }
+                
+                .contact-info .contact-item .contact-content {
+                    color: #adb5bd;
+                }
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(md) {
+    .site-footer {
+        .footer-widgets {
+            .row > div {
+                margin-bottom: 2rem;
+                
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            
+            .row > div {
+                margin-bottom: 1rem;
+                
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            
+            .theme-toggle {
+                justify-content: center;
+            }
+            
+            .footer-menu ul {
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .site-footer {
+        .footer-widgets {
+            .widget {
+                .social-links {
+                    justify-content: center;
+                }
+                
+                .contact-info .contact-item {
+                    flex-direction: column;
+                    text-align: center;
+                    
+                    .contact-icon {
+                        margin-right: 0;
+                        margin-bottom: 0.5rem;
+                    }
+                }
+            }
+        }
+        
+        .footer-bottom {
+            .footer-menu ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+}

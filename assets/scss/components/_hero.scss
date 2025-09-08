@@ -1,0 +1,236 @@
+// Hero block styles
+
+.trinity-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 50vh;
+    
+    @include center-content;
+    
+    // Background video
+    .hero-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translateX(-50%) translateY(-50%);
+        z-index: -1;
+        object-fit: cover;
+    }
+    
+    // Hero content
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        
+        .hero-text {
+            max-width: 100%;
+            
+            h1, h2, h3, h4, h5, h6 {
+                margin-bottom: 1rem;
+                font-weight: inherit;
+            }
+            
+            p {
+                font-size: 1.125rem;
+                margin-bottom: 1.5rem;
+                opacity: 0.9;
+            }
+            
+            .hero-buttons {
+                .btn {
+                    margin-right: 1rem;
+                    margin-bottom: 1rem;
+                    
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Parallax effect
+    &.parallax {
+        transform-style: preserve-3d;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            transform: translateZ(-1px) scale(2);
+            z-index: -1;
+        }
+    }
+    
+    // Static background effect
+    &.static-background {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    // Overlay for better text readability
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        pointer-events: none;
+    }
+    
+    // Full height hero
+    &.hero-full-height {
+        min-height: 100vh;
+    }
+    
+    // Animation on scroll
+    &.aos-animate {
+        .hero-text {
+            animation: fadeInUp 1s ease-out;
+        }
+    }
+}
+
+// Page header (for pages)
+.page-header {
+    padding: 4rem 0;
+    //background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    margin-bottom: 2rem;
+    text-align: left !important;
+    border-bottom: 2px solid $danger;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    .page-title {
+        margin-bottom: 0.5rem;
+        font-weight: inherit;
+    }
+    
+    .page-subtitle {
+        margin-bottom: 0;
+        font-size: 1.125rem;
+        opacity: 0.8;
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        //background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        color: white;
+    }
+}
+
+// Hero animations
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(md) {
+    .trinity-hero {
+        min-height: 40vh;
+        
+        .hero-content {
+            .hero-text {
+                p {
+                    font-size: 1rem;
+                }
+                
+                h1 {
+                    font-size: 2rem;
+                }
+                
+                h2 {
+                    font-size: 1.75rem;
+                }
+            }
+        }
+        
+        &.static-background {
+            background-attachment: scroll;
+        }
+    }
+    
+    .page-header {
+        padding: 2rem 0;
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1rem;
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .trinity-hero {
+        min-height: 30vh;
+        
+        .hero-content {
+            .hero-text {
+                .hero-buttons {
+                    .btn {
+                        display: block;
+                        width: 100%;
+                        margin-right: 0;
+                        margin-bottom: 0.75rem;
+                    }
+                }
+            }
+        }
+    }
+}

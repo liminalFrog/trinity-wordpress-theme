@@ -1,0 +1,195 @@
+// Mixins
+
+// Responsive breakpoints
+@mixin media-breakpoint-up($name) {
+    $min: map-get($grid-breakpoints, $name);
+    @if $min != 0 {
+        @media (min-width: $min) {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}
+
+@mixin media-breakpoint-down($name) {
+    $max: map-get($grid-breakpoints, $name) - 0.02;
+    @media (max-width: $max) {
+        @content;
+    }
+}
+
+@mixin media-breakpoint-between($lower, $upper) {
+    $min: map-get($grid-breakpoints, $lower);
+    $max: map-get($grid-breakpoints, $upper) - 0.02;
+    
+    @if $min != 0 and $max != 0 {
+        @media (min-width: $min) and (max-width: $max) {
+            @content;
+        }
+    } @else if $max == 0 {
+        @include media-breakpoint-up($lower) {
+            @content;
+        }
+    } @else if $min == 0 {
+        @include media-breakpoint-down($upper) {
+            @content;
+        }
+    }
+}
+
+// Button variants
+@mixin button-variant($background, $border, $color: #fff) {
+    background-color: $background;
+    border-color: $border;
+    color: $color;
+    
+    &:hover,
+    &:focus {
+        background-color: darken($background, 7.5%);
+        border-color: darken($border, 10%);
+        color: $color;
+    }
+    
+    &:active {
+        background-color: darken($background, 10%);
+        border-color: darken($border, 12.5%);
+    }
+}
+
+@mixin button-outline-variant($color) {
+    color: $color;
+    border-color: $color;
+    background-color: transparent;
+    
+    &:hover,
+    &:focus {
+        color: #fff;
+        background-color: $color;
+        border-color: $color;
+    }
+    
+    &:active {
+        color: #fff;
+        background-color: darken($color, 10%);
+        border-color: darken($color, 12.5%);
+    }
+}
+
+// Shadows
+@mixin shadow($level: 1) {
+    @if $level == 1 {
+        box-shadow: var(--trinity-shadow-sm);
+    } @else if $level == 2 {
+        box-shadow: var(--trinity-shadow);
+    } @else if $level == 3 {
+        box-shadow: var(--trinity-shadow-lg);
+    }
+}
+
+// Backdrop filter
+@mixin backdrop-filter($filter) {
+    backdrop-filter: $filter;
+    -webkit-backdrop-filter: $filter;
+}
+
+// Gradient background
+@mixin gradient-bg($start-color, $end-color, $direction: to bottom) {
+    background: linear-gradient($direction, $start-color, $end-color);
+}
+
+// Center content
+@mixin center-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Aspect ratio
+@mixin aspect-ratio($width, $height) {
+    position: relative;
+    
+    &::before {
+        content: '';
+        display: block;
+        padding-top: calc(#{$height} / #{$width} * 100%);
+    }
+    
+    > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+// Text truncation
+@mixin text-truncate($lines: 1) {
+    @if $lines == 1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    } @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $lines;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+// Placeholder styles
+@mixin placeholder-color($color) {
+    &::placeholder {
+        color: $color;
+    }
+    
+    &::-webkit-input-placeholder {
+        color: $color;
+    }
+    
+    &::-moz-placeholder {
+        color: $color;
+        opacity: 1;
+    }
+    
+    &:-ms-input-placeholder {
+        color: $color;
+    }
+}
+
+// Focus styles
+@mixin focus-outline($color: var(--trinity-primary)) {
+    &:focus {
+        outline: 2px solid $color;
+        outline-offset: 2px;
+    }
+}
+
+// Smooth scrolling
+@mixin smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+// Clearfix
+@mixin clearfix {
+    &::after {
+        display: block;
+        clear: both;
+        content: '';
+    }
+}
+
+// Visually hidden
+@mixin sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}

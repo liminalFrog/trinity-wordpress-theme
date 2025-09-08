@@ -1,0 +1,325 @@
+// Navbar styles
+
+.trinity-navbar {
+    background-color: transparent;
+    @include backdrop-filter(var(--trinity-navbar-backdrop-filter));
+    @include shadow(1);
+    transition: var(--trinity-transition);
+    min-height: var(--trinity-navbar-height);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+    // Background pattern support
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--trinity-navbar-bg-light);
+        background-image: url('assets/images/dot_seamless_dark.png');
+        background-repeat: repeat;
+        background-size: 60px 60px;
+        background-position: center;
+        opacity: 1;
+        z-index: -1;
+    }
+    
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        transition: var(--trinity-transition-fast);
+        
+        img {
+            height: var(--trinity-logo-height);
+            width: auto;
+            transition: var(--trinity-transition-fast);
+            border-radius: 0;
+            
+            &.logo-dark {
+                display: none;
+            }
+        }
+        
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+    
+    .navbar-nav {
+        .nav-link {
+            font-weight: 500;
+            padding: 0.2rem 0.6rem;
+            border-radius: var(--trinity-border-radius);
+            transition: var(--trinity-transition-fast);
+            
+            &:hover,
+            &:focus {
+                background-color: rgba(0, 0, 0, 0.1);
+                // transform: translateY(-1px);
+            }
+            
+            &.active,
+            &.current-menu-item,
+            &.current_page_item,
+            &.current-page-ancestor,
+            &.current-menu-ancestor {
+                background-color: #dc3545; // Red background
+                color: white !important;
+            }
+        }
+        
+        // WordPress menu item classes
+        .menu-item {
+            &.current-menu-item > .nav-link,
+            &.current_page_item > .nav-link,
+            &.current-page-ancestor > .nav-link,
+            &.current-menu-ancestor > .nav-link {
+                background-color: #dc3545; // Red background
+                color: white !important;
+            }
+        }
+        
+        .dropdown-menu {
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            @include shadow(2);
+            border-radius: var(--trinity-border-radius);
+            margin-top: 0.5rem;
+
+            .nav-link {
+                border-radius: 0;
+            }
+            
+            .dropdown-item {
+                padding: 0.5rem 1.5rem;
+                transition: var(--trinity-transition-fast);
+                border-radius: 0;
+                
+                &:hover,
+                &:focus {
+                    background-color: var(--trinity-primary);
+                    color: white;
+                }
+            }
+        }
+    }
+    
+    .navbar-toggler {
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--trinity-border-radius);
+        
+        &:focus {
+            box-shadow: none;
+            outline: 2px solid var(--trinity-primary);
+            outline-offset: 2px;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    }
+    
+    // Scrolled state
+    &.navbar-scrolled {
+        @include shadow(2);
+        
+        &::before {
+            background-color: var(--trinity-navbar-bg-dark);
+            background-image: url('assets/images/dot_seamless_light.png');
+        }
+        
+        .navbar-brand img {
+            &.logo-light {
+                display: none;
+            }
+            
+            &.logo-dark {
+                display: inline-block;
+            }
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        &::before {
+            background-color: var(--trinity-navbar-bg-dark);
+            background-image: url('assets/images/dot_seamless_light.png');
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .navbar-brand img {
+            &.logo-light {
+                display: none;
+            }
+            
+            &.logo-dark {
+                display: inline-block;
+            }
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            
+            &:hover,
+            &:focus {
+                color: rgba(255, 255, 255, 0.9);
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+        
+        // Dark mode dropdown styling
+        .dropdown-menu {
+            background-color: var(--trinity-dark);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            
+            .dropdown-item {
+                color: rgba(255, 255, 255, 0.75);
+                
+                &:hover,
+                &:focus {
+                    background-color: var(--trinity-primary);
+                    color: white;
+                }
+            }
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    }
+}
+
+// Announcement bar
+.announcement-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1055;
+    font-size: 0.875rem;
+    
+    + .trinity-navbar {
+        top: auto;
+        margin-top: 40px; // Adjust based on announcement bar height
+    }
+    
+    .btn-close {
+        font-size: 0.75rem;
+        padding: 0.25rem;
+    }
+}
+
+// Mobile responsive
+@include media-breakpoint-down(lg) {
+    .trinity-navbar {
+        .navbar-collapse {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-nav {
+            .nav-link {
+                margin: 0.125rem 0;
+            }
+            
+            .dropdown-menu {
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                margin-top: 0;
+                
+                .dropdown-item {
+                    padding-left: 2rem;
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+    
+    // Dark theme mobile styles
+    [data-theme="dark"] .trinity-navbar {
+        .navbar-collapse {
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .navbar-nav .dropdown-menu {
+            background-color: var(--trinity-dark);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            
+            .dropdown-item {
+                color: rgba(255, 255, 255, 0.75);
+                
+                &:hover,
+                &:focus {
+                    background-color: var(--trinity-primary);
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+// Theme toggle dropdown styling
+.theme-toggle {
+    .dropdown-menu {
+        min-width: 150px;
+        
+        .dropdown-item {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            
+            &.active {
+                background-color: var(--trinity-primary);
+                color: white;
+                
+                i {
+                    color: white;
+                }
+            }
+            
+            &:hover,
+            &:focus {
+                background-color: var(--trinity-primary);
+                color: white;
+            }
+            
+            i {
+                font-size: 0.875rem;
+                width: 16px;
+                color: var(--trinity-secondary);
+            }
+        }
+    }
+    
+    // Dark theme styles for theme toggle
+    [data-theme="dark"] & {
+        .dropdown-menu {
+            background-color: var(--trinity-dark);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            
+            .dropdown-item {
+                color: rgba(255, 255, 255, 0.75);
+                
+                i {
+                    color: rgba(255, 255, 255, 0.75);
+                }
+                
+                &:hover,
+                &:focus,
+                &.active {
+                    background-color: var(--trinity-primary);
+                    color: white;
+                    
+                    i {
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
