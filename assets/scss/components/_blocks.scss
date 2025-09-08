@@ -115,7 +115,7 @@ body[data-theme="dark"] .trinity-alert {
 }
 
 // Dark mode support using prefers-color-scheme for alerts
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     .trinity-alert {
         .alert {
             &.alert-primary {
@@ -269,6 +269,8 @@ body[data-theme="dark"] .alert {
             }
             
             .accordion-header {
+                margin-bottom: 0 !important;
+
                 .accordion-button {
                     background-color: #f8f9fa;
                     border: none;
@@ -287,6 +289,8 @@ body[data-theme="dark"] .alert {
                     
                     &::after {
                         transition: transform 0.2s ease;
+                        opacity: 0.5;
+                        color: rgba(0, 0, 0, 0.5);
                     }
                     
                     &.collapsed::after {
@@ -322,6 +326,12 @@ body[data-theme="dark"] .trinity-accordion {
                 &:not(.collapsed) {
                     background-color: var(--trinity-primary) !important;
                     color: white !important;
+                }
+                
+                &::after {
+                    opacity: 0.5 !important;
+                    color: rgba(255, 255, 255, 0.5) !important;
+                    filter: invert(1) grayscale(100%) brightness(200%) !important;
                 }
             }
             
@@ -398,7 +408,7 @@ body[data-theme="dark"] .accordion {
     }
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     .accordion {
         .accordion-item {
             --bs-accordion-border-color: #333 !important;
@@ -530,6 +540,8 @@ body[data-theme="dark"] .accordion {
                 .btn-close {
                     padding: 0.75rem;
                     margin: -0.75rem -0.75rem -0.75rem auto;
+                    opacity: 0.5;
+                    color: rgba(0, 0, 0, 0.5);
                 }
             }
             
@@ -568,12 +580,18 @@ body[data-theme="dark"] .trinity-modal {
             .modal-title {
                 color: white !important;
             }
+            
+            .btn-close {
+                opacity: 0.5 !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+                filter: invert(1) grayscale(100%) brightness(200%) !important;
+            }
         }
     }
 }
 
 // Dark mode support using prefers-color-scheme for modal
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
     .trinity-modal {
         .modal {
             .modal-content {
@@ -588,6 +606,67 @@ body[data-theme="dark"] .trinity-modal {
                 .modal-title {
                     color: white !important;
                 }
+                
+                .btn-close {
+                    opacity: 0.5 !important;
+                    color: rgba(255, 255, 255, 0.5) !important;
+                    filter: invert(1) grayscale(100%) brightness(200%) !important;
+                }
+            }
+        }
+    }
+}
+
+// Native Bootstrap modal support (not wrapped in trinity-modal)
+.modal {
+    .btn-close {
+        opacity: 0.5;
+        color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+// Dark mode for native Bootstrap modals
+body[data-theme="dark"] .modal {
+    .modal-content {
+        background-color: #1e1e1e !important;
+        color: white !important;
+        
+        .modal-header,
+        .modal-footer {
+            border-color: #333 !important;
+        }
+        
+        .modal-title {
+            color: white !important;
+        }
+        
+        .btn-close {
+            opacity: 0.5 !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            filter: invert(1) grayscale(100%) brightness(200%) !important;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .modal {
+        .modal-content {
+            background-color: #1e1e1e !important;
+            color: white !important;
+            
+            .modal-header,
+            .modal-footer {
+                border-color: #333 !important;
+            }
+            
+            .modal-title {
+                color: white !important;
+            }
+            
+            .btn-close {
+                opacity: 0.5 !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+                filter: invert(1) grayscale(100%) brightness(200%) !important;
             }
         }
     }
@@ -656,7 +735,7 @@ body[data-theme="dark"] .trinity-list-group {
 }
 
 // Dark mode support using prefers-color-scheme
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     .trinity-list-group {
         .list-group {
             .list-group-item {
@@ -687,7 +766,7 @@ body[data-theme="dark"] .list-group {
     }
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     .list-group {
         .list-group-item {
             background-color: #1e1e1e !important;
@@ -697,6 +776,53 @@ body[data-theme="dark"] .list-group {
             &.list-group-item-action:hover {
                 background-color: var(--trinity-primary) !important;
                 color: white !important;
+            }
+        }
+    }
+}
+
+// Native Bootstrap accordion support (not wrapped in trinity-accordion)
+.accordion {
+    .accordion-button {
+        &::after {
+            opacity: 0.5;
+            color: rgba(0, 0, 0, 0.5);
+        }
+    }
+}
+
+// Dark mode for native Bootstrap accordions
+body[data-theme="dark"] .accordion {
+    --bs-accordion-bg: #1e1e1e;
+    --bs-accordion-color: white;
+    --bs-accordion-btn-color: white;
+    --bs-accordion-border-color: #333;
+    --bs-accordion-active-bg: #2a2a2a;
+    --bs-accordion-active-color: white;
+    
+    .accordion-button {
+        &::after {
+            opacity: 0.5 !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            filter: invert(1) grayscale(100%) brightness(200%) !important;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .accordion {
+        --bs-accordion-bg: #1e1e1e;
+        --bs-accordion-color: white;
+        --bs-accordion-btn-color: white;
+        --bs-accordion-border-color: #333;
+        --bs-accordion-active-bg: #2a2a2a;
+        --bs-accordion-active-color: white;
+        
+        .accordion-button {
+            &::after {
+                opacity: 0.5 !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+                filter: invert(1) grayscale(100%) brightness(200%) !important;
             }
         }
     }
