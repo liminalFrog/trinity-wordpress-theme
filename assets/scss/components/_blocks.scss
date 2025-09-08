@@ -292,16 +292,43 @@
                 }
             }
         }
-        
-        // Dark theme
-        [data-theme="dark"] & {
+    }
+}
+
+// Dark theme for modal
+body[data-theme="dark"] .trinity-modal {
+    .modal {
+        .modal-content {
+            background-color: #1e1e1e !important;
+            color: white !important;
+            
+            .modal-header,
+            .modal-footer {
+                border-color: #333 !important;
+            }
+            
+            .modal-title {
+                color: white !important;
+            }
+        }
+    }
+}
+
+// Dark mode support using prefers-color-scheme for modal
+@media (prefers-color-scheme: dark) {
+    .trinity-modal {
+        .modal {
             .modal-content {
-                background-color: #1e1e1e;
-                color: white;
+                background-color: #1e1e1e !important;
+                color: white !important;
                 
                 .modal-header,
                 .modal-footer {
-                    border-color: #333;
+                    border-color: #333 !important;
+                }
+                
+                .modal-title {
+                    color: white !important;
                 }
             }
         }
@@ -352,32 +379,36 @@
             }
         }
     }
-    
-    // Dark theme
-    [data-theme="dark"] & {
-        .list-group {
-            .list-group-item {
-                background-color: #1e1e1e;
-                border-color: #333;
-                color: white;
-                
-                &.list-group-item-action:hover {
-                    background-color: var(--trinity-primary);
-                }
+}
+
+// Dark theme for list groups
+body[data-theme="dark"] .trinity-list-group {
+    .list-group {
+        .list-group-item {
+            background-color: #1e1e1e !important;
+            border-color: #333 !important;
+            color: white !important;
+            
+            &.list-group-item-action:hover {
+                background-color: var(--trinity-primary) !important;
+                color: white !important;
             }
         }
     }
-    
-    // Dark mode support using prefers-color-scheme
-    @media (prefers-color-scheme: dark) {
+}
+
+// Dark mode support using prefers-color-scheme
+@media (prefers-color-scheme: dark) {
+    .trinity-list-group {
         .list-group {
             .list-group-item {
-                background-color: #1e1e1e;
-                border-color: #333;
-                color: white;
+                background-color: #1e1e1e !important;
+                border-color: #333 !important;
+                color: white !important;
                 
                 &.list-group-item-action:hover {
-                    background-color: var(--trinity-primary);
+                    background-color: var(--trinity-primary) !important;
+                    color: white !important;
                 }
             }
         }
@@ -487,6 +518,8 @@
         padding: 1rem;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: var(--trinity-border-radius);
+        background-color: #ffffff;
+        color: #212529;
         
         .scrollspy-item {
             margin-bottom: 2rem;
@@ -502,49 +535,51 @@
             }
         }
     }
-    
-    // Dark theme
-    [data-theme="dark"] & {
-        .scrollspy-nav .nav .nav-link {
-            color: #adb5bd;
-            
-            &:hover,
-            &.active {
-                color: var(--trinity-primary);
-                background-color: rgba(var(--bs-primary-rgb), 0.2);
-            }
-        }
+}
+
+// Dark theme for scrollspy
+body[data-theme="dark"] .trinity-scrollspy {
+    .scrollspy-nav .nav .nav-link {
+        color: #adb5bd !important;
         
-        .scrollspy-content {
-            background-color: #1e1e1e;
-            border-color: #333;
-            color: white;
-            
-            .scrollspy-item h4 {
-                color: var(--trinity-primary);
-            }
+        &:hover,
+        &.active {
+            color: var(--trinity-primary) !important;
+            background-color: rgba(var(--bs-primary-rgb), 0.2) !important;
         }
     }
     
-    // Dark mode support using prefers-color-scheme
-    @media (prefers-color-scheme: dark) {
+    .scrollspy-content {
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: white !important;
+        
+        .scrollspy-item h4 {
+            color: var(--trinity-primary) !important;
+        }
+    }
+}
+
+// Dark mode support using prefers-color-scheme
+@media (prefers-color-scheme: dark) {
+    .trinity-scrollspy {
         .scrollspy-nav .nav .nav-link {
-            color: #adb5bd;
+            color: #adb5bd !important;
             
             &:hover,
             &.active {
-                color: var(--trinity-primary);
-                background-color: rgba(var(--bs-primary-rgb), 0.2);
+                color: var(--trinity-primary) !important;
+                background-color: rgba(var(--bs-primary-rgb), 0.2) !important;
             }
         }
         
         .scrollspy-content {
-            background-color: #1e1e1e;
-            border-color: #333;
-            color: white;
+            background-color: #1e1e1e !important;
+            border-color: #333 !important;
+            color: white !important;
             
             .scrollspy-item h4 {
-                color: var(--trinity-primary);
+                color: var(--trinity-primary) !important;
             }
         }
     }
@@ -714,6 +749,58 @@
         
         .btn + .btn {
             margin-left: 0.5rem;
+        }
+    }
+}
+
+// Dark theme for enhanced modal
+body[data-theme="dark"] .trinity-enhanced-modal {
+    .modal-content {
+        background-color: #1e1e1e !important;
+        color: white !important;
+        border-color: #333 !important;
+    }
+    
+    .modal-header {
+        border-color: #333 !important;
+        
+        .modal-title {
+            color: white !important;
+        }
+    }
+    
+    .modal-body {
+        color: white !important;
+    }
+    
+    .modal-footer {
+        border-color: #333 !important;
+    }
+}
+
+// Dark mode support using prefers-color-scheme for enhanced modal
+@media (prefers-color-scheme: dark) {
+    .trinity-enhanced-modal {
+        .modal-content {
+            background-color: #1e1e1e !important;
+            color: white !important;
+            border-color: #333 !important;
+        }
+        
+        .modal-header {
+            border-color: #333 !important;
+            
+            .modal-title {
+                color: white !important;
+            }
+        }
+        
+        .modal-body {
+            color: white !important;
+        }
+        
+        .modal-footer {
+            border-color: #333 !important;
         }
     }
 }
