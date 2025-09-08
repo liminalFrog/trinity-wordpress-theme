@@ -71,39 +71,45 @@
 body[data-theme="dark"] .trinity-alert {
     .alert {
         &.alert-primary {
-            background-color: rgba(13, 110, 253, 0.2) !important;
-            color: #9ec5fe !important;
-            border-color: rgba(13, 110, 253, 0.3) !important;
+            --bs-alert-color: #9ec5fe !important;
+            --bs-alert-bg: rgba(13, 110, 253, 0.2) !important;
+            --bs-alert-border-color: rgba(13, 110, 253, 0.3) !important;
+            --bs-alert-link-color: #9ec5fe !important;
         }
         
         &.alert-secondary {
-            background-color: rgba(108, 117, 125, 0.2) !important;
-            color: #d3d3d4 !important;
-            border-color: rgba(108, 117, 125, 0.3) !important;
+            --bs-alert-color: #d3d3d4 !important;
+            --bs-alert-bg: rgba(108, 117, 125, 0.2) !important;
+            --bs-alert-border-color: rgba(108, 117, 125, 0.3) !important;
+            --bs-alert-link-color: #d3d3d4 !important;
         }
         
         &.alert-success {
-            background-color: rgba(25, 135, 84, 0.2) !important;
-            color: #75b798 !important;
-            border-color: rgba(25, 135, 84, 0.3) !important;
+            --bs-alert-color: #75b798 !important;
+            --bs-alert-bg: rgba(25, 135, 84, 0.2) !important;
+            --bs-alert-border-color: rgba(25, 135, 84, 0.3) !important;
+            --bs-alert-link-color: #75b798 !important;
         }
         
         &.alert-danger {
-            background-color: rgba(220, 53, 69, 0.2) !important;
-            color: #f1aeb5 !important;
-            border-color: rgba(220, 53, 69, 0.3) !important;
+            --bs-alert-color: #f1aeb5 !important;
+            --bs-alert-bg: rgba(220, 53, 69, 0.2) !important;
+            --bs-alert-border-color: rgba(220, 53, 69, 0.3) !important;
+            --bs-alert-link-color: #f1aeb5 !important;
         }
         
         &.alert-warning {
-            background-color: rgba(255, 193, 7, 0.2) !important;
-            color: #ffda6a !important;
-            border-color: rgba(255, 193, 7, 0.3) !important;
+            --bs-alert-color: #ffda6a !important;
+            --bs-alert-bg: rgba(255, 193, 7, 0.2) !important;
+            --bs-alert-border-color: rgba(255, 193, 7, 0.3) !important;
+            --bs-alert-link-color: #ffda6a !important;
         }
         
         &.alert-info {
-            background-color: rgba(13, 202, 240, 0.2) !important;
-            color: #86cfda !important;
-            border-color: rgba(13, 202, 240, 0.3) !important;
+            --bs-alert-color: #86cfda !important;
+            --bs-alert-bg: rgba(13, 202, 240, 0.2) !important;
+            --bs-alert-border-color: rgba(13, 202, 240, 0.3) !important;
+            --bs-alert-link-color: #86cfda !important;
         }
     }
 }
@@ -113,40 +119,137 @@ body[data-theme="dark"] .trinity-alert {
     .trinity-alert {
         .alert {
             &.alert-primary {
-                background-color: rgba(13, 110, 253, 0.2) !important;
-                color: #9ec5fe !important;
-                border-color: rgba(13, 110, 253, 0.3) !important;
+                --bs-alert-color: #9ec5fe !important;
+                --bs-alert-bg: rgba(13, 110, 253, 0.2) !important;
+                --bs-alert-border-color: rgba(13, 110, 253, 0.3) !important;
+                --bs-alert-link-color: #9ec5fe !important;
             }
             
             &.alert-secondary {
-                background-color: rgba(108, 117, 125, 0.2) !important;
-                color: #d3d3d4 !important;
-                border-color: rgba(108, 117, 125, 0.3) !important;
+                --bs-alert-color: #d3d3d4 !important;
+                --bs-alert-bg: rgba(108, 117, 125, 0.2) !important;
+                --bs-alert-border-color: rgba(108, 117, 125, 0.3) !important;
+                --bs-alert-link-color: #d3d3d4 !important;
             }
             
             &.alert-success {
-                background-color: rgba(25, 135, 84, 0.2) !important;
-                color: #75b798 !important;
-                border-color: rgba(25, 135, 84, 0.3) !important;
+                --bs-alert-color: #75b798 !important;
+                --bs-alert-bg: rgba(25, 135, 84, 0.2) !important;
+                --bs-alert-border-color: rgba(25, 135, 84, 0.3) !important;
+                --bs-alert-link-color: #75b798 !important;
             }
             
             &.alert-danger {
-                background-color: rgba(220, 53, 69, 0.2) !important;
-                color: #f1aeb5 !important;
-                border-color: rgba(220, 53, 69, 0.3) !important;
+                --bs-alert-color: #f1aeb5 !important;
+                --bs-alert-bg: rgba(220, 53, 69, 0.2) !important;
+                --bs-alert-border-color: rgba(220, 53, 69, 0.3) !important;
+                --bs-alert-link-color: #f1aeb5 !important;
             }
             
             &.alert-warning {
-                background-color: rgba(255, 193, 7, 0.2) !important;
-                color: #ffda6a !important;
-                border-color: rgba(255, 193, 7, 0.3) !important;
+                --bs-alert-color: #ffda6a !important;
+                --bs-alert-bg: rgba(255, 193, 7, 0.2) !important;
+                --bs-alert-border-color: rgba(255, 193, 7, 0.3) !important;
+                --bs-alert-link-color: #ffda6a !important;
             }
             
             &.alert-info {
-                background-color: rgba(13, 202, 240, 0.2) !important;
-                color: #86cfda !important;
-                border-color: rgba(13, 202, 240, 0.3) !important;
+                --bs-alert-color: #86cfda !important;
+                --bs-alert-bg: rgba(13, 202, 240, 0.2) !important;
+                --bs-alert-border-color: rgba(13, 202, 240, 0.3) !important;
+                --bs-alert-link-color: #86cfda !important;
             }
+        }
+    }
+}
+
+// Native Bootstrap alert dark mode support
+body[data-theme="dark"] .alert {
+    &.alert-primary {
+        --bs-alert-color: #9ec5fe !important;
+        --bs-alert-bg: rgba(13, 110, 253, 0.2) !important;
+        --bs-alert-border-color: rgba(13, 110, 253, 0.3) !important;
+        --bs-alert-link-color: #9ec5fe !important;
+    }
+    
+    &.alert-secondary {
+        --bs-alert-color: #d3d3d4 !important;
+        --bs-alert-bg: rgba(108, 117, 125, 0.2) !important;
+        --bs-alert-border-color: rgba(108, 117, 125, 0.3) !important;
+        --bs-alert-link-color: #d3d3d4 !important;
+    }
+    
+    &.alert-success {
+        --bs-alert-color: #75b798 !important;
+        --bs-alert-bg: rgba(25, 135, 84, 0.2) !important;
+        --bs-alert-border-color: rgba(25, 135, 84, 0.3) !important;
+        --bs-alert-link-color: #75b798 !important;
+    }
+    
+    &.alert-danger {
+        --bs-alert-color: #f1aeb5 !important;
+        --bs-alert-bg: rgba(220, 53, 69, 0.2) !important;
+        --bs-alert-border-color: rgba(220, 53, 69, 0.3) !important;
+        --bs-alert-link-color: #f1aeb5 !important;
+    }
+    
+    &.alert-warning {
+        --bs-alert-color: #ffda6a !important;
+        --bs-alert-bg: rgba(255, 193, 7, 0.2) !important;
+        --bs-alert-border-color: rgba(255, 193, 7, 0.3) !important;
+        --bs-alert-link-color: #ffda6a !important;
+    }
+    
+    &.alert-info {
+        --bs-alert-color: #86cfda !important;
+        --bs-alert-bg: rgba(13, 202, 240, 0.2) !important;
+        --bs-alert-border-color: rgba(13, 202, 240, 0.3) !important;
+        --bs-alert-link-color: #86cfda !important;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .alert {
+        &.alert-primary {
+            --bs-alert-color: #9ec5fe !important;
+            --bs-alert-bg: rgba(13, 110, 253, 0.2) !important;
+            --bs-alert-border-color: rgba(13, 110, 253, 0.3) !important;
+            --bs-alert-link-color: #9ec5fe !important;
+        }
+        
+        &.alert-secondary {
+            --bs-alert-color: #d3d3d4 !important;
+            --bs-alert-bg: rgba(108, 117, 125, 0.2) !important;
+            --bs-alert-border-color: rgba(108, 117, 125, 0.3) !important;
+            --bs-alert-link-color: #d3d3d4 !important;
+        }
+        
+        &.alert-success {
+            --bs-alert-color: #75b798 !important;
+            --bs-alert-bg: rgba(25, 135, 84, 0.2) !important;
+            --bs-alert-border-color: rgba(25, 135, 84, 0.3) !important;
+            --bs-alert-link-color: #75b798 !important;
+        }
+        
+        &.alert-danger {
+            --bs-alert-color: #f1aeb5 !important;
+            --bs-alert-bg: rgba(220, 53, 69, 0.2) !important;
+            --bs-alert-border-color: rgba(220, 53, 69, 0.3) !important;
+            --bs-alert-link-color: #f1aeb5 !important;
+        }
+        
+        &.alert-warning {
+            --bs-alert-color: #ffda6a !important;
+            --bs-alert-bg: rgba(255, 193, 7, 0.2) !important;
+            --bs-alert-border-color: rgba(255, 193, 7, 0.3) !important;
+            --bs-alert-link-color: #ffda6a !important;
+        }
+        
+        &.alert-info {
+            --bs-alert-color: #86cfda !important;
+            --bs-alert-bg: rgba(13, 202, 240, 0.2) !important;
+            --bs-alert-border-color: rgba(13, 202, 240, 0.3) !important;
+            --bs-alert-link-color: #86cfda !important;
         }
     }
 }
@@ -196,28 +299,132 @@ body[data-theme="dark"] .trinity-alert {
                 .accordion-body {
                     padding: 1.5rem;
                     background-color: white;
-                    
-                    [data-theme="dark"] & {
-                        background-color: #1e1e1e;
-                        color: white;
-                    }
                 }
             }
         }
-        
-        // Dark theme
-        [data-theme="dark"] & {
+    }
+}
+
+// Dark theme for accordions
+body[data-theme="dark"] .trinity-accordion {
+    .accordion {
+        .accordion-item {
+            border-color: #333 !important;
+            
+            .accordion-header .accordion-button {
+                --bs-accordion-btn-bg: #2d2d2d !important;
+                --bs-accordion-btn-color: white !important;
+                --bs-accordion-active-bg: var(--trinity-primary) !important;
+                --bs-accordion-active-color: white !important;
+                background-color: #2d2d2d !important;
+                color: white !important;
+                
+                &:not(.collapsed) {
+                    background-color: var(--trinity-primary) !important;
+                    color: white !important;
+                }
+            }
+            
+            .accordion-collapse .accordion-body {
+                --bs-accordion-body-bg: #1e1e1e !important;
+                --bs-accordion-body-color: white !important;
+                background-color: #1e1e1e !important;
+                color: white !important;
+            }
+        }
+    }
+}
+
+// Dark mode support using prefers-color-scheme for accordions
+@media (prefers-color-scheme: dark) {
+    .trinity-accordion {
+        .accordion {
             .accordion-item {
-                border-color: #333;
+                border-color: #333 !important;
                 
                 .accordion-header .accordion-button {
-                    background-color: #2d2d2d;
-                    color: white;
+                    --bs-accordion-btn-bg: #2d2d2d !important;
+                    --bs-accordion-btn-color: white !important;
+                    --bs-accordion-active-bg: var(--trinity-primary) !important;
+                    --bs-accordion-active-color: white !important;
+                    background-color: #2d2d2d !important;
+                    color: white !important;
                     
                     &:not(.collapsed) {
-                        background-color: var(--trinity-primary);
+                        background-color: var(--trinity-primary) !important;
+                        color: white !important;
                     }
                 }
+                
+                .accordion-collapse .accordion-body {
+                    --bs-accordion-body-bg: #1e1e1e !important;
+                    --bs-accordion-body-color: white !important;
+                    background-color: #1e1e1e !important;
+                    color: white !important;
+                }
+            }
+        }
+    }
+}
+
+// Native Bootstrap accordion dark mode support
+body[data-theme="dark"] .accordion {
+    .accordion-item {
+        --bs-accordion-border-color: #333 !important;
+        --bs-accordion-bg: #1e1e1e !important;
+        --bs-accordion-color: white !important;
+        border-color: #333 !important;
+        
+        .accordion-button {
+            --bs-accordion-btn-bg: #2d2d2d !important;
+            --bs-accordion-btn-color: white !important;
+            --bs-accordion-active-bg: var(--trinity-primary) !important;
+            --bs-accordion-active-color: white !important;
+            background-color: #2d2d2d !important;
+            color: white !important;
+            
+            &:not(.collapsed) {
+                background-color: var(--trinity-primary) !important;
+                color: white !important;
+            }
+        }
+        
+        .accordion-body {
+            --bs-accordion-body-bg: #1e1e1e !important;
+            --bs-accordion-body-color: white !important;
+            background-color: #1e1e1e !important;
+            color: white !important;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .accordion {
+        .accordion-item {
+            --bs-accordion-border-color: #333 !important;
+            --bs-accordion-bg: #1e1e1e !important;
+            --bs-accordion-color: white !important;
+            border-color: #333 !important;
+            
+            .accordion-button {
+                --bs-accordion-btn-bg: #2d2d2d !important;
+                --bs-accordion-btn-color: white !important;
+                --bs-accordion-active-bg: var(--trinity-primary) !important;
+                --bs-accordion-active-color: white !important;
+                background-color: #2d2d2d !important;
+                color: white !important;
+                
+                &:not(.collapsed) {
+                    background-color: var(--trinity-primary) !important;
+                    color: white !important;
+                }
+            }
+            
+            .accordion-body {
+                --bs-accordion-body-bg: #1e1e1e !important;
+                --bs-accordion-body-color: white !important;
+                background-color: #1e1e1e !important;
+                color: white !important;
             }
         }
     }
