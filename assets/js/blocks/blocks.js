@@ -1185,6 +1185,18 @@ registerBlockType('trinity/enhanced-modal', {
             type: 'string',
             default: ''
         },
+        primaryButtonVariant: {
+            type: 'string',
+            default: 'primary'
+        },
+        primaryButtonAction: {
+            type: 'string',
+            default: ''
+        },
+        showPrimaryButton: {
+            type: 'boolean',
+            default: true
+        },
         secondaryButtonText: {
             type: 'string',
             default: 'Close'
@@ -1192,11 +1204,23 @@ registerBlockType('trinity/enhanced-modal', {
         secondaryButtonLink: {
             type: 'string',
             default: ''
+        },
+        secondaryButtonVariant: {
+            type: 'string',
+            default: 'secondary'
+        },
+        secondaryButtonAction: {
+            type: 'string',
+            default: 'close'
+        },
+        showSecondaryButton: {
+            type: 'boolean',
+            default: true
         }
     },
     edit: function(props) {
         const { attributes, setAttributes } = props;
-        const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, primaryButtonLink, secondaryButtonText, secondaryButtonLink } = attributes;
+        const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, primaryButtonLink, primaryButtonVariant, primaryButtonAction, showPrimaryButton, secondaryButtonText, secondaryButtonLink, secondaryButtonVariant, secondaryButtonAction, showSecondaryButton } = attributes;
 
         return [
             wp.element.createElement(InspectorControls, null,
@@ -1270,26 +1294,90 @@ registerBlockType('trinity/enhanced-modal', {
                         onChange: (value) => setAttributes({ showFooter: value })
                     }),
                     showFooter && wp.element.createElement('div', null,
-                        wp.element.createElement(TextControl, {
-                            label: 'Primary Button Text',
-                            value: primaryButtonText,
-                            onChange: (value) => setAttributes({ primaryButtonText: value })
+                        wp.element.createElement('h4', { style: { marginTop: '20px', marginBottom: '10px' } }, 'Primary Button'),
+                        wp.element.createElement(ToggleControl, {
+                            label: 'Show Primary Button',
+                            checked: showPrimaryButton,
+                            onChange: (value) => setAttributes({ showPrimaryButton: value })
                         }),
-                        wp.element.createElement(TextControl, {
-                            label: 'Primary Button Link',
-                            value: primaryButtonLink,
-                            onChange: (value) => setAttributes({ primaryButtonLink: value })
+                        showPrimaryButton && wp.element.createElement('div', null,
+                            wp.element.createElement(TextControl, {
+                                label: 'Primary Button Text',
+                                value: primaryButtonText,
+                                onChange: (value) => setAttributes({ primaryButtonText: value })
+                            }),
+                            wp.element.createElement(TextControl, {
+                                label: 'Primary Button Link',
+                                value: primaryButtonLink,
+                                onChange: (value) => setAttributes({ primaryButtonLink: value })
+                            }),
+                            wp.element.createElement(SelectControl, {
+                                label: 'Primary Button Variant',
+                                value: primaryButtonVariant,
+                                options: [
+                                    { label: 'Primary', value: 'primary' },
+                                    { label: 'Secondary', value: 'secondary' },
+                                    { label: 'Success', value: 'success' },
+                                    { label: 'Danger', value: 'danger' },
+                                    { label: 'Warning', value: 'warning' },
+                                    { label: 'Info', value: 'info' },
+                                    { label: 'Light', value: 'light' },
+                                    { label: 'Dark', value: 'dark' }
+                                ],
+                                onChange: (value) => setAttributes({ primaryButtonVariant: value })
+                            }),
+                            wp.element.createElement(SelectControl, {
+                                label: 'Primary Button Action',
+                                value: primaryButtonAction,
+                                options: [
+                                    { label: 'None', value: '' },
+                                    { label: 'Close Modal', value: 'close' }
+                                ],
+                                onChange: (value) => setAttributes({ primaryButtonAction: value })
+                            })
+                        ),
+                        wp.element.createElement('h4', { style: { marginTop: '20px', marginBottom: '10px' } }, 'Secondary Button'),
+                        wp.element.createElement(ToggleControl, {
+                            label: 'Show Secondary Button',
+                            checked: showSecondaryButton,
+                            onChange: (value) => setAttributes({ showSecondaryButton: value })
                         }),
-                        wp.element.createElement(TextControl, {
-                            label: 'Secondary Button Text',
-                            value: secondaryButtonText,
-                            onChange: (value) => setAttributes({ secondaryButtonText: value })
-                        }),
-                        wp.element.createElement(TextControl, {
-                            label: 'Secondary Button Link',
-                            value: secondaryButtonLink,
-                            onChange: (value) => setAttributes({ secondaryButtonLink: value })
-                        })
+                        showSecondaryButton && wp.element.createElement('div', null,
+                            wp.element.createElement(TextControl, {
+                                label: 'Secondary Button Text',
+                                value: secondaryButtonText,
+                                onChange: (value) => setAttributes({ secondaryButtonText: value })
+                            }),
+                            wp.element.createElement(TextControl, {
+                                label: 'Secondary Button Link',
+                                value: secondaryButtonLink,
+                                onChange: (value) => setAttributes({ secondaryButtonLink: value })
+                            }),
+                            wp.element.createElement(SelectControl, {
+                                label: 'Secondary Button Variant',
+                                value: secondaryButtonVariant,
+                                options: [
+                                    { label: 'Primary', value: 'primary' },
+                                    { label: 'Secondary', value: 'secondary' },
+                                    { label: 'Success', value: 'success' },
+                                    { label: 'Danger', value: 'danger' },
+                                    { label: 'Warning', value: 'warning' },
+                                    { label: 'Info', value: 'info' },
+                                    { label: 'Light', value: 'light' },
+                                    { label: 'Dark', value: 'dark' }
+                                ],
+                                onChange: (value) => setAttributes({ secondaryButtonVariant: value })
+                            }),
+                            wp.element.createElement(SelectControl, {
+                                label: 'Secondary Button Action',
+                                value: secondaryButtonAction,
+                                options: [
+                                    { label: 'None', value: '' },
+                                    { label: 'Close Modal', value: 'close' }
+                                ],
+                                onChange: (value) => setAttributes({ secondaryButtonAction: value })
+                            })
+                        )
                     )
                 )
             ),

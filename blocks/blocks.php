@@ -727,13 +727,17 @@ function trinity_render_scrollspy_block($attributes) {
     $smooth = $attributes['smooth'] ?? true;
     $nav_style = $attributes['navStyle'] ?? 'pills';
     $scrollspy_id = 'scrollspy-nav-' . uniqid();
+    $content_id = 'scrollspy-content-' . uniqid();
     
     if (empty($nav_items)) {
         return '<p>No navigation items added to scrollspy.</p>';
     }
     
-    $output = '<nav id="' . $scrollspy_id . '" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">';
-    $output .= '<nav class="nav nav-' . esc_attr($nav_style) . ' flex-column">';
+    $output = '<div class="trinity-scrollspy">';
+    
+    // Navigation column
+    $output .= '<div class="scrollspy-nav">';
+    $output .= '<nav id="' . $scrollspy_id . '" class="nav nav-' . esc_attr($nav_style) . ' flex-column">';
     
     foreach ($nav_items as $item) {
         $label = $item['label'] ?? '';
@@ -744,18 +748,20 @@ function trinity_render_scrollspy_block($attributes) {
     }
     
     $output .= '</nav>';
-    $output .= '</nav>';
+    $output .= '</div>';
     
-    $output .= '<div data-bs-spy="scroll" data-bs-target="#' . $scrollspy_id . '" data-bs-offset="' . intval($offset) . '" class="scrollspy-example bg-light p-4" tabindex="0">';
-    $output .= '<div id="' . esc_attr($target_id) . '">';
+    // Content column
+    $output .= '<div class="scrollspy-content" data-bs-spy="scroll" data-bs-target="#' . $scrollspy_id . '" data-bs-offset="' . intval($offset) . '" tabindex="0">';
     
     foreach ($nav_items as $item) {
         $label = $item['label'] ?? '';
         $target = $item['target'] ?? '';
         $content = $item['content'] ?? 'This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted.';
         if (!empty($label) && !empty($target)) {
-            $output .= '<h4 id="' . esc_attr($target) . '">' . esc_html($label) . '</h4>';
+            $output .= '<div class="scrollspy-item" id="' . esc_attr($target) . '">';
+            $output .= '<h4>' . esc_html($label) . '</h4>';
             $output .= '<p>' . wp_kses_post($content) . '</p>';
+            $output .= '</div>';
         }
     }
     
@@ -763,7 +769,7 @@ function trinity_render_scrollspy_block($attributes) {
     $output .= '</div>';
     
     if ($smooth) {
-        $output .= '<style>.scrollspy-example { scroll-behavior: smooth; }</style>';
+        $output .= '<style>.scrollspy-content { scroll-behavior: smooth; }</style>';
     }
     
     return $output;
@@ -915,6 +921,18 @@ function trinity_register_enhanced_modal_block() {
                 'type' => 'string',
                 'default' => ''
             ],
+            'primaryButtonVariant' => [
+                'type' => 'string',
+                'default' => 'primary'
+            ],
+            'primaryButtonAction' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'showPrimaryButton' => [
+                'type' => 'boolean',
+                'default' => true
+            ],
             'secondaryButtonText' => [
                 'type' => 'string',
                 'default' => 'Close'
@@ -922,6 +940,18 @@ function trinity_register_enhanced_modal_block() {
             'secondaryButtonLink' => [
                 'type' => 'string',
                 'default' => ''
+            ],
+            'secondaryButtonVariant' => [
+                'type' => 'string',
+                'default' => 'secondary'
+            ],
+            'secondaryButtonAction' => [
+                'type' => 'string',
+                'default' => 'close'
+            ],
+            'showSecondaryButton' => [
+                'type' => 'boolean',
+                'default' => true
             ]
         ],
         'render_callback' => 'trinity_render_enhanced_modal_block'
@@ -940,10 +970,20 @@ function trinity_render_enhanced_modal_block($attributes) {
     $trigger_text = $attributes['triggerText'] ?? 'Launch demo modal';
     $trigger_variant = $attributes['triggerVariant'] ?? 'primary';
     $show_footer = $attributes['showFooter'] ?? true;
+    
+    // Primary button attributes
     $primary_button_text = $attributes['primaryButtonText'] ?? 'Save changes';
     $primary_button_link = $attributes['primaryButtonLink'] ?? '';
+    $primary_button_variant = $attributes['primaryButtonVariant'] ?? 'primary';
+    $primary_button_action = $attributes['primaryButtonAction'] ?? '';
+    $show_primary_button = $attributes['showPrimaryButton'] ?? true;
+    
+    // Secondary button attributes
     $secondary_button_text = $attributes['secondaryButtonText'] ?? 'Close';
     $secondary_button_link = $attributes['secondaryButtonLink'] ?? '';
+    $secondary_button_variant = $attributes['secondaryButtonVariant'] ?? 'secondary';
+    $secondary_button_action = $attributes['secondaryButtonAction'] ?? 'close';
+    $show_secondary_button = $attributes['showSecondaryButton'] ?? true;
     
     $modal_classes = ['modal-dialog'];
     if (!empty($size)) {
@@ -997,21 +1037,37 @@ function trinity_render_enhanced_modal_block($attributes) {
     $output .= '</div>';
     
     // Footer
-    if ($show_footer) {
+    if ($show_footer && ($show_secondary_button || $show_primary_button)) {
         $output .= '<div class="modal-footer">';
         
         // Secondary button
-        if (!empty($secondary_button_link)) {
-            $output .= '<a href="' . esc_url($secondary_button_link) . '" class="btn btn-secondary" data-bs-dismiss="modal">' . esc_html($secondary_button_text) . '</a>';
-        } else {
-            $output .= '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . esc_html($secondary_button_text) . '</button>';
+        if ($show_secondary_button) {
+            $button_attrs = 'class="btn btn-' . esc_attr($secondary_button_variant) . '"';
+            
+            if ($secondary_button_action === 'close') {
+                $button_attrs .= ' data-bs-dismiss="modal"';
+            }
+            
+            if (!empty($secondary_button_link)) {
+                $output .= '<a href="' . esc_url($secondary_button_link) . '" ' . $button_attrs . '>' . esc_html($secondary_button_text) . '</a>';
+            } else {
+                $output .= '<button type="button" ' . $button_attrs . '>' . esc_html($secondary_button_text) . '</button>';
+            }
         }
         
         // Primary button
-        if (!empty($primary_button_link)) {
-            $output .= '<a href="' . esc_url($primary_button_link) . '" class="btn btn-primary">' . esc_html($primary_button_text) . '</a>';
-        } else {
-            $output .= '<button type="button" class="btn btn-primary">' . esc_html($primary_button_text) . '</button>';
+        if ($show_primary_button) {
+            $button_attrs = 'class="btn btn-' . esc_attr($primary_button_variant) . '"';
+            
+            if ($primary_button_action === 'close') {
+                $button_attrs .= ' data-bs-dismiss="modal"';
+            }
+            
+            if (!empty($primary_button_link)) {
+                $output .= '<a href="' . esc_url($primary_button_link) . '" ' . $button_attrs . '>' . esc_html($primary_button_text) . '</a>';
+            } else {
+                $output .= '<button type="button" ' . $button_attrs . '>' . esc_html($primary_button_text) . '</button>';
+            }
         }
         
         $output .= '</div>';

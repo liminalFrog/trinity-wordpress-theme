@@ -222,17 +222,25 @@
         }
         
         .carousel-caption {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             @include backdrop-filter(blur(10px));
             border-radius: var(--trinity-border-radius);
             padding: 1rem 2rem;
             bottom: 2rem;
             left: 2rem;
             right: 2rem;
+            z-index: 10;
+            position: absolute;
             
             h5 {
                 font-weight: 600;
                 margin-bottom: 0.5rem;
+                color: white;
+            }
+            
+            p {
+                color: rgba(255, 255, 255, 0.9);
+                margin-bottom: 0;
             }
         }
     }
@@ -343,9 +351,26 @@
                 color: var(--trinity-primary);
             }
         }
-        
-        // Dark theme
-        [data-theme="dark"] & {
+    }
+    
+    // Dark theme
+    [data-theme="dark"] & {
+        .list-group {
+            .list-group-item {
+                background-color: #1e1e1e;
+                border-color: #333;
+                color: white;
+                
+                &.list-group-item-action:hover {
+                    background-color: var(--trinity-primary);
+                }
+            }
+        }
+    }
+    
+    // Dark mode support using prefers-color-scheme
+    @media (prefers-color-scheme: dark) {
+        .list-group {
             .list-group-item {
                 background-color: #1e1e1e;
                 border-color: #333;
@@ -389,7 +414,7 @@
         }
         
         &.table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.025);
+            background-color: rgba(0, 0, 0, 0.015);
         }
         
         // Dark theme
@@ -413,7 +438,7 @@
             }
             
             &.table-striped tbody tr:nth-of-type(odd) {
-                background-color: rgba(255, 255, 255, 0.05);
+                background-color: rgba(255, 255, 255, 0.02);
             }
         }
     }
@@ -426,28 +451,100 @@
 
 // Scroll spy styles
 .trinity-scrollspy {
-    .nav {
-        .nav-link {
-            color: #6c757d;
-            transition: var(--trinity-transition-fast);
+    display: flex;
+    gap: 2rem;
+    
+    .scrollspy-nav {
+        flex: 0 0 200px;
+        position: sticky;
+        top: 2rem;
+        height: fit-content;
+        
+        .nav {
+            flex-direction: column;
             
-            &:hover,
-            &.active {
+            .nav-link {
+                color: #6c757d;
+                transition: var(--trinity-transition-fast);
+                padding: 0.5rem 1rem;
+                border-radius: var(--trinity-border-radius);
+                text-decoration: none;
+                border: none;
+                
+                &:hover,
+                &.active {
+                    color: var(--trinity-primary);
+                    background-color: rgba(var(--bs-primary-rgb), 0.1);
+                }
+            }
+        }
+    }
+    
+    .scrollspy-content {
+        flex: 1;
+        height: 400px;
+        overflow-y: auto;
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: var(--trinity-border-radius);
+        
+        .scrollspy-item {
+            margin-bottom: 2rem;
+            
+            h4 {
+                margin-bottom: 1rem;
+                font-weight: 600;
                 color: var(--trinity-primary);
-                background-color: rgba(var(--bs-primary-rgb), 0.1);
+            }
+            
+            &:last-child {
+                margin-bottom: 0;
             }
         }
     }
     
     // Dark theme
     [data-theme="dark"] & {
-        .nav .nav-link {
+        .scrollspy-nav .nav .nav-link {
             color: #adb5bd;
             
             &:hover,
             &.active {
                 color: var(--trinity-primary);
                 background-color: rgba(var(--bs-primary-rgb), 0.2);
+            }
+        }
+        
+        .scrollspy-content {
+            background-color: #1e1e1e;
+            border-color: #333;
+            color: white;
+            
+            .scrollspy-item h4 {
+                color: var(--trinity-primary);
+            }
+        }
+    }
+    
+    // Dark mode support using prefers-color-scheme
+    @media (prefers-color-scheme: dark) {
+        .scrollspy-nav .nav .nav-link {
+            color: #adb5bd;
+            
+            &:hover,
+            &.active {
+                color: var(--trinity-primary);
+                background-color: rgba(var(--bs-primary-rgb), 0.2);
+            }
+        }
+        
+        .scrollspy-content {
+            background-color: #1e1e1e;
+            border-color: #333;
+            color: white;
+            
+            .scrollspy-item h4 {
+                color: var(--trinity-primary);
             }
         }
     }
@@ -641,19 +738,19 @@
         
         &.table-striped {
             tbody tr:nth-of-type(odd) {
-                background-color: rgba(var(--bs-secondary-rgb), 0.05);
+                background-color: rgba(var(--bs-secondary-rgb), 0.02);
             }
             
             // Dark mode support for striped tables
             @media (prefers-color-scheme: dark) {
                 tbody tr:nth-of-type(odd) {
-                    background-color: rgba(255, 255, 255, 0.05);
+                    background-color: rgba(255, 255, 255, 0.02);
                 }
             }
             
             // Bootstrap dark theme support
             &.table-dark tbody tr:nth-of-type(odd) {
-                background-color: rgba(255, 255, 255, 0.05);
+                background-color: rgba(255, 255, 255, 0.02);
             }
         }
         

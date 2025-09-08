@@ -11,7 +11,11 @@
     @include center-content;
     z-index: 9999;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    
+    background-image: url(assets/images/dot_seamless_light.png);
+    background-size: 60px 60px;
+    background-position: center;
+    background-repeat: repeat;
+
     &.hidden {
         opacity: 0;
         visibility: hidden;
@@ -21,6 +25,7 @@
         width: 3rem;
         height: 3rem;
         border-width: 0.3em;
+        box-shadow: 0 0 1rem, inset 0 0 0.5rem;
     }
     
     // Dark theme
