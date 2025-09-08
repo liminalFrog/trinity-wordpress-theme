@@ -120,6 +120,23 @@ body[data-theme="dark"] {
     .border {
         border-color: #333333 !important;
     }
+    
+    // Code and pre elements dark mode
+    code {
+        background: #2d2d2d !important;
+        color: #f8f9fa !important;
+    }
+    
+    pre {
+        background: #2d2d2d !important;
+        color: #f8f9fa !important;
+        border: 1px solid #333 !important;
+        
+        code {
+            background: none !important;
+            color: inherit !important;
+        }
+    }
 }
 
 // Responsive images default to rounded
@@ -251,6 +268,15 @@ img {
             background: none;
             padding: 0;
         }
+    }
+}
+
+// Responsive images default to rounded
+img {
+    border-radius: 0.375rem;
+    
+    &.rounded-0 {
+        border-radius: 0;
     }
 }
 
