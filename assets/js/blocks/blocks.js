@@ -480,11 +480,31 @@ wp.blocks.registerBlockType('trinity/carousel', {
         autoplay: {
             type: 'boolean',
             default: true
+        },
+        imageId: {
+            type: 'number',
+            default: 0
+        },
+        fullWidth: {
+            type: 'boolean',
+            default: false
+        },
+        height: {
+            type: 'string',
+            default: '400px'
+        },
+        fade: {
+            type: 'boolean',
+            default: false
+        },
+        interval: {
+            type: 'number',
+            default: 5000
         }
     },
     edit: function(props) {
         const { attributes, setAttributes } = props;
-        const { images, showControls, showIndicators, autoplay } = attributes;
+        const { images, showControls, showIndicators, autoplay, imageId, fullWidth, height, fade, interval } = attributes;
 
         return [
             wp.element.createElement(wp.blockEditor.InspectorControls, null,
@@ -503,13 +523,48 @@ wp.blocks.registerBlockType('trinity/carousel', {
                         label: 'Autoplay',
                         checked: autoplay,
                         onChange: (value) => setAttributes({ autoplay: value })
+                    }),
+                    wp.element.createElement(wp.components.ToggleControl, {
+                        label: 'Full Width',
+                        checked: fullWidth,
+                        onChange: (value) => setAttributes({ fullWidth: value })
+                    }),
+                    wp.element.createElement(wp.components.ToggleControl, {
+                        label: 'Fade Transition',
+                        checked: fade,
+                        onChange: (value) => setAttributes({ fade: value })
+                    }),
+                    wp.element.createElement(wp.components.TextControl, {
+                        label: 'Height',
+                        value: height,
+                        onChange: (value) => setAttributes({ height: value })
+                    }),
+                    wp.element.createElement(wp.components.RangeControl, {
+                        label: 'Interval (ms)',
+                        value: interval,
+                        min: 1000,
+                        max: 10000,
+                        step: 500,
+                        onChange: (value) => setAttributes({ interval: value })
+                    }),
+                    wp.element.createElement(wp.blockEditor.MediaUpload, {
+                        onSelect: (media) => setAttributes({ imageId: media.id }),
+                        allowedTypes: ['image'],
+                        value: imageId,
+                        render: ({ open }) => (
+                            wp.element.createElement(wp.components.Button, {
+                                onClick: open,
+                                isPrimary: true
+                            }, imageId ? 'Change Image' : 'Select Image')
+                        )
                     })
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-block-placeholder' },
                 wp.element.createElement('div', { className: 'bootstrap-icon' }, '🎠'),
                 wp.element.createElement('h3', null, 'Bootstrap Carousel'),
-                wp.element.createElement('p', null, `Controls: ${showControls ? 'Yes' : 'No'}, Indicators: ${showIndicators ? 'Yes' : 'No'}, Autoplay: ${autoplay ? 'Yes' : 'No'}`)
+                wp.element.createElement('p', null, `Controls: ${showControls ? 'Yes' : 'No'}, Indicators: ${showIndicators ? 'Yes' : 'No'}, Autoplay: ${autoplay ? 'Yes' : 'No'}`),
+                wp.element.createElement('p', null, `Full Width: ${fullWidth ? 'Yes' : 'No'}, Fade: ${fade ? 'Yes' : 'No'}, Height: ${height}`)
             )
         ];
     },
@@ -618,6 +673,410 @@ wp.blocks.registerBlockType('trinity/tabs', {
                 wp.element.createElement('div', { className: 'bootstrap-icon' }, '📑'),
                 wp.element.createElement('h3', null, 'Bootstrap Tabs'),
                 wp.element.createElement('p', null, `${tabs.length} tabs (${style} style)`)
+            )
+        ];
+    },
+    save: function() {
+        return null; // Server-side rendering
+    }
+});
+
+// Scrollspy Block
+registerBlockType('trinity/scrollspy', {
+    title: 'Bootstrap Scrollspy',
+    icon: 'list-view',
+    category: 'trinity-blocks',
+    attributes: {
+        targetId: {
+            type: 'string',
+            default: 'scrollspy-content'
+        },
+        navItems: {
+            type: 'array',
+            default: [
+                { label: 'Item 1', target: 'item-1' },
+                { label: 'Item 2', target: 'item-2' },
+                { label: 'Item 3', target: 'item-3' }
+            ]
+        },
+        offset: {
+            type: 'number',
+            default: 0
+        },
+        smooth: {
+            type: 'boolean',
+            default: true
+        },
+        navStyle: {
+            type: 'string',
+            default: 'pills'
+        }
+    },
+    edit: function(props) {
+        const { attributes, setAttributes } = props;
+        const { targetId, navItems, offset, smooth, navStyle } = attributes;
+
+        return [
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'Scrollspy Settings' },
+                    wp.element.createElement(TextControl, {
+                        label: 'Target ID',
+                        value: targetId,
+                        onChange: (value) => setAttributes({ targetId: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Navigation Style',
+                        value: navStyle,
+                        options: [
+                            { label: 'Pills', value: 'pills' },
+                            { label: 'Tabs', value: 'tabs' }
+                        ],
+                        onChange: (value) => setAttributes({ navStyle: value })
+                    }),
+                    wp.element.createElement(RangeControl, {
+                        label: 'Offset',
+                        value: offset,
+                        min: 0,
+                        max: 100,
+                        onChange: (value) => setAttributes({ offset: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Smooth Scrolling',
+                        checked: smooth,
+                        onChange: (value) => setAttributes({ smooth: value })
+                    })
+                )
+            ),
+            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
+                wp.element.createElement('div', { className: 'bootstrap-icon' }, '📍'),
+                wp.element.createElement('h3', null, 'Bootstrap Scrollspy'),
+                wp.element.createElement('p', null, `${navItems.length} navigation items (${navStyle} style)`)
+            )
+        ];
+    },
+    save: function() {
+        return null; // Server-side rendering
+    }
+});
+
+// List Group Block
+registerBlockType('trinity/list-group', {
+    title: 'Bootstrap List Group',
+    icon: 'editor-ul',
+    category: 'trinity-blocks',
+    attributes: {
+        items: {
+            type: 'array',
+            default: [
+                { text: 'First item', active: false, disabled: false, variant: '', link: '' },
+                { text: 'Second item', active: true, disabled: false, variant: '', link: '' },
+                { text: 'Third item', active: false, disabled: false, variant: '', link: '' }
+            ]
+        },
+        flush: {
+            type: 'boolean',
+            default: false
+        },
+        numbered: {
+            type: 'boolean',
+            default: false
+        },
+        horizontal: {
+            type: 'boolean',
+            default: false
+        }
+    },
+    edit: function(props) {
+        const { attributes, setAttributes } = props;
+        const { items, flush, numbered, horizontal } = attributes;
+
+        return [
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'List Group Settings' },
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Flush',
+                        checked: flush,
+                        onChange: (value) => setAttributes({ flush: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Numbered',
+                        checked: numbered,
+                        onChange: (value) => setAttributes({ numbered: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Horizontal',
+                        checked: horizontal,
+                        onChange: (value) => setAttributes({ horizontal: value })
+                    })
+                )
+            ),
+            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
+                wp.element.createElement('div', { className: 'bootstrap-icon' }, '📝'),
+                wp.element.createElement('h3', null, 'Bootstrap List Group'),
+                wp.element.createElement('p', null, `${items.length} items${flush ? ' (flush)' : ''}${numbered ? ' (numbered)' : ''}${horizontal ? ' (horizontal)' : ''}`)
+            )
+        ];
+    },
+    save: function() {
+        return null; // Server-side rendering
+    }
+});
+
+// Enhanced Modal Block
+registerBlockType('trinity/enhanced-modal', {
+    title: 'Bootstrap Enhanced Modal',
+    icon: 'admin-page',
+    category: 'trinity-blocks',
+    attributes: {
+        modalId: {
+            type: 'string',
+            default: ''
+        },
+        title: {
+            type: 'string',
+            default: 'Modal title'
+        },
+        content: {
+            type: 'string',
+            default: 'Modal body text goes here.'
+        },
+        size: {
+            type: 'string',
+            default: ''
+        },
+        centered: {
+            type: 'boolean',
+            default: false
+        },
+        scrollable: {
+            type: 'boolean',
+            default: false
+        },
+        fullscreen: {
+            type: 'string',
+            default: ''
+        },
+        backdrop: {
+            type: 'string',
+            default: 'true'
+        },
+        triggerText: {
+            type: 'string',
+            default: 'Launch demo modal'
+        },
+        triggerVariant: {
+            type: 'string',
+            default: 'primary'
+        },
+        showFooter: {
+            type: 'boolean',
+            default: true
+        },
+        primaryButtonText: {
+            type: 'string',
+            default: 'Save changes'
+        },
+        secondaryButtonText: {
+            type: 'string',
+            default: 'Close'
+        }
+    },
+    edit: function(props) {
+        const { attributes, setAttributes } = props;
+        const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, secondaryButtonText } = attributes;
+
+        return [
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'Modal Settings' },
+                    wp.element.createElement(TextControl, {
+                        label: 'Modal ID',
+                        value: modalId,
+                        onChange: (value) => setAttributes({ modalId: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Title',
+                        value: title,
+                        onChange: (value) => setAttributes({ title: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Content',
+                        value: content,
+                        onChange: (value) => setAttributes({ content: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Size',
+                        value: size,
+                        options: [
+                            { label: 'Default', value: '' },
+                            { label: 'Small', value: 'sm' },
+                            { label: 'Large', value: 'lg' },
+                            { label: 'Extra Large', value: 'xl' }
+                        ],
+                        onChange: (value) => setAttributes({ size: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Centered',
+                        checked: centered,
+                        onChange: (value) => setAttributes({ centered: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Scrollable',
+                        checked: scrollable,
+                        onChange: (value) => setAttributes({ scrollable: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Show Footer',
+                        checked: showFooter,
+                        onChange: (value) => setAttributes({ showFooter: value })
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Trigger Button' },
+                    wp.element.createElement(TextControl, {
+                        label: 'Trigger Text',
+                        value: triggerText,
+                        onChange: (value) => setAttributes({ triggerText: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Trigger Variant',
+                        value: triggerVariant,
+                        options: [
+                            { label: 'Primary', value: 'primary' },
+                            { label: 'Secondary', value: 'secondary' },
+                            { label: 'Success', value: 'success' },
+                            { label: 'Danger', value: 'danger' },
+                            { label: 'Warning', value: 'warning' },
+                            { label: 'Info', value: 'info' }
+                        ],
+                        onChange: (value) => setAttributes({ triggerVariant: value })
+                    })
+                )
+            ),
+            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
+                wp.element.createElement('div', { className: 'bootstrap-icon' }, '🪟'),
+                wp.element.createElement('h3', null, 'Bootstrap Enhanced Modal'),
+                wp.element.createElement('p', null, `"${title}" - ${size ? size.toUpperCase() + ' ' : ''}${centered ? 'Centered ' : ''}Modal`)
+            )
+        ];
+    },
+    save: function() {
+        return null; // Server-side rendering
+    }
+});
+
+// Bootstrap Table Block
+registerBlockType('trinity/table', {
+    title: 'Bootstrap Table',
+    icon: 'editor-table',
+    category: 'trinity-blocks',
+    attributes: {
+        headers: {
+            type: 'array',
+            default: ['First', 'Last', 'Handle']
+        },
+        rows: {
+            type: 'array',
+            default: [
+                ['Mark', 'Otto', '@mdo'],
+                ['Jacob', 'Thornton', '@fat'],
+                ['Larry', 'the Bird', '@twitter']
+            ]
+        },
+        striped: {
+            type: 'boolean',
+            default: false
+        },
+        hover: {
+            type: 'boolean',
+            default: false
+        },
+        bordered: {
+            type: 'boolean',
+            default: false
+        },
+        borderless: {
+            type: 'boolean',
+            default: false
+        },
+        small: {
+            type: 'boolean',
+            default: false
+        },
+        responsive: {
+            type: 'boolean',
+            default: true
+        },
+        variant: {
+            type: 'string',
+            default: ''
+        },
+        caption: {
+            type: 'string',
+            default: ''
+        }
+    },
+    edit: function(props) {
+        const { attributes, setAttributes } = props;
+        const { headers, rows, striped, hover, bordered, borderless, small, responsive, variant, caption } = attributes;
+
+        return [
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'Table Settings' },
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Striped',
+                        checked: striped,
+                        onChange: (value) => setAttributes({ striped: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Hover',
+                        checked: hover,
+                        onChange: (value) => setAttributes({ hover: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Bordered',
+                        checked: bordered,
+                        onChange: (value) => setAttributes({ bordered: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Borderless',
+                        checked: borderless,
+                        onChange: (value) => setAttributes({ borderless: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Small',
+                        checked: small,
+                        onChange: (value) => setAttributes({ small: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Responsive',
+                        checked: responsive,
+                        onChange: (value) => setAttributes({ responsive: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Variant',
+                        value: variant,
+                        options: [
+                            { label: 'Default', value: '' },
+                            { label: 'Dark', value: 'dark' },
+                            { label: 'Primary', value: 'primary' },
+                            { label: 'Secondary', value: 'secondary' },
+                            { label: 'Success', value: 'success' },
+                            { label: 'Danger', value: 'danger' },
+                            { label: 'Warning', value: 'warning' },
+                            { label: 'Info', value: 'info' }
+                        ],
+                        onChange: (value) => setAttributes({ variant: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Caption',
+                        value: caption,
+                        onChange: (value) => setAttributes({ caption: value })
+                    })
+                )
+            ),
+            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
+                wp.element.createElement('div', { className: 'bootstrap-icon' }, '📊'),
+                wp.element.createElement('h3', null, 'Bootstrap Table'),
+                wp.element.createElement('p', null, `${headers.length} columns, ${rows.length} rows${hover ? ' (hover)' : ''}${striped ? ' (striped)' : ''}`)
             )
         ];
     },
