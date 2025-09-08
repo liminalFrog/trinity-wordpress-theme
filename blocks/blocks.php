@@ -109,6 +109,30 @@ function trinity_register_accordion_block() {
             'flush' => [
                 'type' => 'boolean',
                 'default' => false
+            ],
+            'headerFontSize' => [
+                'type' => 'string',
+                'default' => '1.25rem'
+            ],
+            'headerFontWeight' => [
+                'type' => 'string',
+                'default' => '500'
+            ],
+            'headerFontFamily' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'contentFontSize' => [
+                'type' => 'string',
+                'default' => '1rem'
+            ],
+            'contentFontWeight' => [
+                'type' => 'string',
+                'default' => '400'
+            ],
+            'contentFontFamily' => [
+                'type' => 'string',
+                'default' => ''
             ]
         ],
         'render_callback' => 'trinity_render_accordion_block'
@@ -118,12 +142,30 @@ function trinity_register_accordion_block() {
 function trinity_render_accordion_block($attributes) {
     $items = $attributes['items'] ?? [];
     $flush = $attributes['flush'] ?? false;
+    $header_font_size = $attributes['headerFontSize'] ?? '1.25rem';
+    $header_font_weight = $attributes['headerFontWeight'] ?? '500';
+    $header_font_family = $attributes['headerFontFamily'] ?? '';
+    $content_font_size = $attributes['contentFontSize'] ?? '1rem';
+    $content_font_weight = $attributes['contentFontWeight'] ?? '400';
+    $content_font_family = $attributes['contentFontFamily'] ?? '';
     $accordion_id = 'accordion-' . uniqid();
     
     $classes = 'accordion';
     if ($flush) {
         $classes .= ' accordion-flush';
     }
+    
+    $header_styles = [];
+    if ($header_font_size) $header_styles[] = 'font-size: ' . esc_attr($header_font_size);
+    if ($header_font_weight) $header_styles[] = 'font-weight: ' . esc_attr($header_font_weight);
+    if ($header_font_family) $header_styles[] = 'font-family: ' . esc_attr($header_font_family);
+    $header_style_attr = !empty($header_styles) ? ' style="' . implode('; ', $header_styles) . '"' : '';
+    
+    $content_styles = [];
+    if ($content_font_size) $content_styles[] = 'font-size: ' . esc_attr($content_font_size);
+    if ($content_font_weight) $content_styles[] = 'font-weight: ' . esc_attr($content_font_weight);
+    if ($content_font_family) $content_styles[] = 'font-family: ' . esc_attr($content_font_family);
+    $content_style_attr = !empty($content_styles) ? ' style="' . implode('; ', $content_styles) . '"' : '';
     
     $output = '<div class="' . $classes . '" id="' . $accordion_id . '">';
     
@@ -135,12 +177,12 @@ function trinity_render_accordion_block($attributes) {
         
         $output .= '<div class="accordion-item">';
         $output .= '<h2 class="accordion-header" id="heading-' . $item_id . '">';
-        $output .= '<button class="accordion-button' . ($open ? '' : ' collapsed') . '" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-' . $item_id . '" aria-expanded="' . ($open ? 'true' : 'false') . '" aria-controls="collapse-' . $item_id . '">';
+        $output .= '<button class="accordion-button' . ($open ? '' : ' collapsed') . '" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-' . $item_id . '" aria-expanded="' . ($open ? 'true' : 'false') . '" aria-controls="collapse-' . $item_id . '"' . $header_style_attr . '>';
         $output .= esc_html($title);
         $output .= '</button>';
         $output .= '</h2>';
         $output .= '<div id="collapse-' . $item_id . '" class="accordion-collapse collapse' . ($open ? ' show' : '') . '" aria-labelledby="heading-' . $item_id . '" data-bs-parent="#' . $accordion_id . '">';
-        $output .= '<div class="accordion-body">';
+        $output .= '<div class="accordion-body"' . $content_style_attr . '>';
         $output .= wp_kses_post($content);
         $output .= '</div>';
         $output .= '</div>';
@@ -710,9 +752,10 @@ function trinity_render_scrollspy_block($attributes) {
     foreach ($nav_items as $item) {
         $label = $item['label'] ?? '';
         $target = $item['target'] ?? '';
+        $content = $item['content'] ?? 'This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted.';
         if (!empty($label) && !empty($target)) {
             $output .= '<h4 id="' . esc_attr($target) . '">' . esc_html($label) . '</h4>';
-            $output .= '<p>This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted.</p>';
+            $output .= '<p>' . wp_kses_post($content) . '</p>';
         }
     }
     
@@ -868,9 +911,17 @@ function trinity_register_enhanced_modal_block() {
                 'type' => 'string',
                 'default' => 'Save changes'
             ],
+            'primaryButtonLink' => [
+                'type' => 'string',
+                'default' => ''
+            ],
             'secondaryButtonText' => [
                 'type' => 'string',
                 'default' => 'Close'
+            ],
+            'secondaryButtonLink' => [
+                'type' => 'string',
+                'default' => ''
             ]
         ],
         'render_callback' => 'trinity_render_enhanced_modal_block'
@@ -890,7 +941,9 @@ function trinity_render_enhanced_modal_block($attributes) {
     $trigger_variant = $attributes['triggerVariant'] ?? 'primary';
     $show_footer = $attributes['showFooter'] ?? true;
     $primary_button_text = $attributes['primaryButtonText'] ?? 'Save changes';
+    $primary_button_link = $attributes['primaryButtonLink'] ?? '';
     $secondary_button_text = $attributes['secondaryButtonText'] ?? 'Close';
+    $secondary_button_link = $attributes['secondaryButtonLink'] ?? '';
     
     $modal_classes = ['modal-dialog'];
     if (!empty($size)) {
@@ -946,8 +999,21 @@ function trinity_render_enhanced_modal_block($attributes) {
     // Footer
     if ($show_footer) {
         $output .= '<div class="modal-footer">';
-        $output .= '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . esc_html($secondary_button_text) . '</button>';
-        $output .= '<button type="button" class="btn btn-primary">' . esc_html($primary_button_text) . '</button>';
+        
+        // Secondary button
+        if (!empty($secondary_button_link)) {
+            $output .= '<a href="' . esc_url($secondary_button_link) . '" class="btn btn-secondary" data-bs-dismiss="modal">' . esc_html($secondary_button_text) . '</a>';
+        } else {
+            $output .= '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . esc_html($secondary_button_text) . '</button>';
+        }
+        
+        // Primary button
+        if (!empty($primary_button_link)) {
+            $output .= '<a href="' . esc_url($primary_button_link) . '" class="btn btn-primary">' . esc_html($primary_button_text) . '</a>';
+        } else {
+            $output .= '<button type="button" class="btn btn-primary">' . esc_html($primary_button_text) . '</button>';
+        }
+        
         $output .= '</div>';
     }
     

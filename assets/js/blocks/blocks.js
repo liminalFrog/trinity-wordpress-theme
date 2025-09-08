@@ -112,11 +112,35 @@ registerBlockType('trinity/accordion', {
         flush: {
             type: 'boolean',
             default: false
+        },
+        headerFontSize: {
+            type: 'string',
+            default: '1.25rem'
+        },
+        headerFontWeight: {
+            type: 'string',
+            default: '500'
+        },
+        headerFontFamily: {
+            type: 'string',
+            default: ''
+        },
+        contentFontSize: {
+            type: 'string',
+            default: '1rem'
+        },
+        contentFontWeight: {
+            type: 'string',
+            default: '400'
+        },
+        contentFontFamily: {
+            type: 'string',
+            default: ''
         }
     },
     edit: function(props) {
         const { attributes, setAttributes } = props;
-        const { items, flush } = attributes;
+        const { items, flush, headerFontSize, headerFontWeight, headerFontFamily, contentFontSize, contentFontWeight, contentFontFamily } = attributes;
 
         const addItem = () => {
             const newItems = [...items, {
@@ -150,6 +174,60 @@ registerBlockType('trinity/accordion', {
                         isPrimary: true,
                         onClick: addItem
                     }, 'Add Item')
+                ),
+                wp.element.createElement(PanelBody, { title: 'Header Typography', initialOpen: false },
+                    wp.element.createElement(TextControl, {
+                        label: 'Font Size',
+                        value: headerFontSize,
+                        onChange: (value) => setAttributes({ headerFontSize: value }),
+                        placeholder: '1.25rem'
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Font Weight',
+                        value: headerFontWeight,
+                        options: [
+                            { label: 'Light (300)', value: '300' },
+                            { label: 'Normal (400)', value: '400' },
+                            { label: 'Medium (500)', value: '500' },
+                            { label: 'Semi-bold (600)', value: '600' },
+                            { label: 'Bold (700)', value: '700' },
+                            { label: 'Extra-bold (800)', value: '800' }
+                        ],
+                        onChange: (value) => setAttributes({ headerFontWeight: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Font Family',
+                        value: headerFontFamily,
+                        onChange: (value) => setAttributes({ headerFontFamily: value }),
+                        placeholder: 'inherit'
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Content Typography', initialOpen: false },
+                    wp.element.createElement(TextControl, {
+                        label: 'Font Size',
+                        value: contentFontSize,
+                        onChange: (value) => setAttributes({ contentFontSize: value }),
+                        placeholder: '1rem'
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Font Weight',
+                        value: contentFontWeight,
+                        options: [
+                            { label: 'Light (300)', value: '300' },
+                            { label: 'Normal (400)', value: '400' },
+                            { label: 'Medium (500)', value: '500' },
+                            { label: 'Semi-bold (600)', value: '600' },
+                            { label: 'Bold (700)', value: '700' },
+                            { label: 'Extra-bold (800)', value: '800' }
+                        ],
+                        onChange: (value) => setAttributes({ contentFontWeight: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Font Family',
+                        value: contentFontFamily,
+                        onChange: (value) => setAttributes({ contentFontFamily: value }),
+                        placeholder: 'inherit'
+                    })
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-accordion-preview' },
@@ -162,7 +240,12 @@ registerBlockType('trinity/accordion', {
                                     className: `accordion-button${item.open ? '' : ' collapsed'}`,
                                     value: item.title,
                                     onChange: (value) => updateItem(index, 'title', value),
-                                    placeholder: 'Accordion title...'
+                                    placeholder: 'Accordion title...',
+                                    style: {
+                                        fontSize: headerFontSize,
+                                        fontWeight: headerFontWeight,
+                                        fontFamily: headerFontFamily || 'inherit'
+                                    }
                                 }),
                                 wp.element.createElement(Button, {
                                     isDestructive: true,
@@ -179,7 +262,12 @@ registerBlockType('trinity/accordion', {
                                         tagName: 'div',
                                         value: item.content,
                                         onChange: (value) => updateItem(index, 'content', value),
-                                        placeholder: 'Accordion content...'
+                                        placeholder: 'Accordion content...',
+                                        style: {
+                                            fontSize: contentFontSize,
+                                            fontWeight: contentFontWeight,
+                                            fontFamily: contentFontFamily || 'inherit'
+                                        }
                                     })
                                 )
                             )
@@ -465,7 +553,7 @@ wp.blocks.registerBlockType('trinity/carousel', {
     icon: 'images-alt2',
     category: 'trinity-blocks',
     attributes: {
-        images: {
+        slides: {
             type: 'array',
             default: []
         },
@@ -477,13 +565,9 @@ wp.blocks.registerBlockType('trinity/carousel', {
             type: 'boolean',
             default: true
         },
-        autoplay: {
+        autoSlide: {
             type: 'boolean',
-            default: true
-        },
-        imageId: {
-            type: 'number',
-            default: 0
+            default: false
         },
         fullWidth: {
             type: 'boolean',
@@ -504,7 +588,46 @@ wp.blocks.registerBlockType('trinity/carousel', {
     },
     edit: function(props) {
         const { attributes, setAttributes } = props;
-        const { images, showControls, showIndicators, autoplay, imageId, fullWidth, height, fade, interval } = attributes;
+        const { slides, showControls, showIndicators, autoSlide, fullWidth, height, fade, interval } = attributes;
+
+        const addSlide = () => {
+            const newSlides = [...slides, {
+                imageId: 0,
+                image: '',
+                title: '',
+                content: '',
+                link: '',
+                linkText: ''
+            }];
+            setAttributes({ slides: newSlides });
+        };
+
+        const removeSlide = (index) => {
+            const newSlides = slides.filter((_, i) => i !== index);
+            setAttributes({ slides: newSlides });
+        };
+
+        const updateSlide = (index, field, value) => {
+            const newSlides = [...slides];
+            newSlides[index] = { ...newSlides[index], [field]: value };
+            setAttributes({ slides: newSlides });
+        };
+
+        const selectImage = (index) => {
+            const frame = wp.media({
+                title: 'Select Carousel Image',
+                button: { text: 'Use Image' },
+                multiple: false
+            });
+
+            frame.on('select', function() {
+                const attachment = frame.state().get('selection').first().toJSON();
+                updateSlide(index, 'imageId', attachment.id);
+                updateSlide(index, 'image', attachment.url);
+            });
+
+            frame.open();
+        };
 
         return [
             wp.element.createElement(wp.blockEditor.InspectorControls, null,
@@ -520,9 +643,9 @@ wp.blocks.registerBlockType('trinity/carousel', {
                         onChange: (value) => setAttributes({ showIndicators: value })
                     }),
                     wp.element.createElement(wp.components.ToggleControl, {
-                        label: 'Autoplay',
-                        checked: autoplay,
-                        onChange: (value) => setAttributes({ autoplay: value })
+                        label: 'Auto Slide',
+                        checked: autoSlide,
+                        onChange: (value) => setAttributes({ autoSlide: value })
                     }),
                     wp.element.createElement(wp.components.ToggleControl, {
                         label: 'Full Width',
@@ -546,25 +669,65 @@ wp.blocks.registerBlockType('trinity/carousel', {
                         max: 10000,
                         step: 500,
                         onChange: (value) => setAttributes({ interval: value })
-                    }),
-                    wp.element.createElement(wp.blockEditor.MediaUpload, {
-                        onSelect: (media) => setAttributes({ imageId: media.id }),
-                        allowedTypes: ['image'],
-                        value: imageId,
-                        render: ({ open }) => (
-                            wp.element.createElement(wp.components.Button, {
-                                onClick: open,
-                                isPrimary: true
-                            }, imageId ? 'Change Image' : 'Select Image')
-                        )
                     })
+                ),
+                wp.element.createElement(wp.components.PanelBody, { title: 'Slides', initialOpen: false },
+                    wp.element.createElement(wp.components.Button, {
+                        isPrimary: true,
+                        onClick: addSlide
+                    }, 'Add Slide'),
+                    slides.map((slide, index) => 
+                        wp.element.createElement('div', { 
+                            key: index, 
+                            style: { 
+                                padding: '1rem', 
+                                marginTop: '1rem', 
+                                border: '1px solid #ddd', 
+                                borderRadius: '4px' 
+                            } 
+                        },
+                            wp.element.createElement('h4', null, `Slide ${index + 1}`),
+                            wp.element.createElement(wp.components.Button, {
+                                isSecondary: true,
+                                onClick: () => selectImage(index)
+                            }, slide.image ? 'Change Image' : 'Select Image'),
+                            slide.image && wp.element.createElement('img', {
+                                src: slide.image,
+                                style: { width: '100%', maxWidth: '200px', height: 'auto', marginTop: '0.5rem' }
+                            }),
+                            wp.element.createElement(wp.components.TextControl, {
+                                label: 'Title',
+                                value: slide.title || '',
+                                onChange: (value) => updateSlide(index, 'title', value)
+                            }),
+                            wp.element.createElement(wp.components.TextareaControl, {
+                                label: 'Content',
+                                value: slide.content || '',
+                                onChange: (value) => updateSlide(index, 'content', value)
+                            }),
+                            wp.element.createElement(wp.components.TextControl, {
+                                label: 'Link URL',
+                                value: slide.link || '',
+                                onChange: (value) => updateSlide(index, 'link', value)
+                            }),
+                            wp.element.createElement(wp.components.TextControl, {
+                                label: 'Link Text',
+                                value: slide.linkText || '',
+                                onChange: (value) => updateSlide(index, 'linkText', value)
+                            }),
+                            wp.element.createElement(wp.components.Button, {
+                                isDestructive: true,
+                                onClick: () => removeSlide(index),
+                                style: { marginTop: '0.5rem' }
+                            }, 'Remove Slide')
+                        )
+                    )
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-block-placeholder' },
                 wp.element.createElement('div', { className: 'bootstrap-icon' }, '🎠'),
                 wp.element.createElement('h3', null, 'Bootstrap Carousel'),
-                wp.element.createElement('p', null, `Controls: ${showControls ? 'Yes' : 'No'}, Indicators: ${showIndicators ? 'Yes' : 'No'}, Autoplay: ${autoplay ? 'Yes' : 'No'}`),
-                wp.element.createElement('p', null, `Full Width: ${fullWidth ? 'Yes' : 'No'}, Fade: ${fade ? 'Yes' : 'No'}, Height: ${height}`)
+                wp.element.createElement('p', null, `${slides.length} slides${fullWidth ? ' (full width)' : ''}${fade ? ' (fade)' : ''}`)
             )
         ];
     },
@@ -694,9 +857,9 @@ registerBlockType('trinity/scrollspy', {
         navItems: {
             type: 'array',
             default: [
-                { label: 'Item 1', target: 'item-1' },
-                { label: 'Item 2', target: 'item-2' },
-                { label: 'Item 3', target: 'item-3' }
+                { label: 'Item 1', target: 'item-1', content: 'This is some placeholder content for Item 1. As you scroll down the page, the appropriate navigation link is highlighted.' },
+                { label: 'Item 2', target: 'item-2', content: 'This is some placeholder content for Item 2. Note that as you scroll, the navigation automatically highlights the current section.' },
+                { label: 'Item 3', target: 'item-3', content: 'This is some placeholder content for Item 3. You can customize both the navigation labels and the content for each section.' }
             ]
         },
         offset: {
@@ -715,6 +878,26 @@ registerBlockType('trinity/scrollspy', {
     edit: function(props) {
         const { attributes, setAttributes } = props;
         const { targetId, navItems, offset, smooth, navStyle } = attributes;
+
+        const addNavItem = () => {
+            const newItems = [...navItems, {
+                label: `Item ${navItems.length + 1}`,
+                target: `item-${navItems.length + 1}`,
+                content: 'New scrollspy content section.'
+            }];
+            setAttributes({ navItems: newItems });
+        };
+
+        const removeNavItem = (index) => {
+            const newItems = navItems.filter((_, i) => i !== index);
+            setAttributes({ navItems: newItems });
+        };
+
+        const updateNavItem = (index, field, value) => {
+            const newItems = [...navItems];
+            newItems[index] = { ...newItems[index], [field]: value };
+            setAttributes({ navItems: newItems });
+        };
 
         return [
             wp.element.createElement(InspectorControls, null,
@@ -745,6 +928,46 @@ registerBlockType('trinity/scrollspy', {
                         checked: smooth,
                         onChange: (value) => setAttributes({ smooth: value })
                     })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Navigation Items', initialOpen: false },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        onClick: addNavItem
+                    }, 'Add Navigation Item'),
+                    navItems.map((item, index) => 
+                        wp.element.createElement('div', { 
+                            key: index, 
+                            style: { 
+                                padding: '1rem', 
+                                marginTop: '1rem', 
+                                border: '1px solid #ddd', 
+                                borderRadius: '4px' 
+                            } 
+                        },
+                            wp.element.createElement('h4', null, `Item ${index + 1}`),
+                            wp.element.createElement(TextControl, {
+                                label: 'Label',
+                                value: item.label || '',
+                                onChange: (value) => updateNavItem(index, 'label', value)
+                            }),
+                            wp.element.createElement(TextControl, {
+                                label: 'Target ID',
+                                value: item.target || '',
+                                onChange: (value) => updateNavItem(index, 'target', value)
+                            }),
+                            wp.element.createElement(wp.components.TextareaControl, {
+                                label: 'Content',
+                                value: item.content || '',
+                                onChange: (value) => updateNavItem(index, 'content', value),
+                                rows: 3
+                            }),
+                            wp.element.createElement(Button, {
+                                isDestructive: true,
+                                onClick: () => removeNavItem(index),
+                                style: { marginTop: '0.5rem' }
+                            }, 'Remove Item')
+                        )
+                    )
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-block-placeholder' },
@@ -790,6 +1013,28 @@ registerBlockType('trinity/list-group', {
         const { attributes, setAttributes } = props;
         const { items, flush, numbered, horizontal } = attributes;
 
+        const addItem = () => {
+            const newItems = [...items, {
+                text: 'New item',
+                active: false,
+                disabled: false,
+                variant: '',
+                link: ''
+            }];
+            setAttributes({ items: newItems });
+        };
+
+        const removeItem = (index) => {
+            const newItems = items.filter((_, i) => i !== index);
+            setAttributes({ items: newItems });
+        };
+
+        const updateItem = (index, field, value) => {
+            const newItems = [...items];
+            newItems[index] = { ...newItems[index], [field]: value };
+            setAttributes({ items: newItems });
+        };
+
         return [
             wp.element.createElement(InspectorControls, null,
                 wp.element.createElement(PanelBody, { title: 'List Group Settings' },
@@ -808,6 +1053,66 @@ registerBlockType('trinity/list-group', {
                         checked: horizontal,
                         onChange: (value) => setAttributes({ horizontal: value })
                     })
+                ),
+                wp.element.createElement(PanelBody, { title: 'List Items', initialOpen: false },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        onClick: addItem
+                    }, 'Add Item'),
+                    items.map((item, index) => 
+                        wp.element.createElement('div', { 
+                            key: index, 
+                            style: { 
+                                padding: '1rem', 
+                                marginTop: '1rem', 
+                                border: '1px solid #ddd', 
+                                borderRadius: '4px' 
+                            } 
+                        },
+                            wp.element.createElement('h4', null, `Item ${index + 1}`),
+                            wp.element.createElement(TextControl, {
+                                label: 'Text',
+                                value: item.text || '',
+                                onChange: (value) => updateItem(index, 'text', value)
+                            }),
+                            wp.element.createElement(TextControl, {
+                                label: 'Link URL',
+                                value: item.link || '',
+                                onChange: (value) => updateItem(index, 'link', value)
+                            }),
+                            wp.element.createElement(SelectControl, {
+                                label: 'Variant',
+                                value: item.variant || '',
+                                options: [
+                                    { label: 'Default', value: '' },
+                                    { label: 'Primary', value: 'primary' },
+                                    { label: 'Secondary', value: 'secondary' },
+                                    { label: 'Success', value: 'success' },
+                                    { label: 'Danger', value: 'danger' },
+                                    { label: 'Warning', value: 'warning' },
+                                    { label: 'Info', value: 'info' },
+                                    { label: 'Light', value: 'light' },
+                                    { label: 'Dark', value: 'dark' }
+                                ],
+                                onChange: (value) => updateItem(index, 'variant', value)
+                            }),
+                            wp.element.createElement(ToggleControl, {
+                                label: 'Active',
+                                checked: item.active || false,
+                                onChange: (value) => updateItem(index, 'active', value)
+                            }),
+                            wp.element.createElement(ToggleControl, {
+                                label: 'Disabled',
+                                checked: item.disabled || false,
+                                onChange: (value) => updateItem(index, 'disabled', value)
+                            }),
+                            wp.element.createElement(Button, {
+                                isDestructive: true,
+                                onClick: () => removeItem(index),
+                                style: { marginTop: '0.5rem' }
+                            }, 'Remove Item')
+                        )
+                    )
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-block-placeholder' },
@@ -876,14 +1181,22 @@ registerBlockType('trinity/enhanced-modal', {
             type: 'string',
             default: 'Save changes'
         },
+        primaryButtonLink: {
+            type: 'string',
+            default: ''
+        },
         secondaryButtonText: {
             type: 'string',
             default: 'Close'
+        },
+        secondaryButtonLink: {
+            type: 'string',
+            default: ''
         }
     },
     edit: function(props) {
         const { attributes, setAttributes } = props;
-        const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, secondaryButtonText } = attributes;
+        const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, primaryButtonLink, secondaryButtonText, secondaryButtonLink } = attributes;
 
         return [
             wp.element.createElement(InspectorControls, null,
@@ -949,6 +1262,35 @@ registerBlockType('trinity/enhanced-modal', {
                         ],
                         onChange: (value) => setAttributes({ triggerVariant: value })
                     })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Footer Buttons', initialOpen: false },
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Show Footer',
+                        checked: showFooter,
+                        onChange: (value) => setAttributes({ showFooter: value })
+                    }),
+                    showFooter && wp.element.createElement('div', null,
+                        wp.element.createElement(TextControl, {
+                            label: 'Primary Button Text',
+                            value: primaryButtonText,
+                            onChange: (value) => setAttributes({ primaryButtonText: value })
+                        }),
+                        wp.element.createElement(TextControl, {
+                            label: 'Primary Button Link',
+                            value: primaryButtonLink,
+                            onChange: (value) => setAttributes({ primaryButtonLink: value })
+                        }),
+                        wp.element.createElement(TextControl, {
+                            label: 'Secondary Button Text',
+                            value: secondaryButtonText,
+                            onChange: (value) => setAttributes({ secondaryButtonText: value })
+                        }),
+                        wp.element.createElement(TextControl, {
+                            label: 'Secondary Button Link',
+                            value: secondaryButtonLink,
+                            onChange: (value) => setAttributes({ secondaryButtonLink: value })
+                        })
+                    )
                 )
             ),
             wp.element.createElement('div', { className: 'trinity-block-placeholder' },

@@ -643,6 +643,18 @@
             tbody tr:nth-of-type(odd) {
                 background-color: rgba(var(--bs-secondary-rgb), 0.05);
             }
+            
+            // Dark mode support for striped tables
+            @media (prefers-color-scheme: dark) {
+                tbody tr:nth-of-type(odd) {
+                    background-color: rgba(255, 255, 255, 0.05);
+                }
+            }
+            
+            // Bootstrap dark theme support
+            &.table-dark tbody tr:nth-of-type(odd) {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
         }
         
         &.table-bordered {
