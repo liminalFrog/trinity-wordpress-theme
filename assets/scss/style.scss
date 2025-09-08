@@ -208,10 +208,11 @@ img {
     }
     
     h1, h2, h3, h4, h5, h6 {
-        margin-top: 2rem;
-        &:not(.accordion-header) {
-            margin-bottom: 1rem;
-        }
+        // margin-top: 2rem;
+        // &:not(.accordion-header) {
+        //     margin-bottom: 1rem;
+        // }
+        font-weight: normal;
         
         &:first-child {
             margin-top: 0;
