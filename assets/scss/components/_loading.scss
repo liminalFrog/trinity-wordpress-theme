@@ -7,11 +7,11 @@
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.95);
-    @include backdrop-filter(blur(5px));
+    @include backdrop-filter(blur(10px));
     @include center-content;
     z-index: 9999;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    background-image: url(assets/images/dot_seamless_light.png);
+    background-image: url(assets/images/dot_seamless_dark.png);
     background-size: 60px 60px;
     background-position: center;
     background-repeat: repeat;
@@ -31,6 +31,7 @@
     // Dark theme
     [data-theme="dark"] & {
         background-color: rgba(18, 18, 18, 0.95);
+        background-image: url(assets/images/dot_seamless_light.png);
     }
 }
 

@@ -3,9 +3,9 @@
  */
 
 const { registerBlockType } = wp.blocks;
-const { InspectorControls } = wp.blockEditor;
-const { PanelBody, TextControl, SelectControl, ToggleControl, RangeControl, Button } = wp.components;
-const { useState } = wp.element;
+const { InspectorControls, RichText, MediaUpload } = wp.blockEditor;
+const { PanelBody, TextControl, SelectControl, ToggleControl, RangeControl, Button, ButtonGroup, IconButton, Toolbar } = wp.components;
+const { useState, Fragment } = wp.element;
 
 // Alert Block
 registerBlockType('trinity/alert', {
@@ -28,57 +28,173 @@ registerBlockType('trinity/alert', {
         heading: {
             type: 'string',
             default: ''
+        },
+        showIcon: {
+            type: 'boolean',
+            default: false
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
-        const { content, type, dismissible, heading } = attributes;
+        const { attributes, setAttributes, isSelected } = props;
+        const { content, type, dismissible, heading, showIcon } = attributes;
+
+        // Alert type options with icons and colors
+        const alertTypes = [
+            { label: '🔵 Primary', value: 'primary', icon: 'info' },
+            { label: '⚪ Secondary', value: 'secondary', icon: 'admin-generic' },
+            { label: '✅ Success', value: 'success', icon: 'yes-alt' },
+            { label: '❌ Danger', value: 'danger', icon: 'dismiss' },
+            { label: '⚠️ Warning', value: 'warning', icon: 'warning' },
+            { label: 'ℹ️ Info', value: 'info', icon: 'info-outline' }
+        ];
+
+        const currentType = alertTypes.find(t => t.value === type) || alertTypes[0];
 
         return [
             wp.element.createElement(InspectorControls, null,
-                wp.element.createElement(PanelBody, { title: 'Alert Settings' },
-                    wp.element.createElement(SelectControl, {
-                        label: 'Alert Type',
-                        value: type,
-                        options: [
-                            { label: 'Primary', value: 'primary' },
-                            { label: 'Secondary', value: 'secondary' },
-                            { label: 'Success', value: 'success' },
-                            { label: 'Danger', value: 'danger' },
-                            { label: 'Warning', value: 'warning' },
-                            { label: 'Info', value: 'info' }
-                        ],
-                        onChange: (value) => setAttributes({ type: value })
-                    }),
-                    wp.element.createElement(TextControl, {
-                        label: 'Heading (optional)',
-                        value: heading,
-                        onChange: (value) => setAttributes({ heading: value })
-                    }),
+                wp.element.createElement(PanelBody, { title: 'Alert Settings', initialOpen: true },
+                    wp.element.createElement('div', { style: { marginBottom: '16px' } },
+                        wp.element.createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Alert Type'),
+                        wp.element.createElement(ButtonGroup, null,
+                            alertTypes.slice(0, 3).map(alertType =>
+                                wp.element.createElement(Button, {
+                                    key: alertType.value,
+                                    isPrimary: type === alertType.value,
+                                    isSecondary: type !== alertType.value,
+                                    onClick: () => setAttributes({ type: alertType.value }),
+                                    style: { fontSize: '12px' }
+                                }, alertType.label)
+                            )
+                        ),
+                        wp.element.createElement('br'),
+                        wp.element.createElement('br'),
+                        wp.element.createElement(ButtonGroup, null,
+                            alertTypes.slice(3).map(alertType =>
+                                wp.element.createElement(Button, {
+                                    key: alertType.value,
+                                    isPrimary: type === alertType.value,
+                                    isSecondary: type !== alertType.value,
+                                    onClick: () => setAttributes({ type: alertType.value }),
+                                    style: { fontSize: '12px' }
+                                }, alertType.label)
+                            )
+                        )
+                    ),
                     wp.element.createElement(ToggleControl, {
-                        label: 'Dismissible',
+                        label: 'Show Dismissible Close Button',
                         checked: dismissible,
                         onChange: (value) => setAttributes({ dismissible: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Show Icon',
+                        checked: showIcon,
+                        onChange: (value) => setAttributes({ showIcon: value })
                     })
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-alert-preview' },
+            wp.element.createElement('div', { 
+                className: 'trinity-alert-preview',
+                style: { 
+                    position: 'relative',
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0'
+                }
+            },
+                // Quick type selector toolbar
+                isSelected && wp.element.createElement('div', {
+                    style: {
+                        position: 'absolute',
+                        top: '-40px',
+                        left: '0',
+                        background: 'white',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        padding: '4px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        zIndex: 100
+                    }
+                },
+                    alertTypes.map(alertType =>
+                        wp.element.createElement(Button, {
+                            key: alertType.value,
+                            isSmall: true,
+                            isPrimary: type === alertType.value,
+                            isSecondary: type !== alertType.value,
+                            onClick: () => setAttributes({ type: alertType.value }),
+                            style: { margin: '2px', fontSize: '11px' },
+                            title: `Switch to ${alertType.label}`
+                        }, alertType.value.charAt(0).toUpperCase())
+                    )
+                ),
+                
                 wp.element.createElement('div', {
                     className: `alert alert-${type}${dismissible ? ' alert-dismissible' : ''}`,
-                    style: { marginBottom: 0 }
+                    style: { marginBottom: 0, position: 'relative' }
                 },
-                    heading && wp.element.createElement('h4', { className: 'alert-heading' }, heading),
-                    wp.element.createElement(wp.blockEditor.RichText, {
+                    // Icon
+                    showIcon && wp.element.createElement('span', {
+                        className: `dashicons dashicons-${currentType.icon}`,
+                        style: { 
+                            marginRight: '8px',
+                            fontSize: '16px',
+                            verticalAlign: 'middle'
+                        }
+                    }),
+                    
+                    // Editable heading
+                    wp.element.createElement(RichText, {
+                        tagName: 'h4',
+                        className: 'alert-heading',
+                        value: heading,
+                        onChange: (value) => setAttributes({ heading: value }),
+                        placeholder: 'Alert heading (optional)...',
+                        style: { 
+                            display: heading || isSelected ? 'block' : 'none',
+                            margin: '0 0 8px 0',
+                            fontSize: '1.25rem',
+                            fontWeight: 'bold'
+                        }
+                    }),
+                    
+                    // Editable content
+                    wp.element.createElement(RichText, {
                         tagName: 'div',
                         value: content,
                         onChange: (value) => setAttributes({ content: value }),
-                        placeholder: 'Enter alert message...'
+                        placeholder: 'Enter your alert message here...',
+                        style: { margin: 0 }
                     }),
+                    
+                    // Close button
                     dismissible && wp.element.createElement('button', {
                         type: 'button',
                         className: 'btn-close',
-                        'aria-label': 'Close'
-                    })
+                        'aria-label': 'Close',
+                        style: { opacity: 0.7 }
+                    }),
+                    
+                    // Floating controls when selected
+                    isSelected && wp.element.createElement('div', {
+                        style: {
+                            position: 'absolute',
+                            top: '8px',
+                            right: dismissible ? '40px' : '8px',
+                            display: 'flex',
+                            gap: '4px'
+                        }
+                    },
+                        wp.element.createElement(Button, {
+                            isSmall: true,
+                            onClick: () => setAttributes({ dismissible: !dismissible }),
+                            title: dismissible ? 'Remove close button' : 'Add close button'
+                        }, dismissible ? '✕' : '+'),
+                        wp.element.createElement(Button, {
+                            isSmall: true,
+                            onClick: () => setAttributes({ showIcon: !showIcon }),
+                            title: showIcon ? 'Hide icon' : 'Show icon'
+                        }, showIcon ? '🚫' : '🎯')
+                    )
                 )
             )
         ];
@@ -139,21 +255,23 @@ registerBlockType('trinity/accordion', {
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
+        const { attributes, setAttributes, isSelected } = props;
         const { items, flush, headerFontSize, headerFontWeight, headerFontFamily, contentFontSize, contentFontWeight, contentFontFamily } = attributes;
 
         const addItem = () => {
             const newItems = [...items, {
                 title: `Accordion Item #${items.length + 1}`,
-                content: 'New accordion content.',
+                content: 'Click here to edit accordion content...',
                 open: false
             }];
             setAttributes({ items: newItems });
         };
 
         const removeItem = (index) => {
-            const newItems = items.filter((_, i) => i !== index);
-            setAttributes({ items: newItems });
+            if (items.length > 1) {
+                const newItems = items.filter((_, i) => i !== index);
+                setAttributes({ items: newItems });
+            }
         };
 
         const updateItem = (index, field, value) => {
@@ -162,18 +280,31 @@ registerBlockType('trinity/accordion', {
             setAttributes({ items: newItems });
         };
 
+        const moveItem = (index, direction) => {
+            const newItems = [...items];
+            const targetIndex = direction === 'up' ? index - 1 : index + 1;
+            
+            if (targetIndex >= 0 && targetIndex < items.length) {
+                [newItems[index], newItems[targetIndex]] = [newItems[targetIndex], newItems[index]];
+                setAttributes({ items: newItems });
+            }
+        };
+
         return [
             wp.element.createElement(InspectorControls, null,
-                wp.element.createElement(PanelBody, { title: 'Accordion Settings' },
+                wp.element.createElement(PanelBody, { title: 'Accordion Settings', initialOpen: true },
                     wp.element.createElement(ToggleControl, {
-                        label: 'Flush Design',
+                        label: 'Flush Design (No borders)',
                         checked: flush,
                         onChange: (value) => setAttributes({ flush: value })
                     }),
-                    wp.element.createElement(Button, {
-                        isPrimary: true,
-                        onClick: addItem
-                    }, 'Add Item')
+                    wp.element.createElement('div', { style: { marginTop: '16px' } },
+                        wp.element.createElement(Button, {
+                            isPrimary: true,
+                            onClick: addItem,
+                            icon: 'plus-alt'
+                        }, `Add Item (${items.length + 1})`)
+                    )
                 ),
                 wp.element.createElement(PanelBody, { title: 'Header Typography', initialOpen: false },
                     wp.element.createElement(TextControl, {
@@ -230,43 +361,128 @@ registerBlockType('trinity/accordion', {
                     })
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-accordion-preview' },
+            wp.element.createElement('div', { 
+                className: 'trinity-accordion-preview',
+                style: {
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0',
+                    position: 'relative'
+                }
+            },
+                // Add item button at top when selected
+                isSelected && wp.element.createElement('div', {
+                    style: {
+                        textAlign: 'center',
+                        marginBottom: '12px',
+                        padding: '8px',
+                        background: '#f0f0f0',
+                        borderRadius: '4px'
+                    }
+                },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        isSmall: true,
+                        onClick: addItem,
+                        icon: 'plus-alt'
+                    }, 'Add New Item')
+                ),
+
                 wp.element.createElement('div', { className: `accordion${flush ? ' accordion-flush' : ''}` },
-                    items.map((item, index) =>
-                        wp.element.createElement('div', { key: index, className: 'accordion-item' },
+                    items.map((item, index) => 
+                        wp.element.createElement('div', { 
+                            key: index, 
+                            className: 'accordion-item',
+                            style: { position: 'relative' }
+                        },
+                            // Item controls when selected
+                            isSelected && wp.element.createElement('div', {
+                                style: {
+                                    position: 'absolute',
+                                    top: '8px',
+                                    right: '8px',
+                                    display: 'flex',
+                                    gap: '4px',
+                                    zIndex: 10,
+                                    background: 'rgba(255,255,255,0.9)',
+                                    padding: '4px',
+                                    borderRadius: '4px'
+                                }
+                            },
+                                wp.element.createElement(Button, {
+                                    isSmall: true,
+                                    onClick: () => moveItem(index, 'up'),
+                                    disabled: index === 0,
+                                    title: 'Move up',
+                                    icon: 'arrow-up-alt'
+                                }),
+                                wp.element.createElement(Button, {
+                                    isSmall: true,
+                                    onClick: () => moveItem(index, 'down'),
+                                    disabled: index === items.length - 1,
+                                    title: 'Move down',
+                                    icon: 'arrow-down-alt'
+                                }),
+                                wp.element.createElement(Button, {
+                                    isSmall: true,
+                                    onClick: () => updateItem(index, 'open', !item.open),
+                                    title: item.open ? 'Collapse' : 'Expand',
+                                    icon: item.open ? 'arrow-up' : 'arrow-down'
+                                }),
+                                items.length > 1 && wp.element.createElement(Button, {
+                                    isSmall: true,
+                                    isDestructive: true,
+                                    onClick: () => removeItem(index),
+                                    title: 'Remove item',
+                                    icon: 'trash'
+                                })
+                            ),
+
                             wp.element.createElement('h2', { className: 'accordion-header' },
-                                wp.element.createElement(wp.blockEditor.RichText, {
-                                    tagName: 'button',
+                                wp.element.createElement('button', {
                                     className: `accordion-button${item.open ? '' : ' collapsed'}`,
-                                    value: item.title,
-                                    onChange: (value) => updateItem(index, 'title', value),
-                                    placeholder: 'Accordion title...',
+                                    type: 'button',
                                     style: {
                                         fontSize: headerFontSize,
                                         fontWeight: headerFontWeight,
-                                        fontFamily: headerFontFamily || 'inherit'
-                                    }
-                                }),
-                                wp.element.createElement(Button, {
-                                    isDestructive: true,
-                                    isSmall: true,
-                                    onClick: () => removeItem(index),
-                                    style: { marginLeft: '10px' }
-                                }, 'Remove')
+                                        fontFamily: headerFontFamily || 'inherit',
+                                        padding: '1rem 1.25rem',
+                                        border: 'none',
+                                        background: 'transparent',
+                                        textAlign: 'left',
+                                        width: '100%',
+                                        cursor: 'pointer'
+                                    },
+                                    onClick: () => updateItem(index, 'open', !item.open)
+                                },
+                                    wp.element.createElement(RichText, {
+                                        tagName: 'span',
+                                        value: item.title,
+                                        onChange: (value) => updateItem(index, 'title', value),
+                                        placeholder: `Accordion Item #${index + 1}`,
+                                        style: { outline: 'none' }
+                                    })
+                                )
                             ),
-                            wp.element.createElement('div', {
-                                className: `accordion-collapse collapse${item.open ? ' show' : ''}`
+                            item.open && wp.element.createElement('div', { 
+                                className: 'accordion-collapse collapse show'
                             },
-                                wp.element.createElement('div', { className: 'accordion-body' },
-                                    wp.element.createElement(wp.blockEditor.RichText, {
+                                wp.element.createElement('div', { 
+                                    className: 'accordion-body',
+                                    style: {
+                                        fontSize: contentFontSize,
+                                        fontWeight: contentFontWeight,
+                                        fontFamily: contentFontFamily || 'inherit'
+                                    }
+                                },
+                                    wp.element.createElement(RichText, {
                                         tagName: 'div',
                                         value: item.content,
                                         onChange: (value) => updateItem(index, 'content', value),
-                                        placeholder: 'Accordion content...',
-                                        style: {
-                                            fontSize: contentFontSize,
-                                            fontWeight: contentFontWeight,
-                                            fontFamily: contentFontFamily || 'inherit'
+                                        placeholder: 'Click here to edit accordion content...',
+                                        style: { 
+                                            outline: 'none',
+                                            minHeight: '50px'
                                         }
                                     })
                                 )

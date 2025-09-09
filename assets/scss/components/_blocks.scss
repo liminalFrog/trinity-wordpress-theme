@@ -393,13 +393,20 @@ body[data-theme="dark"] {
     .trinity-modal .modal,
     .modal {
         .modal-content {
-            background-color: #1e1e1e !important;
+            background-color: rgba(0,0,0,0.25) !important;
             color: #ffffff !important;
             border-color: #333 !important;
+            backdrop-filter: blur(10px);
+            background-image: url("assets/images/dot_seamless_light.png");
+            background-size: 60px 60px;
+            background-position: center;
+            background-repeat: repeat;
+            box-shadow: 0 0 0.5rem rgba(0,0,0,0.25);
             
             .modal-header,
             .modal-footer {
                 border-color: #333 !important;
+                background-color: rgba(0,0,0,0.45) !important;
             }
         }
         
@@ -479,7 +486,7 @@ body[data-theme="dark"] {
     .trinity-table .table,
     .table {
         color: #ffffff !important;
-        
+
         th,
         td {
             border-color: #333 !important;
@@ -565,6 +572,7 @@ body[data-theme="dark"] {
             background-color: #1e1e1e !important;
             border-color: #333 !important;
             color: #ffffff !important;
+            padding: 1rem;
         }
         
         .nav-link {
