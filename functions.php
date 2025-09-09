@@ -43,7 +43,7 @@ function trinity_enqueue_block_editor_assets() {
         'trinity-blocks',
         TRINITY_URI . '/assets/dist/blocks.min.js',
         ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components'],
-        TRINITY_VERSION,
+        TRINITY_VERSION . '-' . time(), // Force cache refresh
         true
     );
     
