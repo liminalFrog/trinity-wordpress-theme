@@ -803,7 +803,7 @@ wp.blocks.registerBlockType('trinity/carousel', {
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
+        const { attributes, setAttributes, isSelected } = props;
         const { slides, showControls, showIndicators, autoSlide, fullWidth, height, fade, interval } = attributes;
 
         const addSlide = () => {
@@ -845,9 +845,9 @@ wp.blocks.registerBlockType('trinity/carousel', {
             frame.open();
         };
 
-        return [
-            wp.element.createElement(wp.blockEditor.InspectorControls, null,
-                wp.element.createElement(wp.components.PanelBody, { title: 'Carousel Settings' },
+        return wp.element.createElement(Fragment, null,
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'Carousel Settings' },
                     wp.element.createElement(wp.components.ToggleControl, {
                         label: 'Show Controls',
                         checked: showControls,
@@ -940,12 +940,187 @@ wp.blocks.registerBlockType('trinity/carousel', {
                     )
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
-                wp.element.createElement('div', { className: 'bootstrap-icon' }, '🎠'),
-                wp.element.createElement('h3', null, 'Bootstrap Carousel'),
-                wp.element.createElement('p', null, `${slides.length} slides${fullWidth ? ' (full width)' : ''}${fade ? ' (fade)' : ''}`)
+            
+            // Interactive Carousel Preview
+            wp.element.createElement('div', {
+                className: 'trinity-carousel-preview',
+                style: {
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0',
+                    position: 'relative'
+                }
+            },
+                slides.length > 0 ? 
+                    wp.element.createElement('div', {
+                        className: `carousel slide${fade ? ' carousel-fade' : ''}`,
+                        style: { 
+                            maxWidth: fullWidth ? '100%' : '600px',
+                            height: height || '400px',
+                            background: '#f8f9fa',
+                            border: '1px solid #dee2e6',
+                            borderRadius: '0.25rem',
+                            overflow: 'hidden'
+                        }
+                    },
+                        // Carousel indicators
+                        showIndicators && slides.length > 1 && wp.element.createElement('div', {
+                            className: 'carousel-indicators',
+                            style: { position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '10' }
+                        },
+                            slides.map((_, index) => 
+                                wp.element.createElement('button', {
+                                    key: index,
+                                    type: 'button',
+                                    className: index === 0 ? 'active' : '',
+                                    style: {
+                                        width: '30px',
+                                        height: '3px',
+                                        margin: '0 3px',
+                                        background: index === 0 ? '#fff' : 'rgba(255,255,255,0.5)',
+                                        border: 'none',
+                                        borderRadius: '1px'
+                                    }
+                                })
+                            )
+                        ),
+                        
+                        // Carousel inner
+                        wp.element.createElement('div', {
+                            className: 'carousel-inner',
+                            style: { height: '100%' }
+                        },
+                            slides.map((slide, index) => 
+                                wp.element.createElement('div', {
+                                    key: index,
+                                    className: `carousel-item${index === 0 ? ' active' : ''}`,
+                                    style: { 
+                                        height: '100%',
+                                        position: 'relative',
+                                        background: slide.image ? `url(${slide.image})` : '#e9ecef',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        display: index === 0 ? 'block' : 'none'
+                                    }
+                                },
+                                    (slide.title || slide.content) && wp.element.createElement('div', {
+                                        className: 'carousel-caption d-block',
+                                        style: {
+                                            position: 'absolute',
+                                            bottom: '20px',
+                                            left: '15%',
+                                            right: '15%',
+                                            paddingTop: '20px',
+                                            paddingBottom: '20px',
+                                            color: '#fff',
+                                            textAlign: 'center',
+                                            background: 'rgba(0,0,0,0.5)',
+                                            borderRadius: '4px'
+                                        }
+                                    },
+                                        slide.title && wp.element.createElement(RichText, {
+                                            tagName: 'h5',
+                                            value: slide.title,
+                                            onChange: (value) => updateSlide(index, 'title', value),
+                                            placeholder: 'Slide title...',
+                                            style: { margin: '0 0 8px 0' }
+                                        }),
+                                        slide.content && wp.element.createElement(RichText, {
+                                            tagName: 'p',
+                                            value: slide.content,
+                                            onChange: (value) => updateSlide(index, 'content', value),
+                                            placeholder: 'Slide content...',
+                                            style: { margin: '0' }
+                                        })
+                                    )
+                                )
+                            )
+                        ),
+                        
+                        // Carousel controls
+                        showControls && slides.length > 1 && wp.element.createElement(Fragment, null,
+                            wp.element.createElement('button', {
+                                className: 'carousel-control-prev',
+                                type: 'button',
+                                style: {
+                                    position: 'absolute',
+                                    top: '0',
+                                    bottom: '0',
+                                    left: '0',
+                                    width: '15%',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    opacity: '0.5'
+                                }
+                            },
+                                wp.element.createElement('span', {
+                                    className: 'carousel-control-prev-icon',
+                                    style: { fontSize: '20px' }
+                                }, '‹')
+                            ),
+                            wp.element.createElement('button', {
+                                className: 'carousel-control-next',
+                                type: 'button',
+                                style: {
+                                    position: 'absolute',
+                                    top: '0',
+                                    bottom: '0',
+                                    right: '0',
+                                    width: '15%',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    opacity: '0.5'
+                                }
+                            },
+                                wp.element.createElement('span', {
+                                    className: 'carousel-control-next-icon',
+                                    style: { fontSize: '20px' }
+                                }, '›')
+                            )
+                        )
+                    ) : 
+                    // Empty state
+                    wp.element.createElement('div', {
+                        style: {
+                            padding: '40px',
+                            textAlign: 'center',
+                            background: '#f8f9fa',
+                            border: '2px dashed #dee2e6',
+                            borderRadius: '4px',
+                            color: '#6c757d'
+                        }
+                    },
+                        wp.element.createElement('div', { style: { fontSize: '48px', marginBottom: '16px' } }, '🎠'),
+                        wp.element.createElement('h4', { style: { marginBottom: '8px' } }, 'Bootstrap Carousel'),
+                        wp.element.createElement('p', { style: { margin: '0' } }, 'Add slides to create your carousel')
+                    ),
+                
+                // Quick add slide button when selected
+                isSelected && wp.element.createElement('div', {
+                    style: {
+                        textAlign: 'center',
+                        marginTop: '10px',
+                        padding: '8px',
+                        background: '#f0f0f0',
+                        borderRadius: '4px'
+                    }
+                },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        isSmall: true,
+                        onClick: addSlide,
+                        icon: 'plus-alt'
+                    }, 'Add Slide'),
+                    slides.length > 0 && wp.element.createElement(Button, {
+                        isDestructive: true,
+                        isSmall: true,
+                        onClick: () => removeSlide(slides.length - 1),
+                        icon: 'trash',
+                        style: { marginLeft: '8px' }
+                    }, 'Remove Last')
+                )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
@@ -1031,13 +1206,32 @@ wp.blocks.registerBlockType('trinity/tabs', {
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
+        const { attributes, setAttributes, isSelected } = props;
         const { tabs, style } = attributes;
 
-        return [
-            wp.element.createElement(wp.blockEditor.InspectorControls, null,
-                wp.element.createElement(wp.components.PanelBody, { title: 'Tabs Settings' },
-                    wp.element.createElement(wp.components.SelectControl, {
+        const addTab = () => {
+            const newTabs = [...tabs, {
+                title: `Tab ${tabs.length + 1}`,
+                content: `Content for tab ${tabs.length + 1}`
+            }];
+            setAttributes({ tabs: newTabs });
+        };
+
+        const removeTab = (index) => {
+            const newTabs = tabs.filter((_, i) => i !== index);
+            setAttributes({ tabs: newTabs });
+        };
+
+        const updateTab = (index, field, value) => {
+            const newTabs = [...tabs];
+            newTabs[index] = { ...newTabs[index], [field]: value };
+            setAttributes({ tabs: newTabs });
+        };
+
+        return wp.element.createElement(Fragment, null,
+            wp.element.createElement(InspectorControls, null,
+                wp.element.createElement(PanelBody, { title: 'Tabs Settings' },
+                    wp.element.createElement(SelectControl, {
                         label: 'Style',
                         value: style,
                         options: [
@@ -1046,14 +1240,165 @@ wp.blocks.registerBlockType('trinity/tabs', {
                         ],
                         onChange: (value) => setAttributes({ style: value })
                     })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Tab Management', initialOpen: false },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        onClick: addTab
+                    }, 'Add Tab'),
+                    tabs.map((tab, index) => 
+                        wp.element.createElement('div', { 
+                            key: index, 
+                            style: { 
+                                padding: '1rem', 
+                                marginTop: '1rem', 
+                                border: '1px solid #ddd', 
+                                borderRadius: '4px' 
+                            } 
+                        },
+                            wp.element.createElement('h4', null, `Tab ${index + 1}`),
+                            wp.element.createElement(TextControl, {
+                                label: 'Title',
+                                value: tab.title || '',
+                                onChange: (value) => updateTab(index, 'title', value)
+                            }),
+                            wp.element.createElement(TextareaControl, {
+                                label: 'Content',
+                                value: tab.content || '',
+                                onChange: (value) => updateTab(index, 'content', value)
+                            }),
+                            wp.element.createElement(Button, {
+                                isDestructive: true,
+                                onClick: () => removeTab(index),
+                                style: { marginTop: '0.5rem' }
+                            }, 'Remove Tab')
+                        )
+                    )
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
-                wp.element.createElement('div', { className: 'bootstrap-icon' }, '📑'),
-                wp.element.createElement('h3', null, 'Bootstrap Tabs'),
-                wp.element.createElement('p', null, `${tabs.length} tabs (${style} style)`)
+            
+            // Interactive Tabs Preview
+            wp.element.createElement('div', {
+                className: 'trinity-tabs-preview',
+                style: {
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0',
+                    position: 'relative'
+                }
+            },
+                tabs.length > 0 ? 
+                    wp.element.createElement('div', {
+                        style: { maxWidth: '600px' }
+                    },
+                        // Tab navigation
+                        wp.element.createElement('ul', {
+                            className: `nav nav-${style}`,
+                            style: {
+                                marginBottom: '16px',
+                                borderBottom: style === 'tabs' ? '1px solid #dee2e6' : 'none'
+                            }
+                        },
+                            tabs.map((tab, index) => 
+                                wp.element.createElement('li', {
+                                    key: index,
+                                    className: 'nav-item'
+                                },
+                                    wp.element.createElement(RichText, {
+                                        tagName: 'button',
+                                        className: `nav-link${index === 0 ? ' active' : ''}`,
+                                        value: tab.title,
+                                        onChange: (value) => updateTab(index, 'title', value),
+                                        placeholder: `Tab ${index + 1} title...`,
+                                        style: {
+                                            cursor: 'text',
+                                            minWidth: '80px',
+                                            border: style === 'tabs' ? '1px solid transparent' : 'none',
+                                            borderBottomColor: index === 0 && style === 'tabs' ? '#007cba' : 'transparent',
+                                            borderRadius: style === 'pills' ? '0.25rem' : '0.25rem 0.25rem 0 0',
+                                            background: index === 0 ? (style === 'pills' ? '#007cba' : 'transparent') : 'transparent',
+                                            color: index === 0 && style === 'pills' ? '#fff' : '#007cba',
+                                            padding: '8px 16px'
+                                        }
+                                    })
+                                )
+                            )
+                        ),
+                        
+                        // Tab content
+                        wp.element.createElement('div', {
+                            className: 'tab-content',
+                            style: {
+                                border: style === 'tabs' ? '1px solid #dee2e6' : 'none',
+                                borderTop: style === 'tabs' ? 'none' : undefined,
+                                borderRadius: style === 'tabs' ? '0 0 0.25rem 0.25rem' : undefined,
+                                padding: '16px',
+                                background: '#fff',
+                                minHeight: '120px'
+                            }
+                        },
+                            tabs.map((tab, index) => 
+                                wp.element.createElement('div', {
+                                    key: index,
+                                    className: `tab-pane${index === 0 ? ' active show' : ''}`,
+                                    style: { display: index === 0 ? 'block' : 'none' }
+                                },
+                                    wp.element.createElement(RichText, {
+                                        tagName: 'div',
+                                        value: tab.content,
+                                        onChange: (value) => updateTab(index, 'content', value),
+                                        placeholder: `Content for ${tab.title || `Tab ${index + 1}`}...`,
+                                        style: {
+                                            cursor: 'text',
+                                            minHeight: '60px'
+                                        }
+                                    })
+                                )
+                            )
+                        )
+                    ) : 
+                    // Empty state
+                    wp.element.createElement('div', {
+                        style: {
+                            padding: '40px',
+                            textAlign: 'center',
+                            background: '#f8f9fa',
+                            border: '2px dashed #dee2e6',
+                            borderRadius: '4px',
+                            color: '#6c757d'
+                        }
+                    },
+                        wp.element.createElement('div', { style: { fontSize: '48px', marginBottom: '16px' } }, '📑'),
+                        wp.element.createElement('h4', { style: { marginBottom: '8px' } }, 'Bootstrap Tabs'),
+                        wp.element.createElement('p', { style: { margin: '0' } }, 'Add tabs to create your tabbed interface')
+                    ),
+                
+                // Quick controls when selected
+                isSelected && wp.element.createElement('div', {
+                    style: {
+                        textAlign: 'center',
+                        marginTop: '10px',
+                        padding: '8px',
+                        background: '#f0f0f0',
+                        borderRadius: '4px'
+                    }
+                },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        isSmall: true,
+                        onClick: addTab,
+                        icon: 'plus-alt'
+                    }, 'Add Tab'),
+                    tabs.length > 0 && wp.element.createElement(Button, {
+                        isDestructive: true,
+                        isSmall: true,
+                        onClick: () => removeTab(tabs.length - 1),
+                        icon: 'trash',
+                        style: { marginLeft: '8px' }
+                    }, 'Remove Last')
+                )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
@@ -1226,7 +1571,7 @@ registerBlockType('trinity/list-group', {
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
+        const { attributes, setAttributes, isSelected } = props;
         const { items, flush, numbered, horizontal } = attributes;
 
         const addItem = () => {
@@ -1251,7 +1596,7 @@ registerBlockType('trinity/list-group', {
             setAttributes({ items: newItems });
         };
 
-        return [
+        return wp.element.createElement(Fragment, null,
             wp.element.createElement(InspectorControls, null,
                 wp.element.createElement(PanelBody, { title: 'List Group Settings' },
                     wp.element.createElement(ToggleControl, {
@@ -1331,12 +1676,70 @@ registerBlockType('trinity/list-group', {
                     )
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
-                wp.element.createElement('div', { className: 'bootstrap-icon' }, '📝'),
-                wp.element.createElement('h3', null, 'Bootstrap List Group'),
-                wp.element.createElement('p', null, `${items.length} items${flush ? ' (flush)' : ''}${numbered ? ' (numbered)' : ''}${horizontal ? ' (horizontal)' : ''}`)
+            
+            // Interactive List Group Preview
+            wp.element.createElement('div', {
+                className: 'trinity-list-group-preview',
+                style: {
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0',
+                    position: 'relative'
+                }
+            },
+                wp.element.createElement('div', {
+                    className: `list-group${flush ? ' list-group-flush' : ''}${numbered ? ' list-group-numbered' : ''}${horizontal ? ' list-group-horizontal' : ''}`,
+                    style: { maxWidth: '400px' }
+                },
+                    items.length > 0 ? items.map((item, index) =>
+                        wp.element.createElement(RichText, {
+                            key: index,
+                            tagName: numbered ? 'li' : 'div',
+                            className: `list-group-item${item.active ? ' active' : ''}${item.disabled ? ' disabled' : ''}`,
+                            value: item.text,
+                            onChange: (value) => updateItem(index, 'text', value),
+                            placeholder: `List item ${index + 1}...`,
+                            style: {
+                                cursor: 'text',
+                                minHeight: '20px'
+                            }
+                        })
+                    ) : wp.element.createElement('div', {
+                        className: 'list-group-item',
+                        style: {
+                            color: '#6c757d',
+                            fontStyle: 'italic',
+                            textAlign: 'center'
+                        }
+                    }, 'No items added yet')
+                ),
+                
+                // Quick controls when selected
+                isSelected && wp.element.createElement('div', {
+                    style: {
+                        textAlign: 'center',
+                        marginTop: '10px',
+                        padding: '8px',
+                        background: '#f0f0f0',
+                        borderRadius: '4px'
+                    }
+                },
+                    wp.element.createElement(Button, {
+                        isPrimary: true,
+                        isSmall: true,
+                        onClick: addItem,
+                        icon: 'plus-alt'
+                    }, 'Add Item'),
+                    items.length > 0 && wp.element.createElement(Button, {
+                        isDestructive: true,
+                        isSmall: true,
+                        onClick: () => removeItem(items.length - 1),
+                        icon: 'trash',
+                        style: { marginLeft: '8px' }
+                    }, 'Remove Last')
+                )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
@@ -1435,10 +1838,10 @@ registerBlockType('trinity/enhanced-modal', {
         }
     },
     edit: function(props) {
-        const { attributes, setAttributes } = props;
+        const { attributes, setAttributes, isSelected } = props;
         const { modalId, title, content, size, centered, scrollable, fullscreen, backdrop, triggerText, triggerVariant, showFooter, primaryButtonText, primaryButtonLink, primaryButtonVariant, primaryButtonAction, showPrimaryButton, secondaryButtonText, secondaryButtonLink, secondaryButtonVariant, secondaryButtonAction, showSecondaryButton } = attributes;
 
-        return [
+        return wp.element.createElement(Fragment, null,
             wp.element.createElement(InspectorControls, null,
                 wp.element.createElement(PanelBody, { title: 'Modal Settings' },
                     wp.element.createElement(TextControl, {
@@ -1597,12 +2000,167 @@ registerBlockType('trinity/enhanced-modal', {
                     )
                 )
             ),
-            wp.element.createElement('div', { className: 'trinity-block-placeholder' },
-                wp.element.createElement('div', { className: 'bootstrap-icon' }, '🪟'),
-                wp.element.createElement('h3', null, 'Bootstrap Enhanced Modal'),
-                wp.element.createElement('p', null, `"${title}" - ${size ? size.toUpperCase() + ' ' : ''}${centered ? 'Centered ' : ''}Modal`)
+            
+            // Interactive Modal Preview
+            wp.element.createElement('div', {
+                className: 'trinity-modal-preview',
+                style: {
+                    border: isSelected ? '2px solid #007cba' : '1px solid transparent',
+                    borderRadius: '4px',
+                    padding: isSelected ? '8px' : '0',
+                    position: 'relative'
+                }
+            },
+                // Trigger button
+                wp.element.createElement('div', {
+                    style: { marginBottom: '20px' }
+                },
+                    wp.element.createElement(RichText, {
+                        tagName: 'button',
+                        className: `btn btn-${triggerVariant}`,
+                        value: triggerText,
+                        onChange: (value) => setAttributes({ triggerText: value }),
+                        placeholder: 'Button text...',
+                        style: {
+                            cursor: 'text',
+                            minWidth: '120px',
+                            padding: '8px 16px'
+                        }
+                    })
+                ),
+                
+                // Modal preview (static version for editor)
+                wp.element.createElement('div', {
+                    style: {
+                        background: 'rgba(0, 0, 0, 0.1)',
+                        border: '2px dashed #007cba',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        marginTop: '10px'
+                    }
+                },
+                    wp.element.createElement('div', {
+                        className: 'modal-dialog' + (size ? ` modal-${size}` : '') + (centered ? ' modal-dialog-centered' : '') + (scrollable ? ' modal-dialog-scrollable' : ''),
+                        style: {
+                            maxWidth: size === 'sm' ? '300px' : size === 'lg' ? '800px' : size === 'xl' ? '1140px' : '500px',
+                            margin: '0 auto',
+                            background: '#fff',
+                            border: '1px solid #dee2e6',
+                            borderRadius: '0.25rem',
+                            boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.15)'
+                        }
+                    },
+                        wp.element.createElement('div', {
+                            className: 'modal-content'
+                        },
+                            // Modal header
+                            wp.element.createElement('div', {
+                                className: 'modal-header',
+                                style: {
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: '1rem',
+                                    borderBottom: '1px solid #dee2e6'
+                                }
+                            },
+                                wp.element.createElement(RichText, {
+                                    tagName: 'h5',
+                                    className: 'modal-title',
+                                    value: title,
+                                    onChange: (value) => setAttributes({ title: value }),
+                                    placeholder: 'Modal title...',
+                                    style: {
+                                        cursor: 'text',
+                                        margin: '0',
+                                        minWidth: '100px'
+                                    }
+                                }),
+                                wp.element.createElement('span', {
+                                    style: {
+                                        fontSize: '24px',
+                                        fontWeight: 'bold',
+                                        color: '#6c757d',
+                                        cursor: 'pointer'
+                                    }
+                                }, '×')
+                            ),
+                            
+                            // Modal body
+                            wp.element.createElement('div', {
+                                className: 'modal-body',
+                                style: {
+                                    padding: '1rem',
+                                    minHeight: '100px'
+                                }
+                            },
+                                wp.element.createElement(RichText, {
+                                    tagName: 'div',
+                                    value: content,
+                                    onChange: (value) => setAttributes({ content: value }),
+                                    placeholder: 'Modal content...',
+                                    style: {
+                                        cursor: 'text',
+                                        minHeight: '60px'
+                                    }
+                                })
+                            ),
+                            
+                            // Modal footer
+                            showFooter && wp.element.createElement('div', {
+                                className: 'modal-footer',
+                                style: {
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    gap: '0.5rem',
+                                    padding: '1rem',
+                                    borderTop: '1px solid #dee2e6'
+                                }
+                            },
+                                showSecondaryButton && wp.element.createElement(RichText, {
+                                    tagName: 'button',
+                                    className: `btn btn-${secondaryButtonVariant}`,
+                                    value: secondaryButtonText,
+                                    onChange: (value) => setAttributes({ secondaryButtonText: value }),
+                                    placeholder: 'Secondary button...',
+                                    style: {
+                                        cursor: 'text',
+                                        minWidth: '80px',
+                                        marginRight: '8px'
+                                    }
+                                }),
+                                showPrimaryButton && wp.element.createElement(RichText, {
+                                    tagName: 'button',
+                                    className: `btn btn-${primaryButtonVariant}`,
+                                    value: primaryButtonText,
+                                    onChange: (value) => setAttributes({ primaryButtonText: value }),
+                                    placeholder: 'Primary button...',
+                                    style: {
+                                        cursor: 'text',
+                                        minWidth: '80px'
+                                    }
+                                })
+                            )
+                        )
+                    )
+                ),
+                
+                // Editor hint
+                wp.element.createElement('div', {
+                    style: {
+                        textAlign: 'center',
+                        marginTop: '10px',
+                        padding: '8px',
+                        background: '#e3f2fd',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        color: '#1976d2'
+                    }
+                },
+                    '💡 This is a preview - the actual modal will appear as an overlay on the frontend'
+                )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
