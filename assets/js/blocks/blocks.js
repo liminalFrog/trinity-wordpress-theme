@@ -50,7 +50,7 @@ registerBlockType('trinity/alert', {
 
         const currentType = alertTypes.find(t => t.value === type) || alertTypes[0];
 
-        return [
+        return wp.element.createElement(Fragment, null,
             wp.element.createElement(InspectorControls, null,
                 wp.element.createElement(PanelBody, { title: 'Alert Settings', initialOpen: true },
                     wp.element.createElement('div', { style: { marginBottom: '16px' } },
@@ -197,7 +197,7 @@ registerBlockType('trinity/alert', {
                     )
                 )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
@@ -290,7 +290,7 @@ registerBlockType('trinity/accordion', {
             }
         };
 
-        return [
+        return wp.element.createElement(Fragment, null,
             wp.element.createElement(InspectorControls, null,
                 wp.element.createElement(PanelBody, { title: 'Accordion Settings', initialOpen: true },
                     wp.element.createElement(ToggleControl, {
@@ -491,7 +491,7 @@ registerBlockType('trinity/accordion', {
                     )
                 )
             )
-        ];
+        );
     },
     save: function() {
         return null; // Server-side rendering
