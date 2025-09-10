@@ -23,9 +23,33 @@
          * Loading spinner
          */
         loadingSpinner: function() {
-            $(window).on('load', function() {
-                $('#trinity-loading').fadeOut('slow');
-            });
+            // Hide loading spinner when page is fully loaded
+            const hideLoader = function() {
+                const loader = document.getElementById('trinity-loading');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    // Remove element completely after transition
+                    setTimeout(function() {
+                        if (loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 500);
+                }
+            };
+
+            // Use both jQuery (if available) and vanilla JS for maximum compatibility
+            if (typeof $ !== 'undefined') {
+                $(window).on('load', hideLoader);
+            } else {
+                if (document.readyState === 'complete') {
+                    hideLoader();
+                } else {
+                    window.addEventListener('load', hideLoader);
+                }
+            }
+            
+            // Fallback: Hide after 3 seconds regardless
+            setTimeout(hideLoader, 3000);
         },
 
         /**
@@ -375,6 +399,17 @@
         Trinity.formEnhancements();
         Trinity.imageZoom();
     });
+
+    // Fallback initialization if jQuery is not available
+    if (typeof $ === 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                Trinity.init();
+            });
+        } else {
+            Trinity.init();
+        }
+    }
 
     // Expose Trinity object globally
     window.Trinity = Trinity;
