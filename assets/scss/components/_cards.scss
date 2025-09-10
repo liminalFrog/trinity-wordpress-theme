@@ -9,7 +9,6 @@
     
     &:hover {
         @include shadow(2);
-        transform: translateY(-2px);
     }
     
     .card-img-top {
@@ -25,8 +24,8 @@
         padding: 1.5rem;
         
         .card-title {
-            margin-bottom: 0.75rem;
-            font-weight: 600;
+            margin-bottom: 1rem !important;
+            font-weight: normal !important;
             
             a {
                 color: inherit;
@@ -39,7 +38,6 @@
         }
         
         .card-text {
-            margin-bottom: 1rem;
             color: #6c757d;
             line-height: 1.6;
         }

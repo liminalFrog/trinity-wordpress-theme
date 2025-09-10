@@ -52,10 +52,12 @@
             padding: 0.2rem 0.6rem;
             border-radius: var(--trinity-border-radius);
             transition: var(--trinity-transition-fast);
+            text-decoration: none !important;
             
             &:hover,
             &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
+                text-decoration: none !important;
                 // transform: translateY(-1px);
             }
             
@@ -77,6 +79,7 @@
             &.current-menu-ancestor > .nav-link {
                 background-color: #dc3545; // Red background
                 color: white !important;
+                box-shadow: 0 0 0.5rem rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.25);
             }
         }
         

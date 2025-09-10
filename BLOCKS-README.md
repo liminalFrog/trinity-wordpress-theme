@@ -63,6 +63,40 @@ The Trinity theme now includes custom WordPress blocks for Bootstrap components,
   - Multiple tab items
   - Custom content for each tab
 
+### 9. Scrollspy Block (`trinity/scrollspy`)
+- **Purpose**: Create navigation that highlights based on scroll position
+- **Options**:
+  - Navigation items with labels and targets
+  - Navigation style: Pills or Tabs
+  - Scroll offset adjustment
+  - Smooth scrolling toggle
+
+### 10. List Group Block (`trinity/list-group`)
+- **Purpose**: Display a series of content in a list group component
+- **Options**:
+  - Multiple list items with text and links
+  - Flush, numbered, and horizontal layouts
+  - Item variants with different colors
+  - Active and disabled states
+
+### 11. Enhanced Modal Block (`trinity/enhanced-modal`)
+- **Purpose**: Create Bootstrap modals with advanced options
+- **Options**:
+  - Modal size (small, large, extra large)
+  - Centering and scrollable options
+  - Customizable trigger button
+  - Footer controls with button links
+  - Backdrop behavior settings
+
+### 12. Bootstrap Table Block (`trinity/table`)
+- **Purpose**: Create styled data tables with Bootstrap styling
+- **Options**:
+  - Striped, hover, bordered, and borderless variants
+  - Responsive wrapper support
+  - Color variants (dark, primary, secondary, etc.)
+  - Small size option
+  - Caption support
+
 ## How to Use
 
 1. **In the WordPress Editor**:
