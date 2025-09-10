@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build:css && npm run build:js",
-    "build:css": "sass assets/scss/style.scss:style.css --style=compressed --source-map",
+    "build:css": "sass assets/scss/style.scss:style.css --style=compressed --source-map --load-path=node_modules",
     "build:js": "webpack --mode=production",
     "watch": "npm-run-all --parallel watch:*",
     "watch:css": "sass assets/scss/style.scss:style.css --watch --source-map",
