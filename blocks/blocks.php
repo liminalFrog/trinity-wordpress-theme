@@ -23,7 +23,6 @@ function trinity_register_blocks() {
     trinity_register_badge_block();
     trinity_register_progress_block();
     trinity_register_tabs_block();
-    trinity_register_scrollspy_block();
     trinity_register_list_group_block();
     trinity_register_enhanced_modal_block();
     trinity_register_table_block();
@@ -266,9 +265,10 @@ function trinity_render_carousel_block($attributes) {
         $carousel_classes[] = 'carousel-fade';
     }
     
-    $wrapper_classes = [];
+    $wrapper_classes = ['trinity-carousel'];
     if ($full_width) {
         $wrapper_classes[] = 'trinity-carousel-full-width';
+        $wrapper_classes[] = 'full-width';
     }
     
     $wrapper_style = '';
@@ -681,96 +681,6 @@ function trinity_render_tabs_block($attributes) {
     }
     
     $output .= '</div>';
-    
-    return $output;
-}
-
-/**
- * Scrollspy Block
- */
-function trinity_register_scrollspy_block() {
-    register_block_type('trinity/scrollspy', [
-        'attributes' => [
-            'targetId' => [
-                'type' => 'string',
-                'default' => 'scrollspy-content'
-            ],
-            'navItems' => [
-                'type' => 'array',
-                'default' => [
-                    ['label' => 'Item 1', 'target' => 'item-1'],
-                    ['label' => 'Item 2', 'target' => 'item-2'],
-                    ['label' => 'Item 3', 'target' => 'item-3']
-                ]
-            ],
-            'offset' => [
-                'type' => 'number',
-                'default' => 0
-            ],
-            'smooth' => [
-                'type' => 'boolean',
-                'default' => true
-            ],
-            'navStyle' => [
-                'type' => 'string',
-                'default' => 'pills'
-            ]
-        ],
-        'render_callback' => 'trinity_render_scrollspy_block'
-    ]);
-}
-
-function trinity_render_scrollspy_block($attributes) {
-    $target_id = $attributes['targetId'] ?? 'scrollspy-content';
-    $nav_items = $attributes['navItems'] ?? [];
-    $offset = $attributes['offset'] ?? 0;
-    $smooth = $attributes['smooth'] ?? true;
-    $nav_style = $attributes['navStyle'] ?? 'pills';
-    $scrollspy_id = 'scrollspy-nav-' . uniqid();
-    $content_id = 'scrollspy-content-' . uniqid();
-    
-    if (empty($nav_items)) {
-        return '<p>No navigation items added to scrollspy.</p>';
-    }
-    
-    $output = '<div class="trinity-scrollspy">';
-    
-    // Navigation column
-    $output .= '<div class="scrollspy-nav">';
-    $output .= '<nav id="' . $scrollspy_id . '" class="nav nav-' . esc_attr($nav_style) . ' flex-column">';
-    
-    foreach ($nav_items as $item) {
-        $label = $item['label'] ?? '';
-        $target = $item['target'] ?? '';
-        if (!empty($label) && !empty($target)) {
-            $output .= '<a class="nav-link" href="#' . esc_attr($target) . '">' . esc_html($label) . '</a>';
-        }
-    }
-    
-    $output .= '</nav>';
-    $output .= '</div>';
-    
-    // Content column
-    $output .= '<div class="scrollspy-content" data-bs-spy="scroll" data-bs-target="#' . $scrollspy_id . '" data-bs-offset="' . intval($offset) . '" tabindex="0">';
-    
-    foreach ($nav_items as $item) {
-        $label = $item['label'] ?? '';
-        $target = $item['target'] ?? '';
-        $content = $item['content'] ?? 'This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted.';
-        if (!empty($label) && !empty($target)) {
-            $output .= '<div class="scrollspy-item" id="' . esc_attr($target) . '">';
-            $output .= '<h4>' . esc_html($label) . '</h4>';
-            $output .= '<p>' . wp_kses_post($content) . '</p>';
-            $output .= '</div>';
-        }
-    }
-    
-    $output .= '</div>';
-    $output .= '</div>';
-    
-    if ($smooth) {
-        $output .= '<style>.scrollspy-content { scroll-behavior: smooth; }</style>';
-    }
     
     return $output;
 }

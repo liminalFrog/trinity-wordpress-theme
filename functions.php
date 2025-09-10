@@ -264,6 +264,105 @@ function trinity_save_page_options($post_id) {
 add_action('save_post', 'trinity_save_page_options');
 
 /**
+ * Filter core table blocks to add Bootstrap classes
+ */
+function trinity_render_core_table_block($block_content, $block) {
+    if ($block['blockName'] !== 'core/table') {
+        return $block_content;
+    }
+    
+    // Get Bootstrap table attributes from block
+    $bootstrap_classes = [];
+    
+    // Base table class
+    $has_bootstrap_options = false;
+    
+    if (isset($block['attrs']['bootstrapHover']) && $block['attrs']['bootstrapHover']) {
+        $bootstrap_classes[] = 'table-hover';
+        $has_bootstrap_options = true;
+    }
+    if (isset($block['attrs']['bootstrapStriped']) && $block['attrs']['bootstrapStriped']) {
+        $bootstrap_classes[] = 'table-striped';
+        $has_bootstrap_options = true;
+    }
+    if (isset($block['attrs']['bootstrapBordered']) && $block['attrs']['bootstrapBordered']) {
+        $bootstrap_classes[] = 'table-bordered';
+        $has_bootstrap_options = true;
+    }
+    if (isset($block['attrs']['bootstrapBorderless']) && $block['attrs']['bootstrapBorderless']) {
+        $bootstrap_classes[] = 'table-borderless';
+        $has_bootstrap_options = true;
+    }
+    if (isset($block['attrs']['bootstrapSmall']) && $block['attrs']['bootstrapSmall']) {
+        $bootstrap_classes[] = 'table-sm';
+        $has_bootstrap_options = true;
+    }
+    if (isset($block['attrs']['bootstrapVariant']) && !empty($block['attrs']['bootstrapVariant'])) {
+        $bootstrap_classes[] = 'table-' . $block['attrs']['bootstrapVariant'];
+        $has_bootstrap_options = true;
+    }
+    
+    // Handle responsive wrapper
+    $is_responsive = isset($block['attrs']['bootstrapResponsive']) && $block['attrs']['bootstrapResponsive'];
+    if ($is_responsive) {
+        $has_bootstrap_options = true;
+    }
+    
+    // Add base Bootstrap table class if any Bootstrap features are enabled
+    if ($has_bootstrap_options) {
+        array_unshift($bootstrap_classes, 'table');
+        $table_class_string = implode(' ', $bootstrap_classes);
+        
+        if ($is_responsive) {
+            // For responsive tables, wrap in responsive div
+            $responsive_class = 'table-responsive';
+            
+            // Check if table already has a class attribute
+            if (preg_match('/<table[^>]*class="([^"]*)"[^>]*>/', $block_content, $matches)) {
+                // Table has existing classes - add Bootstrap classes
+                $existing_classes = $matches[1];
+                $new_classes = $existing_classes . ' ' . $table_class_string;
+                $block_content = preg_replace(
+                    '/<table([^>]*)class="([^"]*)"([^>]*)>/',
+                    '<div class="' . $responsive_class . '"><table$1class="' . $new_classes . '"$3>',
+                    $block_content
+                );
+            } else {
+                // Table has no class attribute - add one
+                $block_content = preg_replace(
+                    '/<table([^>]*)>/',
+                    '<div class="' . $responsive_class . '"><table$1 class="' . $table_class_string . '">',
+                    $block_content
+                );
+            }
+            $block_content = str_replace('</table>', '</table></div>', $block_content);
+        } else {
+            // Just add classes to existing table
+            if (preg_match('/<table[^>]*class="([^"]*)"[^>]*>/', $block_content, $matches)) {
+                // Table has existing classes - add Bootstrap classes
+                $existing_classes = $matches[1];
+                $new_classes = $existing_classes . ' ' . $table_class_string;
+                $block_content = preg_replace(
+                    '/<table([^>]*)class="([^"]*)"([^>]*)>/',
+                    '<table$1class="' . $new_classes . '"$3>',
+                    $block_content
+                );
+            } else {
+                // Table has no class attribute - add one
+                $block_content = preg_replace(
+                    '/<table([^>]*)>/',
+                    '<table$1 class="' . $table_class_string . '">',
+                    $block_content
+                );
+            }
+        }
+    }
+    
+    return $block_content;
+}
+add_filter('render_block', 'trinity_render_core_table_block', 10, 2);
+
+/**
  * Include required files
  */
 require_once TRINITY_DIR . '/inc/nav-walker.php';

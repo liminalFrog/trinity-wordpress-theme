@@ -63,6 +63,13 @@ img {
     height: auto;
     border-radius: var(--trinity-border-radius);
 }
+.wp-block-image img {
+    border-radius: var(--trinity-border-radius);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    body[data-theme=dark] & {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+}
 
 // Lists
 ul, ol {
