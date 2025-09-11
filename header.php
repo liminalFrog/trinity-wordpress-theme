@@ -110,5 +110,5 @@
                 </div>
             </div>
         <?php elseif (!is_page()) : ?>
-            <div class="spacer" style="height: 40px;"></div>
+            <!-- <div class="spacer mb-5" style="height: 72px;"></div> -->
         <?php endif; ?>

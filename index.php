@@ -34,50 +34,141 @@ get_header(); ?>
         
         <?php if (have_posts()) : ?>
             <div class="blog-posts">
-                <?php while (have_posts()) : the_post(); ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class('blog-post-item' . (has_post_thumbnail() ? ' has-post-thumbnail' : '')); ?>>
-                        <div class="blog-post-content">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="blog-post-thumbnail">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail('medium', ['class' => 'blog-post-img']); ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="blog-post-info">
-                                <h2 class="blog-post-title">
-                                    <a href="<?php the_permalink(); ?>" class="text-decoration-none">
-                                        <?php the_title(); ?>
-                                    </a>
-                                </h2>
-                                
-                                <div class="blog-post-meta">
-                                    <small class="text-muted">
-                                        <i class="fas fa-calendar-alt me-1"></i>
-                                        <?php echo get_the_date(); ?>
-                                        <span class="mx-2">•</span>
-                                        <i class="fas fa-user me-1"></i>
-                                        <?php the_author(); ?>
-                                        <?php if (get_comments_number() > 0) : ?>
-                                            <span class="mx-2">•</span>
-                                            <i class="fas fa-comments me-1"></i>
-                                            <?php comments_number('0', '1', '%'); ?>
+                <?php 
+                $post_count = 0;
+                $posts_per_row = 2;
+                
+                while (have_posts()) : the_post(); 
+                    $post_count++;
+                    $post_categories = get_the_category();
+                    $primary_category = !empty($post_categories) ? $post_categories[0] : null;
+                    $is_featured = $post_count === 1; // First post is featured
+                    
+                    // Featured post gets full width
+                    if ($is_featured) : ?>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card featured-post h-100 position-relative">
+                                    <a href="<?php the_permalink(); ?>" class="stretched-link"></a>
+                                    
+                                    <?php if (has_post_thumbnail()) : ?>
+                                        <?php the_post_thumbnail('large', [
+                                            'class' => 'card-img-top',
+                                            'style' => 'height: 300px; object-fit: cover;'
+                                        ]); ?>
+                                    <?php endif; ?>
+                                    
+                                    <div class="card-body">
+                                        <?php if ($primary_category) : ?>
+                                            <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                                <?php echo esc_html($primary_category->name); ?>
+                                            </strong>
                                         <?php endif; ?>
-                                    </small>
+                                        
+                                        <h1 class="card-title display-4 fst-italic mb-3">
+                                            <?php the_title(); ?>
+                                        </h1>
+                                        
+                                        <p class="card-text lead mb-3">
+                                            <?php echo wp_trim_words(get_the_excerpt(), 30, '...'); ?>
+                                        </p>
+                                        
+                                        <span class="btn btn-primary">
+                                            <?php esc_html_e('Continue reading...', 'trinity'); ?>
+                                        </span>
+                                    </div>
                                 </div>
-                                
-                                <div class="blog-post-excerpt">
-                                    <?php the_excerpt(); ?>
-                                </div>
-                                
-                                <a href="<?php the_permalink(); ?>" class="btn btn-outline-primary btn-sm">
-                                    <?php esc_html_e('Read More', 'trinity'); ?>
-                                </a>
                             </div>
                         </div>
-                    </article>
-                <?php endwhile; ?>
+                    <?php else :
+                        // Regular posts in card layout
+                        // Start new row every 2 posts (excluding featured post)
+                        $regular_post_count = $post_count - 1;
+                        if ($regular_post_count % $posts_per_row === 1) : ?>
+                            <div class="row mb-4">
+                        <?php endif; ?>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 position-relative">
+                                <a href="<?php the_permalink(); ?>" class="stretched-link"></a>
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <div class="row g-0 h-100">
+                                        <!-- Image on left for desktop, top for mobile -->
+                                        <div class="col-12 col-md-4">
+                                            <?php the_post_thumbnail('medium', [
+                                                'class' => 'card-img img-fluid h-100',
+                                                'style' => 'object-fit: cover;'
+                                            ]); ?>
+                                        </div>
+                                        
+                                        <!-- Content on right for desktop, bottom for mobile -->
+                                        <div class="col-12 col-md-8">
+                                            <div class="card-body d-flex flex-column h-100">
+                                                <?php if ($primary_category) : ?>
+                                                    <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                                        <?php echo esc_html($primary_category->name); ?>
+                                                    </strong>
+                                                <?php endif; ?>
+                                                
+                                                <h5 class="card-title">
+                                                    <?php the_title(); ?>
+                                                </h5>
+                                                
+                                                <div class="mb-2 text-body-secondary">
+                                                    <small><?php echo get_the_date('M j, Y'); ?></small>
+                                                </div>
+                                                
+                                                <p class="card-text flex-grow-1">
+                                                    <?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?>
+                                                </p>
+                                                
+                                                <div class="mt-auto">
+                                                    <span class="btn btn-outline-primary btn-sm">
+                                                        <?php esc_html_e('Read More', 'trinity'); ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php else : ?>
+                                    <!-- No image version -->
+                                    <div class="card-body d-flex flex-column h-100">
+                                        <?php if ($primary_category) : ?>
+                                            <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                                <?php echo esc_html($primary_category->name); ?>
+                                            </strong>
+                                        <?php endif; ?>
+                                        
+                                        <h5 class="card-title">
+                                            <?php the_title(); ?>
+                                        </h5>
+                                        
+                                        <div class="mb-2 text-body-secondary">
+                                            <small><?php echo get_the_date('M j, Y'); ?></small>
+                                        </div>
+                                        
+                                        <p class="card-text flex-grow-1">
+                                            <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
+                                        </p>
+                                        
+                                        <div class="mt-auto">
+                                            <span class="btn btn-outline-primary btn-sm">
+                                                <?php esc_html_e('Read More', 'trinity'); ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <?php 
+                        // Close row every 2 posts or at the end
+                        if ($regular_post_count % $posts_per_row === 0 || !have_posts()) : ?>
+                            </div>
+                        <?php endif;
+                    endif;
+                    
+                endwhile; ?>
             </div>
             
             <?php trinity_pagination(); ?>

@@ -17,15 +17,40 @@
             this.smoothScrolling();
             this.parallaxEffects();
             this.announcementBar();
+            this.handlePageHeaderSpacing();
         },
 
         /**
          * Loading spinner
          */
         loadingSpinner: function() {
-            $(window).on('load', function() {
-                $('#trinity-loading').fadeOut('slow');
-            });
+            // Hide loading spinner when page is fully loaded
+            const hideLoader = function() {
+                const loader = document.getElementById('trinity-loading');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    // Remove element completely after transition
+                    setTimeout(function() {
+                        if (loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 500);
+                }
+            };
+
+            // Use both jQuery (if available) and vanilla JS for maximum compatibility
+            if (typeof $ !== 'undefined') {
+                $(window).on('load', hideLoader);
+            } else {
+                if (document.readyState === 'complete') {
+                    hideLoader();
+                } else {
+                    window.addEventListener('load', hideLoader);
+                }
+            }
+            
+            // Fallback: Hide after 3 seconds regardless
+            setTimeout(hideLoader, 3000);
         },
 
         /**
@@ -278,6 +303,68 @@
         },
 
         /**
+         * Handle page header spacing
+         */
+        handlePageHeaderSpacing: function() {
+            const pageHeader = document.querySelector('.page-header');
+            const body = document.body;
+            
+            if (pageHeader) {
+                body.classList.add('has-page-header');
+            } else {
+                body.classList.remove('has-page-header');
+            }
+            
+            // Also handle dynamic content changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        const pageHeader = document.querySelector('.page-header');
+                        if (pageHeader) {
+                            body.classList.add('has-page-header');
+                            Trinity.handlePageHeaderMargin();
+                        } else {
+                            body.classList.remove('has-page-header');
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            // Initial check for page header margin
+            this.handlePageHeaderMargin();
+        },
+
+        /**
+         * Handle page header margin based on following elements
+         */
+        handlePageHeaderMargin: function() {
+            const pageHeader = document.querySelector('.page-header');
+            if (!pageHeader) return;
+            
+            const nextElement = pageHeader.nextElementSibling;
+            
+            // Check if the next element is TMHero or full-width carousel
+            const isFollowedBySpecialBlock = nextElement && (
+                nextElement.classList.contains('tmhero-block') ||
+                nextElement.classList.contains('wp-block-tmhero-hero-block') ||
+                (nextElement.classList.contains('trinity-carousel') && 
+                 (nextElement.classList.contains('full-width') || 
+                  nextElement.classList.contains('trinity-carousel-full-width')))
+            );
+            
+            if (isFollowedBySpecialBlock) {
+                pageHeader.classList.add('no-margin-bottom');
+            } else {
+                pageHeader.classList.remove('no-margin-bottom');
+            }
+        },
+
+        /**
          * Initialize tooltips and popovers
          */
         initBootstrapComponents: function() {
@@ -375,6 +462,17 @@
         Trinity.formEnhancements();
         Trinity.imageZoom();
     });
+
+    // Fallback initialization if jQuery is not available
+    if (typeof $ === 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                Trinity.init();
+            });
+        } else {
+            Trinity.init();
+        }
+    }
 
     // Expose Trinity object globally
     window.Trinity = Trinity;

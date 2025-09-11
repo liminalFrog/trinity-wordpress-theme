@@ -1,9 +1,9 @@
-/*
+/*!
 Theme Name: Trinity
-Theme URI: https://github.com/your-username/trinity-theme
+Theme URI: https://github.com/liminalFrog/trinity-wordpress-theme
 Description: A modern WordPress theme with Bootstrap framework, dark/light mode support, and custom blocks.
 Author: Adam Mureiko
-Author URI: https://adammureiko.com
+Author URI: https://trinitymetalworks.com
 Version: 1.0.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,26 +46,61 @@ body,
 }
 
 .site-content {
-    margin-top: 5rem;
+    // Default: Content runs up to navbar when no page header
+    margin-top: var(--trinity-navbar-height);
+    
+    // Mobile responsive margin
+    @media (max-width: 991.98px) {
+        margin-top: var(--trinity-navbar-height-mobile);
+    }
+}
+
+// When page header is present (using body class approach)
+// body.has-page-header .site-content {
+//     margin-top: calc(var(--trinity-navbar-height) + var(--trinity-page-header-height));
+    
+//     @media (max-width: 991.98px) {
+//         margin-top: calc(var(--trinity-navbar-height-mobile) + var(--trinity-page-header-height-mobile));
+//     }
+// }
+
+// For templates where page header is inside main content area
+main.site-main .page-header:first-child {
+    margin-top: calc(-1 * var(--trinity-page-header-height));
+    padding-top: calc(var(--trinity-navbar-height) + var(--trinity-page-header-height));
+    margin-bottom: 2rem;
+    
+    @media (max-width: 991.98px) {
+        margin-top: calc(-1 * var(--trinity-page-header-height-mobile));
+        padding-top: calc(var(--trinity-navbar-height-mobile) + var(--trinity-page-header-height-mobile));
+    }
+}
+
+.tmhero-block.tmhero-full-width,
+.trinity-carousel.full-width,
+.trinity-carousel.trinity-carousel-full-width {
+    margin-top: -1rem !important;
 }
 
 // Remove top margin for single posts and blog pages
 .single-post,
 .home .site-main,
-.blog .site-main,
 .archive .site-main {
     .site-content {
         margin-top: 0;
     }
 }
 
-// Alternative approach - target the main element directly
-main.site-main.single-post,
-.home main.site-main,
-.blog main.site-main,
-.archive main.site-main {
-    margin-top: 0;
-    padding-top: 5rem; // Maintain some spacing but less than 80px
+.blog .site-main {
+    margin-top: -3rem !important;
+    
+    .site-content {
+        margin-top: 0;
+    }
+}
+
+.site-main.single-post {
+    margin-top: 6rem !important;
 }
 
 .sidebar {
