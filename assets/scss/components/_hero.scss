@@ -108,7 +108,7 @@
 // Page header (for pages)
 .page-header {
     padding: calc(var(--trinity-page-header-height) / 3) 0;
-    margin-bottom: 0;
+    margin-bottom: 1rem; // Default margin-bottom (mb-3 equivalent)
     text-align: left !important;
     border-bottom: 2px solid $danger;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -121,6 +121,23 @@
     @media (max-width: 991.98px) {
         min-height: var(--trinity-page-header-height-mobile);
         padding: calc(var(--trinity-page-header-height-mobile) / 3) 0;
+    }
+    
+    // Remove margin when followed by TMHero or full-width carousel
+    &:has(+ .tmhero-block),
+    &:has(+ .wp-block-tmhero-hero-block),
+    &:has(+ .trinity-carousel.full-width),
+    &:has(+ .trinity-carousel.trinity-carousel-full-width),
+    &.no-margin-bottom {
+        margin-bottom: 0;
+    }
+    
+    // Alternative approach using adjacent sibling selector (better browser support)
+    + .tmhero-block,
+    + .wp-block-tmhero-hero-block,
+    + .trinity-carousel.full-width,
+    + .trinity-carousel.trinity-carousel-full-width {
+        margin-top: -1rem; // Offset the page-header margin-bottom
     }
     
     .page-title {

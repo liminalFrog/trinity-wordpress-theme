@@ -76,29 +76,32 @@ main.site-main .page-header:first-child {
     }
 }
 
+.tmhero-block.tmhero-full-width,
+.trinity-carousel.full-width,
+.trinity-carousel.trinity-carousel-full-width {
+    margin-top: -1rem !important;
+}
+
 // Remove top margin for single posts and blog pages
 .single-post,
 .home .site-main,
-.blog .site-main,
 .archive .site-main {
     .site-content {
         margin-top: 0;
     }
 }
 
-// // Alternative approach - target the main element directly
-// main.site-main.single-post,
-// .home main.site-main,
-// .blog main.site-main,
-// .archive main.site-main {
-//     margin-top: 0;
-//     padding-top: var(--trinity-navbar-height);
+.blog .site-main {
+    margin-top: -3rem !important;
     
-//     // Mobile responsive padding
-//     @media (max-width: 991.98px) {
-//         padding-top: var(--trinity-navbar-height-mobile);
-//     }
-// }
+    .site-content {
+        margin-top: 0;
+    }
+}
+
+.site-main.single-post {
+    margin-top: 6rem !important;
+}
 
 .sidebar {
     padding: 1.5rem;

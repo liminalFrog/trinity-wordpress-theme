@@ -322,6 +322,7 @@
                         const pageHeader = document.querySelector('.page-header');
                         if (pageHeader) {
                             body.classList.add('has-page-header');
+                            Trinity.handlePageHeaderMargin();
                         } else {
                             body.classList.remove('has-page-header');
                         }
@@ -333,6 +334,34 @@
                 childList: true,
                 subtree: true
             });
+            
+            // Initial check for page header margin
+            this.handlePageHeaderMargin();
+        },
+
+        /**
+         * Handle page header margin based on following elements
+         */
+        handlePageHeaderMargin: function() {
+            const pageHeader = document.querySelector('.page-header');
+            if (!pageHeader) return;
+            
+            const nextElement = pageHeader.nextElementSibling;
+            
+            // Check if the next element is TMHero or full-width carousel
+            const isFollowedBySpecialBlock = nextElement && (
+                nextElement.classList.contains('tmhero-block') ||
+                nextElement.classList.contains('wp-block-tmhero-hero-block') ||
+                (nextElement.classList.contains('trinity-carousel') && 
+                 (nextElement.classList.contains('full-width') || 
+                  nextElement.classList.contains('trinity-carousel-full-width')))
+            );
+            
+            if (isFollowedBySpecialBlock) {
+                pageHeader.classList.add('no-margin-bottom');
+            } else {
+                pageHeader.classList.remove('no-margin-bottom');
+            }
         },
 
         /**
