@@ -16,6 +16,7 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
 */
 
 // Import partials
+@import 'fonts';
 @import 'variables';
 @import 'mixins';
 @import 'base';
@@ -31,7 +32,7 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
 
 // Main theme styles
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "IBM Plex Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--trinity-font-primary);
     line-height: 1.6;
     transition: all 0.3s ease;
     overflow-x: hidden !important;
@@ -211,6 +212,16 @@ img {
         color: #6c757d;
         text-align: center;
         margin-top: 0.5rem;
+    }
+}
+
+.wp-block-separator {
+    border: 0;
+    opacity: 0.25;
+    margin: 1rem 0;
+
+    &:not([size]) {
+        height: 1px;
     }
 }
 

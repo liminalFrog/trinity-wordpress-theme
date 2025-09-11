@@ -15,6 +15,62 @@ Tested up to: 6.3
 Requires PHP: 7.4
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, bootstrap, dark-mode
 */
+@font-face {
+  font-family: "Walleye";
+  src: url("fonts/walleye/walleye-webfont.woff2") format("woff2"), url("fonts/walleye/walleye-webfont.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Walleye";
+  src: url("fonts/walleye/walleye-bold-webfont.woff2") format("woff2"), url("fonts/walleye/walleye-bold-webfont.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Walleye";
+  src: url("fonts/walleye/walleye-italic-webfont.woff2") format("woff2"), url("fonts/walleye/walleye-italic-webfont.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Walleye";
+  src: url("fonts/walleye/walleye-bolditalic-webfont.woff2") format("woff2"), url("fonts/walleye/walleye-bolditalic-webfont.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+.font-walleye {
+  font-family: var(--trinity-font-walleye);
+}
+
+.font-walleye-normal {
+  font-family: var(--trinity-font-walleye);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.font-walleye-bold {
+  font-family: var(--trinity-font-walleye);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.font-walleye-italic {
+  font-family: var(--trinity-font-walleye);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.font-walleye-bold-italic {
+  font-family: var(--trinity-font-walleye);
+  font-weight: 700;
+  font-style: italic;
+}
+
 :root {
   --trinity-primary: #007cba;
   --trinity-primary-dark: #005a87;
@@ -36,6 +92,8 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
   --trinity-page-header-height-mobile: 100px;
   --trinity-section-padding: 4rem;
   --trinity-section-padding-sm: 2rem;
+  --trinity-font-primary: -apple-system, BlinkMacSystemFont, "IBM Plex Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --trinity-font-walleye: "Walleye", var(--trinity-font-primary);
   --trinity-border-radius: 0.375rem;
   --trinity-border-radius-lg: 0.75rem;
   --trinity-border-color: rgba(0, 0, 0, 0.4);
@@ -470,8 +528,11 @@ hr {
 @media (max-width: 991.98px) {
   .trinity-navbar .navbar-collapse {
     margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--trinity-border-radius);
+    box-shadow: inset 0 -0.25rem 0.5rem rgba(0, 0, 0, 0.15), 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
   .trinity-navbar .navbar-nav .nav-link {
     margin: 0.125rem 0;
@@ -485,7 +546,8 @@ hr {
     border-radius: 0;
   }
   [data-theme=dark] .trinity-navbar .navbar-collapse {
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgba(33, 37, 41, 0.9);
   }
   [data-theme=dark] .trinity-navbar .navbar-nav .dropdown-menu {
     background-color: var(--trinity-dark);
@@ -495,6 +557,32 @@ hr {
     color: rgba(255, 255, 255, 0.75);
   }
   [data-theme=dark] .trinity-navbar .navbar-nav .dropdown-menu .dropdown-item:hover, [data-theme=dark] .trinity-navbar .navbar-nav .dropdown-menu .dropdown-item:focus {
+    background-color: var(--trinity-primary);
+    color: white;
+  }
+  .trinity-navbar.navbar-scrolled .navbar-collapse {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgba(33, 37, 41, 0.9);
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .nav-link:hover, .trinity-navbar.navbar-scrolled .navbar-nav .nav-link:focus {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .nav-link.active, .trinity-navbar.navbar-scrolled .navbar-nav .nav-link.current-menu-item, .trinity-navbar.navbar-scrolled .navbar-nav .nav-link.current_page_item, .trinity-navbar.navbar-scrolled .navbar-nav .nav-link.current-page-ancestor, .trinity-navbar.navbar-scrolled .navbar-nav .nav-link.current-menu-ancestor {
+    background-color: #dc3545;
+    color: white !important;
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .dropdown-menu {
+    background-color: var(--trinity-dark);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .dropdown-menu .dropdown-item {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .trinity-navbar.navbar-scrolled .navbar-nav .dropdown-menu .dropdown-item:hover, .trinity-navbar.navbar-scrolled .navbar-nav .dropdown-menu .dropdown-item:focus {
     background-color: var(--trinity-primary);
     color: white;
   }
@@ -3689,7 +3777,7 @@ body[data-theme=dark] .comment-content blockquote {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "IBM Plex Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--trinity-font-primary);
   line-height: 1.6;
   transition: all 0.3s ease;
   overflow-x: hidden !important;
@@ -3836,6 +3924,15 @@ img.rounded-0 {
   color: #6c757d;
   text-align: center;
   margin-top: 0.5rem;
+}
+
+.wp-block-separator {
+  border: 0;
+  opacity: 0.25;
+  margin: 1rem 0;
+}
+.wp-block-separator:not([size]) {
+  height: 1px;
 }
 
 .gallery {
