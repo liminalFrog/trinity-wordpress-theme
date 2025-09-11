@@ -6,8 +6,16 @@
     @include shadow(1);
     transition: var(--trinity-transition);
     min-height: var(--trinity-navbar-height);
+    max-height: var(--trinity-navbar-height);
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+    
+    // Mobile responsive height
+    @media (max-width: 991.98px) {
+        min-height: var(--trinity-navbar-height-mobile);
+        max-height: var(--trinity-navbar-height-mobile);
+    }
+    
     // Background pattern support
     &::before {
         content: '';
@@ -27,7 +35,7 @@
     
     .navbar-brand {
         font-weight: 700;
-        font-size: 1.5rem;
+        font-size: 1rem;
         transition: var(--trinity-transition-fast);
         
         img {
@@ -35,6 +43,11 @@
             width: auto;
             transition: var(--trinity-transition-fast);
             border-radius: 0;
+            
+            // Mobile responsive logo size
+            @media (max-width: 991.98px) {
+                height: var(--trinity-logo-height-mobile);
+            }
             
             &.logo-dark {
                 display: none;

@@ -17,6 +17,7 @@
             this.smoothScrolling();
             this.parallaxEffects();
             this.announcementBar();
+            this.handlePageHeaderSpacing();
         },
 
         /**
@@ -299,6 +300,39 @@
                     localStorage.setItem('trinity-announcement-dismissed', 'true');
                 });
             }
+        },
+
+        /**
+         * Handle page header spacing
+         */
+        handlePageHeaderSpacing: function() {
+            const pageHeader = document.querySelector('.page-header');
+            const body = document.body;
+            
+            if (pageHeader) {
+                body.classList.add('has-page-header');
+            } else {
+                body.classList.remove('has-page-header');
+            }
+            
+            // Also handle dynamic content changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        const pageHeader = document.querySelector('.page-header');
+                        if (pageHeader) {
+                            body.classList.add('has-page-header');
+                        } else {
+                            body.classList.remove('has-page-header');
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
         },
 
         /**

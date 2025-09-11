@@ -11,11 +11,17 @@
     --trinity-dark: #212529;
     
     // Navbar
-    --trinity-navbar-height: 64px;
+    --trinity-navbar-height: 72px;
+    --trinity-navbar-height-mobile: 60px;
     --trinity-logo-height: 48px;
+    --trinity-logo-height-mobile: 36px;
     --trinity-navbar-bg-light: rgba(255, 255, 255, 0.75);
     --trinity-navbar-bg-dark: rgba(0, 0, 0, 0.85);
     --trinity-navbar-backdrop-filter: blur(10px);
+    
+    // Page Header
+    --trinity-page-header-height: 120px;
+    --trinity-page-header-height-mobile: 100px;
     
     // Spacing
     --trinity-section-padding: 4rem;

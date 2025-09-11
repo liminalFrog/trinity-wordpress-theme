@@ -46,7 +46,34 @@ body,
 }
 
 .site-content {
-    margin-top: 5rem;
+    // Default: Content runs up to navbar when no page header
+    margin-top: var(--trinity-navbar-height);
+    
+    // Mobile responsive margin
+    @media (max-width: 991.98px) {
+        margin-top: var(--trinity-navbar-height-mobile);
+    }
+}
+
+// When page header is present (using body class approach)
+// body.has-page-header .site-content {
+//     margin-top: calc(var(--trinity-navbar-height) + var(--trinity-page-header-height));
+    
+//     @media (max-width: 991.98px) {
+//         margin-top: calc(var(--trinity-navbar-height-mobile) + var(--trinity-page-header-height-mobile));
+//     }
+// }
+
+// For templates where page header is inside main content area
+main.site-main .page-header:first-child {
+    margin-top: calc(-1 * var(--trinity-page-header-height));
+    padding-top: calc(var(--trinity-navbar-height) + var(--trinity-page-header-height));
+    margin-bottom: 2rem;
+    
+    @media (max-width: 991.98px) {
+        margin-top: calc(-1 * var(--trinity-page-header-height-mobile));
+        padding-top: calc(var(--trinity-navbar-height-mobile) + var(--trinity-page-header-height-mobile));
+    }
 }
 
 // Remove top margin for single posts and blog pages
@@ -59,14 +86,19 @@ body,
     }
 }
 
-// Alternative approach - target the main element directly
-main.site-main.single-post,
-.home main.site-main,
-.blog main.site-main,
-.archive main.site-main {
-    margin-top: 0;
-    padding-top: 5rem; // Maintain some spacing but less than 80px
-}
+// // Alternative approach - target the main element directly
+// main.site-main.single-post,
+// .home main.site-main,
+// .blog main.site-main,
+// .archive main.site-main {
+//     margin-top: 0;
+//     padding-top: var(--trinity-navbar-height);
+    
+//     // Mobile responsive padding
+//     @media (max-width: 991.98px) {
+//         padding-top: var(--trinity-navbar-height-mobile);
+//     }
+// }
 
 .sidebar {
     padding: 1.5rem;
