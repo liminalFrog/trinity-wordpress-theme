@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) {
  */
 function trinity_register_blocks() {
     // Register blocks
+    trinity_register_hero_block();
     trinity_register_alert_block();
     trinity_register_accordion_block();
     trinity_register_carousel_block();
@@ -28,6 +29,338 @@ function trinity_register_blocks() {
     trinity_register_table_block();
 }
 add_action('init', 'trinity_register_blocks');
+
+/**
+ * Add hooks for Trinity Hero hide page title functionality
+ */
+add_action('wp_head', 'trinity_hero_hide_page_title_css');
+add_filter('body_class', 'trinity_hero_add_hide_title_body_class');
+
+/**
+ * Hide page title CSS for Trinity Hero blocks
+ */
+function trinity_hero_hide_page_title_css() {
+    global $post;
+    
+    if (!$post || !is_singular()) {
+        return;
+    }
+    
+    // Check if the current post has Trinity Hero blocks with hidePageTitle enabled
+    $content = $post->post_content;
+    
+    if (has_blocks($content)) {
+        $blocks = parse_blocks($content);
+        foreach ($blocks as $block) {
+            if ($block['blockName'] === 'trinity/tmhero' && 
+                isset($block['attrs']['hidePageTitle']) && 
+                $block['attrs']['hidePageTitle']) {
+                
+                // Output CSS to hide common page title selectors
+                echo '<style type="text/css">
+                    .entry-title,
+                    .page-title,
+                    .post-title,
+                    h1.title,
+                    .wp-block-post-title,
+                    .entry-header h1,
+                    .page-header h1,
+                    .single-title,
+                    .content-title,
+                    .main-title {
+                        display: none !important;
+                    }
+                    
+                    /* Remove spacing between navbar and hero when page title is hidden */
+                    body.trinity-hide-page-title main,
+                    body.trinity-hide-page-title .site-main,
+                    body.trinity-hide-page-title #primary,
+                    body.trinity-hide-page-title .content-area,
+                    body.trinity-hide-page-title .main-content {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Ensure hero block starts immediately after navbar */
+                    body.trinity-hide-page-title .trinity-hero-block:first-child,
+                    body.trinity-hide-page-title .wp-block-trinity-tmhero:first-child {
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Remove any article/entry spacing */
+                    body.trinity-hide-page-title article,
+                    body.trinity-hide-page-title .entry-header {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                </style>';
+                break; // Only need to output once
+            }
+        }
+    }
+}
+
+/**
+ * Add body class when Trinity Hero hide page title is active
+ */
+function trinity_hero_add_hide_title_body_class($classes) {
+    global $post;
+    
+    if (!$post || !is_singular()) {
+        return $classes;
+    }
+    
+    // Check if the current post has Trinity Hero blocks with hidePageTitle enabled
+    $content = $post->post_content;
+    
+    if (has_blocks($content)) {
+        $blocks = parse_blocks($content);
+        foreach ($blocks as $block) {
+            if ($block['blockName'] === 'trinity/tmhero' && 
+                isset($block['attrs']['hidePageTitle']) && 
+                $block['attrs']['hidePageTitle']) {
+                
+                $classes[] = 'trinity-hide-page-title';
+                break;
+            }
+        }
+    }
+    
+    return $classes;
+}
+
+/**
+ * Hero Block
+ */
+function trinity_register_hero_block() {
+    register_block_type('trinity/tmhero', [
+        'attributes' => [
+            'mediaUrl' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'mediaType' => [
+                'type' => 'string',
+                'default' => 'image'
+            ],
+            'mediaId' => [
+                'type' => 'number',
+                'default' => 0
+            ],
+            'title' => [
+                'type' => 'string',
+                'default' => 'Hero Title'
+            ],
+            'subtitle' => [
+                'type' => 'string',
+                'default' => 'Hero Subtitle'
+            ],
+            'textPosition' => [
+                'type' => 'string',
+                'default' => 'center'
+            ],
+            'textAlignment' => [
+                'type' => 'string',
+                'default' => 'center'
+            ],
+            'fontSize' => [
+                'type' => 'string',
+                'default' => 'large'
+            ],
+            'dimRatio' => [
+                'type' => 'number',
+                'default' => 30
+            ],
+            'height' => [
+                'type' => 'string',
+                'default' => 'medium'
+            ],
+            'fullWidth' => [
+                'type' => 'boolean',
+                'default' => false
+            ],
+            'textColor' => [
+                'type' => 'string',
+                'default' => '#ffffff'
+            ],
+            'buttonText' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'buttonUrl' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'buttonStyle' => [
+                'type' => 'string',
+                'default' => 'primary'
+            ],
+            'button2Text' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'button2Url' => [
+                'type' => 'string',
+                'default' => ''
+            ],
+            'button2Page' => [
+                'type' => 'number',
+                'default' => 0
+            ],
+            'button2Style' => [
+                'type' => 'string',
+                'default' => 'secondary'
+            ],
+            'button2Type' => [
+                'type' => 'string',
+                'default' => 'url'
+            ],
+            'hidePageTitle' => [
+                'type' => 'boolean',
+                'default' => false
+            ],
+            'parallaxEffect' => [
+                'type' => 'boolean',
+                'default' => false
+            ],
+            'parallaxStatic' => [
+                'type' => 'boolean',
+                'default' => false
+            ]
+        ],
+        'render_callback' => 'trinity_render_tmhero_block',
+    ]);
+}
+
+/**
+ * Render Hero Block (TMHero replacement)
+ */
+function trinity_render_tmhero_block($attributes) {
+    // Set default values if attributes are missing
+    $attributes = wp_parse_args($attributes, [
+        'mediaUrl' => '',
+        'mediaType' => 'image',
+        'title' => 'Hero Title',
+        'subtitle' => 'Hero Subtitle',
+        'textPosition' => 'center',
+        'textAlignment' => 'center',
+        'fontSize' => 'large',
+        'dimRatio' => 30,
+        'height' => 'medium',
+        'fullWidth' => false,
+        'textColor' => '#ffffff',
+        'buttonText' => '',
+        'buttonUrl' => '',
+        'buttonStyle' => 'primary',
+        'button2Text' => '',
+        'button2Url' => '',
+        'button2Page' => 0,
+        'button2Style' => 'secondary',
+        'button2Type' => 'url',
+        'hidePageTitle' => false,
+        'parallaxEffect' => false,
+        'parallaxStatic' => false
+    ]);
+    
+    $media_url = esc_url($attributes['mediaUrl']);
+    $media_type = sanitize_text_field($attributes['mediaType']);
+    $title = sanitize_text_field($attributes['title']);
+    $subtitle = sanitize_text_field($attributes['subtitle']);
+    $text_position = sanitize_text_field($attributes['textPosition']);
+    $text_alignment = sanitize_text_field($attributes['textAlignment']);
+    $font_size = sanitize_text_field($attributes['fontSize']);
+    $dim_ratio = absint($attributes['dimRatio']);
+    $height = sanitize_text_field($attributes['height']);
+    $full_width = (bool) $attributes['fullWidth'];
+    $text_color = sanitize_hex_color($attributes['textColor']);
+    $button_text = sanitize_text_field($attributes['buttonText']);
+    $button_url = esc_url($attributes['buttonUrl']);
+    $button_style = sanitize_text_field($attributes['buttonStyle']);
+    $button2_text = sanitize_text_field($attributes['button2Text']);
+    $button2_url = esc_url($attributes['button2Url']);
+    $button2_page = absint($attributes['button2Page']);
+    $button2_style = sanitize_text_field($attributes['button2Style']);
+    $button2_type = sanitize_text_field($attributes['button2Type']);
+    $hide_page_title = (bool) $attributes['hidePageTitle'];
+    $parallax_effect = (bool) $attributes['parallaxEffect'];
+    $parallax_static = (bool) $attributes['parallaxStatic'];
+    
+    $classes = ['trinity-hero-block'];
+    $classes[] = 'trinity-hero-height-' . $height;
+    $classes[] = 'trinity-hero-text-' . $text_position;
+    $classes[] = 'trinity-hero-align-' . $text_alignment;
+    $classes[] = 'trinity-hero-font-' . $font_size;
+    
+    if ($parallax_effect) {
+        $classes[] = 'trinity-hero-parallax';
+        if ($parallax_static) {
+            $classes[] = 'trinity-hero-parallax-static';
+        }
+    }
+    
+    if ($full_width) {
+        $classes[] = 'trinity-hero-full-width';
+    }
+    
+    $overlay_style = sprintf('background-color: rgba(0, 0, 0, %s);', $dim_ratio / 100);
+    $text_style = sprintf('color: %s;', $text_color);
+    
+    ob_start();
+    ?>
+    <div class="<?php echo esc_attr(implode(' ', $classes)); ?>">
+        <?php if ($media_url): ?>
+            <div class="trinity-hero-media<?php echo $parallax_effect ? ' trinity-hero-parallax-media' : ''; ?>">
+                <?php if ($media_type === 'video'): ?>
+                    <video autoplay muted loop<?php echo $parallax_effect ? ' class="trinity-hero-parallax-video"' : ''; ?>>
+                        <source src="<?php echo esc_url($media_url); ?>" type="video/mp4">
+                    </video>
+                <?php else: ?>
+                    <img src="<?php echo esc_url($media_url); ?>" alt="<?php echo esc_attr($title); ?>"<?php echo $parallax_effect ? ' class="trinity-hero-parallax-image"' : ''; ?>>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        
+        <div class="trinity-hero-overlay" style="<?php echo esc_attr($overlay_style); ?>"></div>
+        
+        <div class="trinity-hero-content">
+            <div class="trinity-hero-text" style="<?php echo esc_attr($text_style); ?>">
+                <?php if ($title): ?>
+                    <h1 class="trinity-hero-title"><?php echo esc_html($title); ?></h1>
+                <?php endif; ?>
+                
+                <?php if ($subtitle): ?>
+                    <p class="trinity-hero-subtitle"><?php echo esc_html($subtitle); ?></p>
+                <?php endif; ?>
+                
+                <?php if ($button_text && $button_url): ?>
+                    <a href="<?php echo esc_url($button_url); ?>" class="trinity-hero-button trinity-hero-button-<?php echo esc_attr($button_style); ?>">
+                        <?php echo esc_html($button_text); ?>
+                    </a>
+                <?php endif; ?>
+                
+                <?php 
+                // Handle second button URL
+                $button2_final_url = '';
+                if ($button2_text) {
+                    if ($button2_type === 'page' && $button2_page) {
+                        $button2_final_url = get_permalink($button2_page);
+                    } else {
+                        $button2_final_url = $button2_url;
+                    }
+                }
+                ?>
+                
+                <?php if ($button2_text && $button2_final_url): ?>
+                    <a href="<?php echo esc_url($button2_final_url); ?>" class="trinity-hero-button trinity-hero-button-<?php echo esc_attr($button2_style); ?>">
+                        <?php echo esc_html($button2_text); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
 
 /**
  * Alert Block

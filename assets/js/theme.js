@@ -16,6 +16,7 @@
             this.lazyLoading();
             this.smoothScrolling();
             this.parallaxEffects();
+            this.heroBlocks();
             this.announcementBar();
             this.handlePageHeaderSpacing();
         },
@@ -280,6 +281,192 @@
                     }
                 });
             });
+        },
+
+        /**
+         * Trinity Hero Blocks functionality
+         */
+        heroBlocks: function() {
+            console.log('Trinity Hero blocks initialization');
+            
+            const heroBlocks = document.querySelectorAll('.trinity-hero-block');
+            
+            if (heroBlocks.length === 0) {
+                console.log('No Trinity Hero blocks found');
+                return;
+            }
+            
+            console.log('Found Trinity Hero blocks:', heroBlocks.length);
+            
+            heroBlocks.forEach(function(block) {
+                const video = block.querySelector('video');
+                
+                if (video) {
+                    // Handle video loading
+                    video.addEventListener('loadeddata', function() {
+                        video.classList.add('loaded');
+                    });
+                    
+                    // Ensure video plays on mobile devices
+                    video.addEventListener('canplay', function() {
+                        video.play().catch(function() {
+                            console.log('Video autoplay prevented by browser policy');
+                        });
+                    });
+                    
+                    // Handle intersection observer for performance
+                    if ('IntersectionObserver' in window) {
+                        const observer = new IntersectionObserver(function(entries) {
+                            entries.forEach(function(entry) {
+                                if (entry.isIntersecting) {
+                                    if (video.paused) {
+                                        video.play().catch(function() {
+                                            // Silently handle autoplay failures
+                                        });
+                                    }
+                                } else {
+                                    if (!video.paused) {
+                                        video.pause();
+                                    }
+                                }
+                            });
+                        }, {
+                            threshold: 0.5
+                        });
+                        
+                        observer.observe(block);
+                    }
+                }
+                
+                // Handle full-width positioning on window resize
+                if (block.classList.contains('trinity-hero-full-width')) {
+                    Trinity.handleFullWidthPositioning(block);
+                    window.addEventListener('resize', function() {
+                        Trinity.handleFullWidthPositioning(block);
+                    });
+                }
+            });
+            
+            // Initialize parallax for hero blocks
+            Trinity.initHeroParallax();
+        },
+
+        /**
+         * Handle full-width positioning for hero blocks
+         */
+        handleFullWidthPositioning: function(block) {
+            const rect = block.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            
+            // Only apply positioning if not already properly positioned
+            if (Math.abs(rect.left) > 1 || Math.abs(rect.right - windowWidth) > 1) {
+                block.style.marginLeft = 'calc(-50vw + 50%)';
+                block.style.marginRight = 'calc(-50vw + 50%)';
+            }
+        },
+
+        /**
+         * Initialize parallax effects for hero blocks
+         */
+        initHeroParallax: function() {
+            console.log('Initializing Trinity Hero parallax effects');
+            const parallaxBlocks = document.querySelectorAll('.trinity-hero-block.trinity-hero-parallax');
+            
+            if (parallaxBlocks.length === 0) {
+                console.log('No parallax hero blocks found');
+                return;
+            }
+            
+            console.log('Found parallax hero blocks:', parallaxBlocks.length);
+            
+            // Check for reduced motion preference
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                console.log('Parallax disabled due to reduced motion preference');
+                return;
+            }
+            
+            function updateHeroParallax() {
+                parallaxBlocks.forEach(function(block) {
+                    let media = block.querySelector('.trinity-hero-parallax-media');
+                    if (!media) {
+                        media = block.querySelector('.trinity-hero-media');
+                    }
+                    
+                    if (!media) {
+                        return;
+                    }
+                    
+                    // Handle static parallax - clip the fixed background to block area
+                    if (block.classList.contains('trinity-hero-parallax-static')) {
+                        const rect = block.getBoundingClientRect();
+                        const blockTop = Math.max(0, rect.top);
+                        const blockLeft = Math.max(0, rect.left);
+                        const blockWidth = rect.width;
+                        const blockHeight = rect.height;
+                        const blockBottom = Math.min(window.innerHeight, rect.top + blockHeight);
+                        const blockRight = Math.min(window.innerWidth, rect.left + blockWidth);
+                        
+                        // Convert to viewport percentages for clip-path
+                        const topPercent = (blockTop / window.innerHeight * 100).toFixed(2);
+                        const leftPercent = (blockLeft / window.innerWidth * 100).toFixed(2);
+                        const rightPercent = (100 - (blockRight / window.innerWidth * 100)).toFixed(2);
+                        const bottomPercent = (100 - (blockBottom / window.innerHeight * 100)).toFixed(2);
+                        
+                        // Only show the background within the hero block area
+                        if (rect.top < window.innerHeight && (rect.top + rect.height) > 0) {
+                            const clipPath = `inset(${topPercent}% ${rightPercent}% ${bottomPercent}% ${leftPercent}%)`;
+                            media.style.clipPath = clipPath;
+                        } else {
+                            // Block not in viewport, hide completely
+                            media.style.clipPath = 'inset(100% 0 0 0)';
+                        }
+                        
+                        media.style.transform = 'none';
+                        return;
+                    }
+                    
+                    const rect = block.getBoundingClientRect();
+                    const blockTop = rect.top;
+                    const blockHeight = rect.height;
+                    const windowHeight = window.innerHeight;
+                    
+                    // Calculate if block is in viewport
+                    if (blockTop <= windowHeight && (blockTop + blockHeight) >= 0) {
+                        // Calculate parallax offset
+                        const scrollProgress = (windowHeight - blockTop) / (windowHeight + blockHeight);
+                        const parallaxOffset = -scrollProgress * 30;
+                        
+                        // Apply transform
+                        media.style.transform = `translateY(calc(-60% + ${parallaxOffset}%))`;
+                        media.style.transition = 'none';
+                    }
+                });
+            }
+            
+            // Use requestAnimationFrame for smooth performance
+            let ticking = false;
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateHeroParallax);
+                    ticking = true;
+                    setTimeout(function() { ticking = false; }, 16);
+                }
+            }
+            
+            // Listen to scroll events
+            window.addEventListener('scroll', requestTick);
+            window.addEventListener('resize', function() {
+                updateHeroParallax();
+                requestTick();
+            });
+            
+            // Initial call
+            updateHeroParallax();
+            
+            // Delayed second call for layout fix
+            setTimeout(function() {
+                updateHeroParallax();
+            }, 100);
         },
 
         /**
