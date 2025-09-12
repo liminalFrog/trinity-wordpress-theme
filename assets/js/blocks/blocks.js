@@ -2575,3 +2575,361 @@ addFilter(
     'trinity/table-bootstrap-controls',
     withBootstrapTableControls
 );
+
+// Trinity TMHero Block (TMHero Plugin Replacement)
+registerBlockType('trinity/tmhero', {
+    title: 'Trinity TMHero',
+    icon: 'format-image',
+    category: 'trinity-blocks',
+    attributes: {
+        mediaUrl: {
+            type: 'string',
+            default: ''
+        },
+        mediaType: {
+            type: 'string',
+            default: 'image'
+        },
+        mediaId: {
+            type: 'number',
+            default: 0
+        },
+        title: {
+            type: 'string',
+            default: 'Hero Title'
+        },
+        subtitle: {
+            type: 'string',
+            default: 'Hero Subtitle'
+        },
+        textPosition: {
+            type: 'string',
+            default: 'center'
+        },
+        textAlignment: {
+            type: 'string',
+            default: 'center'
+        },
+        fontSize: {
+            type: 'string',
+            default: 'large'
+        },
+        dimRatio: {
+            type: 'number',
+            default: 30
+        },
+        height: {
+            type: 'string',
+            default: 'medium'
+        },
+        fullWidth: {
+            type: 'boolean',
+            default: false
+        },
+        textColor: {
+            type: 'string',
+            default: '#ffffff'
+        },
+        buttonText: {
+            type: 'string',
+            default: ''
+        },
+        buttonUrl: {
+            type: 'string',
+            default: ''
+        },
+        buttonStyle: {
+            type: 'string',
+            default: 'primary'
+        },
+        button2Text: {
+            type: 'string',
+            default: ''
+        },
+        button2Url: {
+            type: 'string',
+            default: ''
+        },
+        button2Page: {
+            type: 'number',
+            default: 0
+        },
+        button2Style: {
+            type: 'string',
+            default: 'secondary'
+        },
+        button2Type: {
+            type: 'string',
+            default: 'url'
+        },
+        hidePageTitle: {
+            type: 'boolean',
+            default: false
+        },
+        parallaxEffect: {
+            type: 'boolean',
+            default: false
+        },
+        parallaxStatic: {
+            type: 'boolean',
+            default: false
+        }
+    },
+    edit: function(props) {
+        const { attributes, setAttributes, isSelected } = props;
+        const {
+            mediaUrl, mediaType, mediaId, title, subtitle, textPosition, textAlignment,
+            fontSize, dimRatio, height, fullWidth, textColor, buttonText, buttonUrl,
+            buttonStyle, button2Text, button2Url, button2Page, button2Style, button2Type,
+            hidePageTitle, parallaxEffect, parallaxStatic
+        } = attributes;
+
+        const textPositionOptions = [
+            { label: 'Top Left', value: 'top-left' },
+            { label: 'Top Center', value: 'top-center' },
+            { label: 'Top Right', value: 'top-right' },
+            { label: 'Center Left', value: 'center-left' },
+            { label: 'Center', value: 'center' },
+            { label: 'Center Right', value: 'center-right' },
+            { label: 'Bottom Left', value: 'bottom-left' },
+            { label: 'Bottom Center', value: 'bottom-center' },
+            { label: 'Bottom Right', value: 'bottom-right' }
+        ];
+
+        const fontSizeOptions = [
+            { label: 'Small', value: 'small' },
+            { label: 'Medium', value: 'medium' },
+            { label: 'Large', value: 'large' },
+            { label: 'Extra Large', value: 'extra-large' }
+        ];
+
+        const heightOptions = [
+            { label: 'Small (300px)', value: 'small' },
+            { label: 'Medium (500px)', value: 'medium' },
+            { label: 'Large (700px)', value: 'large' },
+            { label: 'Full Height', value: 'full' }
+        ];
+
+        const buttonStyleOptions = [
+            { label: 'Primary', value: 'primary' },
+            { label: 'Secondary', value: 'secondary' },
+            { label: 'Success', value: 'success' },
+            { label: 'Danger', value: 'danger' },
+            { label: 'Warning', value: 'warning' },
+            { label: 'Info', value: 'info' },
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+            { label: 'Outline', value: 'outline' }
+        ];
+
+        const blockStyles = {
+            position: 'relative',
+            minHeight: height === 'small' ? '300px' : height === 'medium' ? '500px' : height === 'large' ? '700px' : '100vh',
+            display: 'flex',
+            alignItems: textPosition.includes('top') ? 'flex-start' : textPosition.includes('bottom') ? 'flex-end' : 'center',
+            justifyContent: textPosition.includes('left') ? 'flex-start' : textPosition.includes('right') ? 'flex-end' : 'center',
+            backgroundImage: mediaUrl && mediaType === 'image' ? `url(${mediaUrl})` : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#f8f9fa',
+            color: textColor,
+            padding: '2rem'
+        };
+
+        const overlayStyles = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: `rgba(0, 0, 0, ${dimRatio / 100})`,
+            pointerEvents: 'none'
+        };
+
+        const contentStyles = {
+            position: 'relative',
+            zIndex: 2,
+            textAlign: textAlignment,
+            maxWidth: '600px'
+        };
+
+        return wp.element.createElement(Fragment, {},
+            wp.element.createElement(InspectorControls, {},
+                wp.element.createElement(PanelBody, { title: 'Media Settings', initialOpen: true },
+                    wp.element.createElement(MediaUpload, {
+                        onSelect: (media) => {
+                            setAttributes({
+                                mediaUrl: media.url,
+                                mediaId: media.id,
+                                mediaType: media.type === 'video' ? 'video' : 'image'
+                            });
+                        },
+                        allowedTypes: ['image', 'video'],
+                        value: mediaId,
+                        render: ({ open }) => wp.element.createElement(Button, {
+                            onClick: open,
+                            isPrimary: true
+                        }, mediaUrl ? 'Change Media' : 'Select Media')
+                    }),
+                    mediaUrl && wp.element.createElement(Button, {
+                        onClick: () => setAttributes({ mediaUrl: '', mediaId: 0 }),
+                        isDestructive: true
+                    }, 'Remove Media'),
+                    wp.element.createElement(RangeControl, {
+                        label: 'Overlay Opacity',
+                        value: dimRatio,
+                        onChange: (value) => setAttributes({ dimRatio: value }),
+                        min: 0,
+                        max: 100
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Layout Settings' },
+                    wp.element.createElement(SelectControl, {
+                        label: 'Height',
+                        value: height,
+                        options: heightOptions,
+                        onChange: (value) => setAttributes({ height: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Text Position',
+                        value: textPosition,
+                        options: textPositionOptions,
+                        onChange: (value) => setAttributes({ textPosition: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Text Alignment',
+                        value: textAlignment,
+                        options: [
+                            { label: 'Left', value: 'left' },
+                            { label: 'Center', value: 'center' },
+                            { label: 'Right', value: 'right' }
+                        ],
+                        onChange: (value) => setAttributes({ textAlignment: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Font Size',
+                        value: fontSize,
+                        options: fontSizeOptions,
+                        onChange: (value) => setAttributes({ fontSize: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Full Width',
+                        checked: fullWidth,
+                        onChange: (value) => setAttributes({ fullWidth: value })
+                    }),
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Hide Page Title',
+                        checked: hidePageTitle,
+                        onChange: (value) => setAttributes({ hidePageTitle: value })
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Button Settings' },
+                    wp.element.createElement(TextControl, {
+                        label: 'Button Text',
+                        value: buttonText,
+                        onChange: (value) => setAttributes({ buttonText: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Button URL',
+                        value: buttonUrl,
+                        onChange: (value) => setAttributes({ buttonUrl: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Button Style',
+                        value: buttonStyle,
+                        options: buttonStyleOptions,
+                        onChange: (value) => setAttributes({ buttonStyle: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Second Button Text',
+                        value: button2Text,
+                        onChange: (value) => setAttributes({ button2Text: value })
+                    }),
+                    wp.element.createElement(TextControl, {
+                        label: 'Second Button URL',
+                        value: button2Url,
+                        onChange: (value) => setAttributes({ button2Url: value })
+                    }),
+                    wp.element.createElement(SelectControl, {
+                        label: 'Second Button Style',
+                        value: button2Style,
+                        options: buttonStyleOptions,
+                        onChange: (value) => setAttributes({ button2Style: value })
+                    })
+                ),
+                wp.element.createElement(PanelBody, { title: 'Effects' },
+                    wp.element.createElement(ToggleControl, {
+                        label: 'Parallax Effect',
+                        checked: parallaxEffect,
+                        onChange: (value) => setAttributes({ parallaxEffect: value })
+                    }),
+                    parallaxEffect && wp.element.createElement(ToggleControl, {
+                        label: 'Static Parallax',
+                        help: 'Background stays fixed in viewport',
+                        checked: parallaxStatic,
+                        onChange: (value) => setAttributes({ parallaxStatic: value })
+                    })
+                )
+            ),
+            wp.element.createElement('div', {
+                className: 'trinity-hero-block trinity-hero-editor-preview',
+                style: blockStyles
+            },
+                wp.element.createElement('div', { style: overlayStyles }),
+                wp.element.createElement('div', { style: contentStyles },
+                    wp.element.createElement(RichText, {
+                        tagName: 'h1',
+                        placeholder: 'Enter hero title...',
+                        value: title,
+                        onChange: (value) => setAttributes({ title: value }),
+                        style: {
+                            fontSize: fontSize === 'small' ? '2rem' : fontSize === 'medium' ? '2.5rem' : fontSize === 'large' ? '3rem' : '4rem',
+                            marginBottom: '1rem',
+                            fontWeight: 'bold'
+                        }
+                    }),
+                    wp.element.createElement(RichText, {
+                        tagName: 'p',
+                        placeholder: 'Enter hero subtitle...',
+                        value: subtitle,
+                        onChange: (value) => setAttributes({ subtitle: value }),
+                        style: {
+                            fontSize: fontSize === 'small' ? '1rem' : fontSize === 'medium' ? '1.5rem' : '1.25rem',
+                            marginBottom: '1.5rem',
+                            opacity: 0.9
+                        }
+                    }),
+                    (buttonText || button2Text) && wp.element.createElement('div', { style: { marginTop: '1rem' } },
+                        buttonText && wp.element.createElement('span', {
+                            className: `trinity-hero-button trinity-hero-button-${buttonStyle}`,
+                            style: {
+                                display: 'inline-block',
+                                padding: '0.5rem 1rem',
+                                marginRight: '1rem',
+                                backgroundColor: '#007cba',
+                                color: 'white',
+                                borderRadius: '0.25rem',
+                                textDecoration: 'none'
+                            }
+                        }, buttonText),
+                        button2Text && wp.element.createElement('span', {
+                            className: `trinity-hero-button trinity-hero-button-${button2Style}`,
+                            style: {
+                                display: 'inline-block',
+                                padding: '0.5rem 1rem',
+                                backgroundColor: '#6c757d',
+                                color: 'white',
+                                borderRadius: '0.25rem',
+                                textDecoration: 'none'
+                            }
+                        }, button2Text)
+                    )
+                )
+            )
+        );
+    },
+    save: function() {
+        // Return null to use PHP render callback
+        return null;
+    }
+});

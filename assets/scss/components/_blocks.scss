@@ -8,6 +8,7 @@
 .trinity-modal,
 .trinity-accordion,
 .trinity-list-group,
+.trinity-hero-block,
 .alert,
 .card,
 .modal,
@@ -17,6 +18,548 @@
         margin-top: 0 !important;
         margin-bottom: 0 !important;
     }
+}
+
+// ===================================
+// HERO BLOCKS
+// ===================================
+
+.trinity-hero-block {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+/* Full width functionality */
+.trinity-hero-block.trinity-hero-full-width {
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    max-width: 100vw;
+    width: 100vw;
+}
+
+/* Height variants */
+.trinity-hero-block.trinity-hero-height-small {
+    min-height: 300px;
+}
+
+.trinity-hero-block.trinity-hero-height-medium {
+    min-height: 500px;
+}
+
+.trinity-hero-block.trinity-hero-height-large {
+    min-height: 700px;
+}
+
+.trinity-hero-block.trinity-hero-height-full {
+    min-height: 100vh;
+}
+
+/* Media styles */
+.trinity-hero-media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.trinity-hero-media img,
+.trinity-hero-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Parallax effect styles */
+.trinity-hero-block.trinity-hero-parallax {
+    overflow: hidden;
+    position: relative;
+}
+
+.trinity-hero-parallax .trinity-hero-parallax-media {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    transform: translateY(-60%);
+    z-index: 1;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Static parallax - media stays fixed in viewport while container scrolls */
+.trinity-hero-parallax.trinity-hero-parallax-static .trinity-hero-parallax-media {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    will-change: transform;
+    clip-path: inset(0 0 100% 0);
+}
+
+/* Ensure static parallax container maintains proper stacking */
+.trinity-hero-parallax.trinity-hero-parallax-static {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+}
+
+/* Static parallax content needs higher z-index */
+.trinity-hero-parallax.trinity-hero-parallax-static .trinity-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Static parallax overlay needs to stay above fixed media */
+.trinity-hero-parallax.trinity-hero-parallax-static .trinity-hero-overlay {
+    position: relative;
+    z-index: 2;
+}
+
+.trinity-hero-parallax .trinity-hero-parallax-image,
+.trinity-hero-parallax .trinity-hero-parallax-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Ensure content stays above parallax media */
+.trinity-hero-parallax .trinity-hero-content {
+    position: relative;
+    z-index: 3;
+}
+
+/* Disable parallax on mobile devices for better performance */
+@media (max-width: 768px) {
+    .trinity-hero-parallax .trinity-hero-parallax-media {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transform: none !important;
+    }
+}
+
+/* Disable parallax for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .trinity-hero-parallax .trinity-hero-parallax-media {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transform: none !important;
+    }
+}
+
+/* Overlay styles */
+.trinity-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transition: background-color 0.3s ease;
+}
+
+/* Content positioning */
+.trinity-hero-content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.trinity-hero-text {
+    max-width: 600px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Text positioning variants */
+.trinity-hero-text-top-left .trinity-hero-content {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.trinity-hero-text-top-left .trinity-hero-text {
+    text-align: left;
+}
+
+.trinity-hero-text-top-center .trinity-hero-content {
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.trinity-hero-text-top-center .trinity-hero-text {
+    text-align: center;
+}
+
+.trinity-hero-text-top-right .trinity-hero-content {
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.trinity-hero-text-top-right .trinity-hero-text {
+    text-align: right;
+}
+
+.trinity-hero-text-center-left .trinity-hero-content {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.trinity-hero-text-center-left .trinity-hero-text {
+    text-align: left;
+}
+
+.trinity-hero-text-center .trinity-hero-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.trinity-hero-text-center .trinity-hero-text {
+    text-align: center;
+}
+
+.trinity-hero-text-center-right .trinity-hero-content {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.trinity-hero-text-center-right .trinity-hero-text {
+    text-align: right;
+}
+
+.trinity-hero-text-bottom-left .trinity-hero-content {
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.trinity-hero-text-bottom-left .trinity-hero-text {
+    text-align: left;
+}
+
+.trinity-hero-text-bottom-center .trinity-hero-content {
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.trinity-hero-text-bottom-center .trinity-hero-text {
+    text-align: center;
+}
+
+.trinity-hero-text-bottom-right .trinity-hero-content {
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.trinity-hero-text-bottom-right .trinity-hero-text {
+    text-align: right;
+}
+
+/* Typography */
+.trinity-hero-title {
+    margin: 0 0 1rem 0;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.trinity-hero-subtitle {
+    margin: 0 0 1.5rem 0;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+/* Font size variants */
+.trinity-hero-font-small .trinity-hero-title {
+    font-size: 2rem;
+}
+
+.trinity-hero-font-small .trinity-hero-subtitle {
+    font-size: 1rem;
+}
+
+.trinity-hero-font-medium .trinity-hero-title {
+    font-size: 2.5rem;
+}
+
+.trinity-hero-font-medium .trinity-hero-subtitle {
+    font-size: 1.5rem;
+    background-color: var(--trinity-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--trinity-border-radius);
+}
+
+.trinity-hero-font-large .trinity-hero-title {
+    font-size: 3rem;
+}
+
+.trinity-hero-font-large .trinity-hero-subtitle {
+    font-size: 1.25rem;
+}
+
+.trinity-hero-font-extra-large .trinity-hero-title {
+    font-size: 4rem;
+}
+
+.trinity-hero-font-extra-large .trinity-hero-subtitle {
+    font-size: 1.5rem;
+}
+
+/* Text alignment variants */
+.trinity-hero-align-left .trinity-hero-text {
+    text-align: left;
+}
+
+.trinity-hero-align-center .trinity-hero-text {
+    text-align: center;
+}
+
+.trinity-hero-align-right .trinity-hero-text {
+    text-align: right;
+}
+
+/* Button styles */
+.trinity-hero-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: var(--trinity-border-radius);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+}
+
+.trinity-hero-button:last-child {
+    margin-right: 0;
+}
+
+.trinity-hero-button-primary {
+    background-color: var(--trinity-primary);
+    color: white;
+}
+
+.trinity-hero-button-primary:hover {
+    background-color: var(--trinity-primary-dark);
+    color: white;
+    text-decoration: none;
+}
+
+.trinity-hero-button-secondary {
+    background-color: var(--trinity-secondary);
+    color: white;
+}
+
+.trinity-hero-button-secondary:hover {
+    background-color: var(--trinity-secondary-dark);
+    color: white;
+    text-decoration: none;
+}
+
+.trinity-hero-button-outline {
+    background-color: transparent;
+    color: currentColor;
+    border-color: currentColor;
+}
+
+.trinity-hero-button-outline:hover {
+    background-color: currentColor;
+    color: var(--trinity-dark);
+    text-decoration: none;
+}
+
+/* Success button styles */
+.trinity-hero-button-success {
+    background-color: var(--trinity-success);
+    color: white;
+}
+
+.trinity-hero-button-success:hover {
+    background-color: var(--trinity-success-dark);
+    color: white;
+    text-decoration: none;
+}
+
+/* Danger button styles */
+.trinity-hero-button-danger {
+    background-color: var(--trinity-danger);
+    color: white;
+}
+
+.trinity-hero-button-danger:hover {
+    background-color: var(--trinity-danger-dark);
+    color: white;
+    text-decoration: none;
+}
+
+/* Warning button styles */
+.trinity-hero-button-warning {
+    background-color: var(--trinity-warning);
+    color: var(--trinity-dark);
+}
+
+.trinity-hero-button-warning:hover {
+    background-color: var(--trinity-warning-dark);
+    color: var(--trinity-dark);
+    text-decoration: none;
+}
+
+/* Info button styles */
+.trinity-hero-button-info {
+    background-color: var(--trinity-info);
+    color: white;
+}
+
+.trinity-hero-button-info:hover {
+    background-color: var(--trinity-info-dark);
+    color: white;
+    text-decoration: none;
+}
+
+/* Light button styles */
+.trinity-hero-button-light {
+    background-color: var(--trinity-light);
+    color: var(--trinity-dark);
+    border-color: var(--trinity-border-color);
+}
+
+.trinity-hero-button-light:hover {
+    background-color: var(--trinity-light-dark);
+    color: var(--trinity-dark);
+    text-decoration: none;
+}
+
+/* Dark button styles */
+.trinity-hero-button-dark {
+    background-color: var(--trinity-dark);
+    color: white;
+}
+
+.trinity-hero-button-dark:hover {
+    background-color: var(--trinity-dark-dark);
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .trinity-hero-font-small .trinity-hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .trinity-hero-font-medium .trinity-hero-title {
+        font-size: 2rem;
+    }
+    
+    .trinity-hero-font-large .trinity-hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .trinity-hero-font-extra-large .trinity-hero-title {
+        font-size: 3rem;
+    }
+    
+    .trinity-hero-content {
+        padding: 1rem;
+    }
+    
+    .trinity-hero-text {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .trinity-hero-font-small .trinity-hero-title {
+        font-size: 1.25rem;
+    }
+    
+    .trinity-hero-font-medium .trinity-hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .trinity-hero-font-large .trinity-hero-title {
+        font-size: 2rem;
+    }
+    
+    .trinity-hero-font-extra-large .trinity-hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .trinity-hero-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for video loading */
+.trinity-hero-media video {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.trinity-hero-media video.loaded {
+    opacity: 1;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .trinity-hero-overlay,
+    .trinity-hero-button,
+    .trinity-hero-media video {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .trinity-hero-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .trinity-hero-media video {
+        display: none;
+    }
+}
+
+/* Integration styles for when page title is hidden */
+.trinity-hide-page-title .trinity-hero-block:first-child {
+    margin-top: 0 !important;
+}
+
+/* Ensure seamless integration with fixed navbars */
+.trinity-hide-page-title .trinity-hero-full-width:first-child {
+    position: relative;
+    top: 0;
+}
+
+/* Remove any default spacing that might interfere */
+.trinity-hide-page-title main > .trinity-hero-block:first-child,
+.trinity-hide-page-title .site-main > .trinity-hero-block:first-child,
+.trinity-hide-page-title #primary > .trinity-hero-block:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Container integration */
+.trinity-hide-page-title .container > .trinity-hero-block:first-child,
+.trinity-hide-page-title .container-fluid > .trinity-hero-block:first-child {
+    margin-top: 0 !important;
 }
 
 // ===================================
