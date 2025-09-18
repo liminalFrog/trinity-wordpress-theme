@@ -302,16 +302,47 @@
                 const video = block.querySelector('video');
                 
                 if (video) {
+                    // Set video attributes for better mobile behavior
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.setAttribute('muted', '');
+                    video.setAttribute('autoplay', '');
+                    video.setAttribute('loop', '');
+                    video.controls = false;
+                    video.preload = 'metadata';
+                    
+                    // Prevent fullscreen on mobile
+                    video.addEventListener('webkitbeginfullscreen', function(e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                    
+                    video.addEventListener('webkitendfullscreen', function(e) {
+                        // Ensure controls stay hidden after exiting fullscreen
+                        video.controls = false;
+                        video.play().catch(function() {
+                            // Silently handle autoplay failures
+                        });
+                    });
+                    
                     // Handle video loading
                     video.addEventListener('loadeddata', function() {
                         video.classList.add('loaded');
+                        // Try to play immediately when loaded
+                        if (Trinity.isElementInViewport(block)) {
+                            video.play().catch(function() {
+                                console.log('Video autoplay prevented by browser policy');
+                            });
+                        }
                     });
                     
-                    // Ensure video plays on mobile devices
+                    // Ensure video plays when it can
                     video.addEventListener('canplay', function() {
-                        video.play().catch(function() {
-                            console.log('Video autoplay prevented by browser policy');
-                        });
+                        if (Trinity.isElementInViewport(block)) {
+                            video.play().catch(function() {
+                                console.log('Video autoplay prevented by browser policy');
+                            });
+                        }
                     });
                     
                     // Handle intersection observer for performance
@@ -319,6 +350,7 @@
                         const observer = new IntersectionObserver(function(entries) {
                             entries.forEach(function(entry) {
                                 if (entry.isIntersecting) {
+                                    video.controls = false; // Ensure controls stay hidden
                                     if (video.paused) {
                                         video.play().catch(function() {
                                             // Silently handle autoplay failures
@@ -331,10 +363,31 @@
                                 }
                             });
                         }, {
-                            threshold: 0.5
+                            threshold: 0.3, // Lower threshold for better mobile performance
+                            rootMargin: '50px' // Start playing slightly before entering viewport
                         });
                         
                         observer.observe(block);
+                    }
+                    
+                    // Additional mobile-specific handling
+                    if (Trinity.isMobile()) {
+                        // Force inline playback on mobile
+                        video.playsInline = true;
+                        video.webkitPlaysInline = true;
+                        
+                        // Handle touch events to prevent unwanted fullscreen
+                        video.addEventListener('touchstart', function(e) {
+                            e.preventDefault();
+                        });
+                        
+                        // Handle click events
+                        video.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (video.paused) {
+                                video.play();
+                            }
+                        });
                     }
                 }
                 
@@ -467,6 +520,27 @@
             setTimeout(function() {
                 updateHeroParallax();
             }, 100);
+        },
+
+        /**
+         * Check if element is in viewport
+         */
+        isElementInViewport: function(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        },
+
+        /**
+         * Check if device is mobile
+         */
+        isMobile: function() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                   window.innerWidth <= 768;
         },
 
         /**

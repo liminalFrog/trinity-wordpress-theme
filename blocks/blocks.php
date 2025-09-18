@@ -311,7 +311,16 @@ function trinity_render_tmhero_block($attributes) {
         <?php if ($media_url): ?>
             <div class="trinity-hero-media<?php echo $parallax_effect ? ' trinity-hero-parallax-media' : ''; ?>">
                 <?php if ($media_type === 'video'): ?>
-                    <video autoplay muted loop<?php echo $parallax_effect ? ' class="trinity-hero-parallax-video"' : ''; ?>>
+                    <video 
+                        autoplay 
+                        muted 
+                        loop 
+                        playsinline 
+                        webkit-playsinline 
+                        preload="metadata"
+                        controls="false"
+                        <?php echo $parallax_effect ? ' class="trinity-hero-parallax-video"' : ''; ?>
+                    >
                         <source src="<?php echo esc_url($media_url); ?>" type="video/mp4">
                     </video>
                 <?php else: ?>

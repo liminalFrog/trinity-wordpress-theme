@@ -77,6 +77,61 @@
     object-position: center;
 }
 
+/* Mobile video fixes */
+.trinity-hero-media video {
+    /* Prevent fullscreen on mobile */
+    -webkit-playsinline: true;
+    -moz-playsinline: true;
+    -ms-playsinline: true;
+    -o-playsinline: true;
+    playsinline: true;
+    
+    /* Hide controls */
+    &::-webkit-media-controls {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-start-playback-button {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-play-button {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-pause-button {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-current-time-display {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-time-remaining-display {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-timeline {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-volume-slider {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-mute-button {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-fullscreen-button {
+        display: none !important;
+    }
+    
+    &::-webkit-media-controls-toggle-closed-captions-button {
+        display: none !important;
+    }
+}
+
 /* Parallax effect styles */
 .trinity-hero-block.trinity-hero-parallax {
     overflow: hidden;
