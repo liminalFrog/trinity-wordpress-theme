@@ -54,7 +54,9 @@ a {
         text-decoration: underline;
     }
     
-    @include focus-outline;
+    &:focus {
+        outline: none;
+    }
 }
 
 // Images
