@@ -31,6 +31,7 @@
     align-items: center;
     justify-content: center;
     background: #f8f9fa;
+    margin-top: -1rem;
 }
 
 /* Full width functionality */
@@ -338,7 +339,6 @@
     text-decoration: none;
     border-radius: var(--trinity-border-radius);
     font-weight: 600;
-    transition: all 0.3s ease;
     cursor: pointer;
     border: 2px solid transparent;
     margin-top: 0.5rem;
